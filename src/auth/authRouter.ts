@@ -1,4 +1,5 @@
 import express from 'express'
+import { randomUUID } from 'crypto'
 import { db, users, sessions, pool } from '../db'
 import { eq } from 'drizzle-orm'
 
@@ -118,11 +119,15 @@ router.post('/api/auth/sign-up', async (req, res) => {
       lastName: lastName || null,
     })
 
+    // Create user ID (Better Auth uses string IDs)
+    const userId = randomUUID()
+
     // Create user (in production, hash password with bcrypt)
     const [newUser] = await db.insert(users).values({
+      id: userId,
       email,
       password, // TODO: Hash with bcrypt before storing
-      name: name || `${firstName || ''} ${lastName || ''}`.trim() || null,
+      name: name || `${firstName || ''} ${lastName || ''}`.trim() || '',
       firstName: firstName || null,
       lastName: lastName || null,
     }).returning({

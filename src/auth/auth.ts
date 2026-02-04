@@ -36,7 +36,9 @@ export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET || "c0AaF2eamheRYbcHJHr1i5dqYFNSt7u0",
   baseURL: baseURL,
   // Use function-based trustedOrigins for dynamic origin handling
-  trustedOrigins: (request) => {
+  // 'request' type comes from better-auth/node and its headers may not be a plain object,
+  // so we treat it as 'any' to safely access origin across environments.
+  trustedOrigins: (request: any) => {
     const origins = ["saplayer://"] // Your app scheme from app.json
     
     // In development, allow all exp:// origins
@@ -51,11 +53,14 @@ export const auth = betterAuth({
       )
       
       // If we have a request, also allow its origin
-      if (request?.headers?.origin) {
-        const origin = request.headers.origin as string
-        if (origin.startsWith('exp://')) {
-          origins.push(origin)
-        }
+      const origin: string | undefined =
+        (request?.headers as any)?.origin ??
+        (typeof (request?.headers as any)?.get === 'function'
+          ? (request.headers as any).get('origin')
+          : undefined)
+
+      if (origin && origin.startsWith('exp://')) {
+        origins.push(origin)
       }
     }
     
