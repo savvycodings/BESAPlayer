@@ -231,8 +231,10 @@ router.post('/api/auth/sign-in', async (req, res) => {
     // Create session token (in production, use JWT)
     const token = `token_${user.id}_${Date.now()}`
     const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // 7 days
+    const sessionId = randomUUID()
 
     await db.insert(sessions).values({
+      id: sessionId,
       userId: user.id,
       token,
       expiresAt,
