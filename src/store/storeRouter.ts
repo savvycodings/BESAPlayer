@@ -1,5 +1,6 @@
 import express from 'express'
-import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, pool } from '../db'
+import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, pool, cardPrices } from '../db'
+import { getCardLookupOrFetch } from '../pokedata/lookup'
 import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
@@ -102,6 +103,55 @@ declare global {
     }
   }
 }
+
+// GET /api/listings/recent - Get recent store listings (public, for shop home)
+router.get('/api/listings/recent', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(String(req.query.limit), 10) || 24, 50)
+    const rows = await db.select({
+      id: storeListings.id,
+      cardName: storeListings.cardName,
+      cardImage: storeListings.cardImage,
+      price: storeListings.price,
+      vaultingStatus: storeListings.vaultingStatus,
+      storeId: storeListings.storeId,
+      storeName: stores.storeName,
+      sellerId: stores.userId,
+      sellerName: users.name,
+      sellerFirstName: users.firstName,
+      sellerLastName: users.lastName,
+    })
+      .from(storeListings)
+      .innerJoin(stores, eq(storeListings.storeId, stores.id))
+      .innerJoin(users, eq(stores.userId, users.id))
+      .where(and(
+        eq(storeListings.isActive, true),
+        eq(stores.isActive, true)
+      ))
+      .orderBy(desc(storeListings.createdAt))
+      .limit(limit)
+
+    const listings = rows.map((row) => ({
+      id: row.id,
+      listingId: row.id,
+      cardName: row.cardName,
+      cardImage: row.cardImage,
+      price: parseFloat(row.price?.toString() || '0'),
+      vaultingStatus: row.vaultingStatus,
+      storeId: row.storeId,
+      storeName: row.storeName,
+      sellerId: row.sellerId,
+      sellerName: row.sellerFirstName && row.sellerLastName
+        ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
+        : row.sellerName || 'Seller',
+    }))
+
+    res.json({ listings })
+  } catch (error: any) {
+    console.error('Get recent listings error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
 
 // GET /api/store - Get user's store or return null if doesn't exist
 router.get('/api/store', authenticate, async (req, res) => {
@@ -298,7 +348,7 @@ router.get('/api/store/listings', authenticate, async (req, res) => {
 // POST /api/store/listings - Create a new listing
 router.post('/api/store/listings', authenticate, async (req, res) => {
   try {
-    const { cardName, cardImage, price, vaultingStatus, purchaseType, description } = req.body
+    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, cardId } = req.body
 
     if (!cardName || !price) {
       return res.status(400).json({ message: 'Card name and price are required' })
@@ -335,6 +385,7 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
 
     const [newListing] = await db.insert(storeListings).values({
       storeId: store.id,
+      cardId: cardId && String(cardId).trim() ? String(cardId).trim() : null,
       cardName,
       cardImage: cardImage || null,
       price: price.toString(),
@@ -343,6 +394,11 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       description: description || null,
       isActive: true,
     }).returning()
+
+    // Prime price cache so future lookups use DB (saves API credits)
+    if (cardId && String(cardId).trim()) {
+      getCardLookupOrFetch(String(cardId).trim(), 'CARD').catch(() => {})
+    }
 
     res.json({
       success: true,
@@ -558,7 +614,19 @@ router.post('/api/store/iso', authenticate, async (req, res) => {
 // POST /api/profile/collections - Add a new collection item (card, sealed, slab)
 router.post('/api/profile/collections', authenticate, async (req, res) => {
   try {
-    const { type, name, description, image, cardId, set, condition, grade, estimatedValue, purchasePrice, purchaseDate, notes, requestVaulting } = req.body
+    const { type, name, description, image, cardId, set, condition, grade, purchaseDate, notes, requestVaulting } = req.body
+
+    console.log('[Add Card] Request received:', {
+      type,
+      name,
+      cardId: cardId ?? null,
+      set: set ?? null,
+      condition: condition ?? null,
+      grade: grade ?? null,
+      hasImage: !!image,
+      requestVaulting: requestVaulting ?? false,
+      userId: req.user?.id?.substring?.(0, 8) + '...',
+    })
 
     if (!type || !name) {
       return res.status(400).json({ message: 'Type and name are required' })
@@ -578,8 +646,8 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
       set: set || null,
       condition: condition || null,
       grade: grade || null,
-      estimatedValue: estimatedValue ? estimatedValue.toString() : null,
-      purchasePrice: purchasePrice ? purchasePrice.toString() : null,
+      estimatedValue: null,
+      purchasePrice: null,
       purchaseDate: purchaseDate ? new Date(purchaseDate) : null,
       notes: notes || null,
     }).returning()
@@ -596,12 +664,31 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
       })
     }
 
+    // Prime price cache so GET collections has marketPrice (await so cache is filled before client refetches)
+    if (cardId && String(cardId).trim()) {
+      console.log('[Add Card] Priming Pokedata price cache for cardId:', cardId)
+      try {
+        await getCardLookupOrFetch(String(cardId).trim(), type === 'sealed' ? 'SEALED' : 'CARD')
+      } catch (e: any) {
+        console.warn('[Add Card] Price cache prime failed:', e?.message ?? e)
+      }
+    } else {
+      console.log('[Add Card] No cardId provided — skipping Pokedata price cache prime (no API call).')
+    }
+
+    console.log('[Add Card] Success:', {
+      collectionId: newCollection.id,
+      name: newCollection.name,
+      type: newCollection.type,
+      cardId: newCollection.cardId ?? null,
+    })
+
     res.json({
       success: true,
       collection: newCollection,
     })
   } catch (error: any) {
-    console.error('Create collection error:', error)
+    console.error('[Add Card] Error:', error?.message ?? error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
@@ -634,22 +721,61 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
     // Create a map of listed card names for quick lookup
     const listedCardNames = new Set(activeListings.map(listing => listing.cardName.toLowerCase().trim()))
 
-    // Add isListed flag to each collection
-    const collectionsWithListedStatus = userCollections.map(collection => ({
-      ...collection,
-      isListed: listedCardNames.has(collection.name.toLowerCase().trim()),
-    }))
+    // Enrich with market price from card_prices (dynamic data; API only every 48h)
+    const cardIds = [...new Set(userCollections.map((c: any) => c.cardId != null ? String(c.cardId) : null).filter(Boolean))] as string[]
+    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null }>()
+    if (cardIds.length > 0) {
+      let rows: any[] = []
+      try {
+        rows = await db.select({
+          id: cardPrices.id,
+          marketPrice: cardPrices.marketPrice,
+          ebayLastSold: cardPrices.ebayLastSold,
+        })
+          .from(cardPrices)
+          .where(inArray(cardPrices.id, cardIds))
+      } catch (err: any) {
+        console.error("[GET collections] card_prices query failed (table may be missing — run migrations):", err?.message ?? err)
+      }
+      console.log("[GET collections] card_prices lookup — cardIds:", cardIds, "| rows found:", rows.length)
+      if (rows.length > 0) console.log("[GET collections] sample row keys:", Object.keys(rows[0]))
+      rows.forEach((r: any) => {
+        const id = r.id != null ? String(r.id) : null
+        if (id == null) return
+        const rawMarket = r.marketPrice ?? r.market_price
+        const rawEbay = r.ebayLastSold ?? r.ebay_last_sold
+        const market = rawMarket != null && rawMarket !== '' ? parseFloat(String(rawMarket)) : null
+        const ebay = rawEbay != null && rawEbay !== '' ? parseFloat(String(rawEbay)) : null
+        priceMap.set(id, { marketPrice: market, ebayLastSold: ebay })
+        console.log("[GET collections] priceMap set id=%s marketPrice=%s ebayLastSold=%s", id, market, ebay)
+      })
+    }
+    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 16
+    const collectionsWithListedStatus = userCollections.map((collection: any) => {
+      const cid = collection.cardId != null ? String(collection.cardId) : null
+      const prices = cid ? priceMap.get(cid) : null
+      const marketPrice = prices != null ? (prices.marketPrice ?? null) : null
+      const ebayLastSold = prices?.ebayLastSold ?? null
+      console.log("[GET collections] collection id=%s name=%s cardId=%s marketPrice=%s ebayLastSold=%s", collection.id, collection.name, cid, marketPrice, ebayLastSold)
+      return {
+        ...collection,
+        isListed: listedCardNames.has(collection.name.toLowerCase().trim()),
+        marketPrice,
+        ebayLastSold,
+      }
+    })
 
     // Calculate stats
-    const cards = userCollections.filter(c => c.type === 'card').length
-    const sealed = userCollections.filter(c => c.type === 'sealed').length
-    const slabs = userCollections.filter(c => c.type === 'slab').length
+    const cards = userCollections.filter((c: any) => c.type === 'card').length
+    const sealed = userCollections.filter((c: any) => c.type === 'sealed').length
+    const slabs = userCollections.filter((c: any) => c.type === 'slab').length
     const total = userCollections.length
 
-    // Calculate portfolio value
-    const portfolioValue = userCollections.reduce((sum, collection) => {
-      const value = parseFloat(collection.estimatedValue || collection.purchasePrice || '0')
-      return sum + value
+    // Portfolio value: from cache (marketPrice USD → ZAR) when cardId set, else legacy estimatedValue/purchasePrice
+    const portfolioValue = collectionsWithListedStatus.reduce((sum: number, collection: any) => {
+      if (collection.marketPrice != null) return sum + collection.marketPrice * USD_TO_ZAR
+      const legacy = parseFloat(collection.estimatedValue || collection.purchasePrice || '0') || 0
+      return sum + legacy
     }, 0)
 
     // Calculate set distribution

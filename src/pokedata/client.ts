@@ -61,12 +61,14 @@ export class PokedataClient {
 
       if (!response.ok) {
         const errorText = await response.text()
+        console.log("[Pokedata API] Response (error):", { status: response.status, body: errorText })
         throw new Error(`Pokedata API error: ${response.status} - ${errorText}`)
       }
 
-      return await response.json()
+      const data = await response.json()
+      return data
     } catch (error) {
-      console.error(`❌ Pokedata API request failed: ${endpoint}`, error)
+      console.error("[Pokedata API] Request failed:", endpoint, error)
       throw error
     }
   }
@@ -110,15 +112,28 @@ export class PokedataClient {
       id,
       asset_type: assetType,
     })
+    const path = `/pricing?${params}`
+    const fullUrl = `${this.baseUrl}${path}`
 
-    console.log(`💰 Fetching pricing for ${assetType} ID: ${id} (Cost: 10 credits)`)
-    const pricing = await this.request<PokedataCardPricing>(`/pricing?${params}`)
-    
-    console.log(`💰 Pricing data for ${pricing.name}:`, {
-      tcgPlayer: pricing.pricing["TCGPlayer"]?.value,
-      ebay: pricing.pricing["eBay Raw"]?.value,
-      cardMarket: pricing.pricing["CardMkt"]?.value,
-      totalMarketplaces: Object.keys(pricing.pricing).length
+    console.log("[Pokedata API] Request:", {
+      method: "GET",
+      url: fullUrl,
+      params: { id, asset_type: assetType },
+      note: "API Cost: 10 Credits",
+    })
+
+    const pricing = await this.request<PokedataCardPricing>(path)
+
+    console.log("[Pokedata API] Response (USD only, we convert to ZAR):", {
+      id: pricing.id,
+      name: pricing.name,
+      num: (pricing as any).num ?? null,
+      set_name: (pricing as any).set_name ?? null,
+      sample: {
+        TCGPlayer: pricing.pricing?.["TCGPlayer"],
+        "eBay Raw": pricing.pricing?.["eBay Raw"],
+        "Pokedata Raw": pricing.pricing?.["Pokedata Raw"],
+      },
     })
 
     return pricing

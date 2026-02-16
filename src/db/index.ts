@@ -23,6 +23,7 @@ export const users = dbSchema.users
 export const collections = dbSchema.collections
 export const stores = dbSchema.stores
 export const sessions = dbSchema.sessions
+export const cardPrices = dbSchema.cardPrices
 export const storeListings = dbSchema.storeListings
 export const orders = dbSchema.orders
 export const auctions = dbSchema.auctions

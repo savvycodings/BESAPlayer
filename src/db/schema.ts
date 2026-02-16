@@ -129,10 +129,24 @@ export const verificationTokens = pgTable('verification_tokens', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Missing field!
 })
 
+// Cached card prices from Pokedata (eco-friendly: avoid API until 48h old)
+export const cardPrices = pgTable('card_prices', {
+  id: text('id').primaryKey(), // Pokedata card ID
+  cardName: varchar('card_name', { length: 255 }),
+  setName: varchar('set_name', { length: 255 }),
+  marketPrice: decimal('market_price', { precision: 10, scale: 2 }), // TCGPlayer or CardMkt
+  ebayLastSold: decimal('ebay_last_sold', { precision: 10, scale: 2 }), // eBay Raw
+  currency: varchar('currency', { length: 10 }).default('USD'),
+  lastFetchedAt: timestamp('last_fetched_at').notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+})
+
 // Store listings (items for sale)
 export const storeListings = pgTable('store_listings', {
   id: serial('id').primaryKey(),
   storeId: integer('store_id').references(() => stores.id, { onDelete: 'cascade' }).notNull(),
+  cardId: varchar('card_id', { length: 100 }), // Pokedata card ID (optional, for price cache)
   cardName: varchar('card_name', { length: 255 }).notNull(),
   cardImage: text('card_image'), // URL to card image
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
@@ -308,6 +322,8 @@ export type Store = typeof stores.$inferSelect
 export type NewStore = typeof stores.$inferInsert
 export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
+export type CardPrice = typeof cardPrices.$inferSelect
+export type NewCardPrice = typeof cardPrices.$inferInsert
 export type StoreListing = typeof storeListings.$inferSelect
 export type NewStoreListing = typeof storeListings.$inferInsert
 export type Order = typeof orders.$inferSelect
