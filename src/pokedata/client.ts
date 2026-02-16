@@ -123,16 +123,21 @@ export class PokedataClient {
     })
 
     const pricing = await this.request<PokedataCardPricing>(path)
-
-    console.log("[Pokedata API] Response (USD only, we convert to ZAR):", {
+    const raw = pricing as any
+    console.log("[Pokedata API] Response (USD + image fields):", {
       id: pricing.id,
       name: pricing.name,
-      num: (pricing as any).num ?? null,
-      set_name: (pricing as any).set_name ?? null,
+      num: raw.num ?? null,
+      number: raw.number ?? null,
+      set_code: raw.set_code ?? null,
+      set_name: raw.set_name ?? null,
+      set_id: raw.set_id ?? null,
+      set: raw.set ?? null,
+      setId: raw.setId ?? null,
+      allKeys: Object.keys(raw),
       sample: {
         TCGPlayer: pricing.pricing?.["TCGPlayer"],
         "eBay Raw": pricing.pricing?.["eBay Raw"],
-        "Pokedata Raw": pricing.pricing?.["Pokedata Raw"],
       },
     })
 

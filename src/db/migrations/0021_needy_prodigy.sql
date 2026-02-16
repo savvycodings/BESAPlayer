@@ -1,0 +1,1 @@
+ALTER TABLE "collections" ADD COLUMN "card_number" varchar(50);

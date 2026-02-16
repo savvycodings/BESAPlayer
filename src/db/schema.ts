@@ -52,6 +52,7 @@ export const collections = pgTable('collections', {
   image: text('image'), // URL to item image
   cardId: varchar('card_id', { length: 100 }), // Pokedata card ID
   set: varchar('set', { length: 255 }), // Set name (e.g., 'Obsidian Flames', 'Hidden Fates')
+  cardNumber: varchar('card_number', { length: 50 }), // Card number in set (e.g. 161) for images.pokemontcg.io
   condition: varchar('condition', { length: 50 }), // 'mint', 'near_mint', 'excellent', etc.
   grade: integer('grade'), // PSA/BGS grade if slabbed
   estimatedValue: decimal('estimated_value', { precision: 10, scale: 2 }),
@@ -129,11 +130,21 @@ export const verificationTokens = pgTable('verification_tokens', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Missing field!
 })
 
+// Cached Pokedata search results (same query within TTL = no API call)
+export const pokedataSearchCache = pgTable('pokedata_search_cache', {
+  cacheKey: text('cache_key').primaryKey(), // normalized: query|assetType|language
+  results: jsonb('results').$type<{ id: string; name?: string; set?: string; number?: string }[]>().notNull(),
+  fetchedAt: timestamp('fetched_at').defaultNow().notNull(),
+})
+
 // Cached card prices from Pokedata (eco-friendly: avoid API until 48h old)
 export const cardPrices = pgTable('card_prices', {
   id: text('id').primaryKey(), // Pokedata card ID
   cardName: varchar('card_name', { length: 255 }),
   setName: varchar('set_name', { length: 255 }),
+  setId: varchar('set_id', { length: 100 }), // e.g. swsh12 for images.pokemontcg.io
+  cardNumber: varchar('card_number', { length: 50 }), // e.g. 127 for images.pokemontcg.io
+  imageUrl: text('image_url'), // Resolved images.pokemontcg.io URL (set once, reused everywhere)
   marketPrice: decimal('market_price', { precision: 10, scale: 2 }), // TCGPlayer or CardMkt
   ebayLastSold: decimal('ebay_last_sold', { precision: 10, scale: 2 }), // eBay Raw
   currency: varchar('currency', { length: 10 }).default('USD'),

@@ -1,13 +1,27 @@
 import { db, cardPrices } from "../db"
 import { eq } from "drizzle-orm"
 import { pokedataClient } from "./client"
+import { setToSetCode } from "./setCodeMap"
 
 const CACHE_TTL_MS = 48 * 60 * 60 * 1000 // 48 hours
+
+const POKEMON_TCG_IMAGE_BASE = 'https://images.pokemontcg.io'
+
+/** Build image URL from setId + cardNumber so we never return a stale wrong URL from cache. Exported for use in GET collections. */
+export function buildImageUrl(setId: string | null, cardNumber: string | null): string | null {
+  const setCode = setToSetCode(setId)
+  const num = cardNumber != null ? String(cardNumber).trim() || null : null
+  if (setCode && num) return `${POKEMON_TCG_IMAGE_BASE}/${encodeURIComponent(setCode)}/${encodeURIComponent(num)}_hires.png`
+  return null
+}
 
 export type CardLookupResult = {
   id: string
   cardName: string | null
   setName: string | null
+  setId: string | null
+  cardNumber: string | null
+  imageUrl: string | null
   marketPrice: number | null
   ebayLastSold: number | null
   currency: string
@@ -29,10 +43,16 @@ export async function getCardLookupOrFetch(
   const [cached] = await db.select().from(cardPrices).where(eq(cardPrices.id, id)).limit(1)
 
   if (cached && new Date(cached.lastFetchedAt) > cutoff) {
+    const setId = cached.setId ?? null
+    const cardNum = cached.cardNumber ?? null
+    const imageUrl = buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null
     return {
       id: cached.id,
       cardName: cached.cardName,
       setName: cached.setName,
+      setId,
+      cardNumber: cardNum,
+      imageUrl,
       marketPrice: cached.marketPrice != null ? parseFloat(cached.marketPrice.toString()) : null,
       ebayLastSold: cached.ebayLastSold != null ? parseFloat(cached.ebayLastSold.toString()) : null,
       currency: cached.currency || "USD",
@@ -53,14 +73,31 @@ export async function getCardLookupOrFetch(
     const marketPrice = marketSource?.value != null ? marketSource.value : null
     const ebayLastSold = ebay?.value != null ? ebay.value : null
     const currency = "USD"
-    console.log("[Pokedata API] Price return — marketPrice (USD):", marketPrice, "| ebayLastSold (USD):", ebayLastSold)
+    const raw = pricing as any
+    const cardNumber = raw.num ?? raw.number ?? null
+    const setName = raw.set_name ?? raw.setName ?? null
+    // Prefer API set_code; else resolve set_name/set_id to images.pokemontcg.io set code via hardcoded map
+    const setId =
+      raw.set_code != null && String(raw.set_code).trim()
+        ? String(raw.set_code).trim()
+        : setToSetCode(setName ?? raw.set_id ?? raw.setId ?? raw.set) ?? raw.set_id ?? raw.setId ?? raw.set ?? null
+    const setIdStr = setId != null ? String(setId).trim() || null : null
+    const cardNumStr = cardNumber != null ? String(cardNumber).trim() || null : null
+    const imageUrl =
+      setIdStr && cardNumStr
+        ? `${POKEMON_TCG_IMAGE_BASE}/${encodeURIComponent(setIdStr)}/${encodeURIComponent(cardNumStr)}_hires.png`
+        : null
+    console.log("[Pokedata API] Price return — marketPrice (USD):", marketPrice, "| ebayLastSold (USD):", ebayLastSold, "| setId (stored):", setIdStr, "| cardNumber:", cardNumStr, "| imageUrl:", imageUrl ?? "none")
 
     await db
       .insert(cardPrices)
       .values({
         id,
         cardName: pricing.name ?? null,
-        setName: null,
+        setName: setName ?? null,
+        setId: setIdStr,
+        cardNumber: cardNumStr,
+        imageUrl,
         marketPrice: marketPrice != null ? String(marketPrice) : null,
         ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : null,
         currency,
@@ -70,6 +107,10 @@ export async function getCardLookupOrFetch(
         target: cardPrices.id,
         set: {
           cardName: pricing.name ?? undefined,
+          setName: setName ?? undefined,
+          setId: setIdStr ?? undefined,
+          cardNumber: cardNumStr ?? undefined,
+          imageUrl: imageUrl ?? undefined,
           marketPrice: marketPrice != null ? String(marketPrice) : undefined,
           ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : undefined,
           currency,
@@ -78,12 +119,15 @@ export async function getCardLookupOrFetch(
         },
       })
 
-    console.log("[Pokedata] Stored in card_prices id=%s marketPrice=%s ebayLastSold=%s", id, marketPrice, ebayLastSold)
+    console.log("[Pokedata] Stored in card_prices id=%s imageUrl=%s marketPrice=%s ebayLastSold=%s", id, imageUrl ?? "none", marketPrice, ebayLastSold)
 
     return {
       id,
       cardName: pricing.name ?? null,
-      setName: null,
+      setName: setName ?? null,
+      setId: setIdStr,
+      cardNumber: cardNumStr,
+      imageUrl,
       marketPrice,
       ebayLastSold,
       currency,
@@ -93,10 +137,16 @@ export async function getCardLookupOrFetch(
   } catch (err) {
     console.error("getCardLookupOrFetch API error:", err)
     if (cached) {
+      const setId = cached.setId ?? null
+      const cardNum = cached.cardNumber ?? null
+      const imageUrl = buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null
       return {
         id: cached.id,
         cardName: cached.cardName,
         setName: cached.setName,
+        setId,
+        cardNumber: cardNum,
+        imageUrl,
         marketPrice: cached.marketPrice != null ? parseFloat(cached.marketPrice.toString()) : null,
         ebayLastSold: cached.ebayLastSold != null ? parseFloat(cached.ebayLastSold.toString()) : null,
         currency: cached.currency || "USD",

@@ -1,6 +1,6 @@
 import express from 'express'
 import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, pool, cardPrices } from '../db'
-import { getCardLookupOrFetch } from '../pokedata/lookup'
+import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
 import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
@@ -353,6 +353,12 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
     if (!cardName || !price) {
       return res.status(400).json({ message: 'Card name and price are required' })
     }
+    if (!cardImage || typeof cardImage !== 'string' || !cardImage.trim()) {
+      return res.status(400).json({ message: 'Listing image is required. Please add a photo of your card (stored in Cloudinary).' })
+    }
+    if (cardImage.includes('images.pokemontcg.io')) {
+      return res.status(400).json({ message: 'Listing image must be a photo of your physical card, not card artwork. Please select a photo to upload.' })
+    }
 
     const [store] = await db.select()
       .from(stores)
@@ -458,6 +464,48 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
     })
   } catch (error: any) {
     console.error('Update listing error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// DELETE /api/store/listings/:id - Remove a listing from the store
+router.delete('/api/store/listings/:id', authenticate, async (req, res) => {
+  try {
+    const { id } = req.params
+    const listingIdNum = parseInt(id, 10)
+    if (Number.isNaN(listingIdNum)) {
+      return res.status(400).json({ message: 'Invalid listing id' })
+    }
+
+    const [store] = await db.select()
+      .from(stores)
+      .where(eq(stores.userId, req.user!.id))
+      .limit(1)
+
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' })
+    }
+
+    const [listing] = await db.select()
+      .from(storeListings)
+      .where(and(
+        eq(storeListings.id, listingIdNum),
+        eq(storeListings.storeId, store.id)
+      ))
+      .limit(1)
+
+    if (!listing) {
+      return res.status(404).json({ message: 'Listing not found' })
+    }
+
+    await db.delete(storeListings).where(eq(storeListings.id, listingIdNum))
+
+    res.json({
+      success: true,
+      message: 'Listing removed from your store',
+    })
+  } catch (error: any) {
+    console.error('Delete listing error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
@@ -614,7 +662,7 @@ router.post('/api/store/iso', authenticate, async (req, res) => {
 // POST /api/profile/collections - Add a new collection item (card, sealed, slab)
 router.post('/api/profile/collections', authenticate, async (req, res) => {
   try {
-    const { type, name, description, image, cardId, set, condition, grade, purchaseDate, notes, requestVaulting } = req.body
+    const { type, name, description, image, cardId, set, cardNumber, condition, grade, purchaseDate, notes, requestVaulting } = req.body
 
     console.log('[Add Card] Request received:', {
       type,
@@ -644,6 +692,7 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
       image: image || null,
       cardId: cardId || null,
       set: set || null,
+      cardNumber: cardNumber || null,
       condition: condition || null,
       grade: grade || null,
       estimatedValue: null,
@@ -723,7 +772,7 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
 
     // Enrich with market price from card_prices (dynamic data; API only every 48h)
     const cardIds = [...new Set(userCollections.map((c: any) => c.cardId != null ? String(c.cardId) : null).filter(Boolean))] as string[]
-    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null }>()
+    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; imageUrl: string | null; setId: string | null; cardNumber: string | null }>()
     if (cardIds.length > 0) {
       let rows: any[] = []
       try {
@@ -731,6 +780,9 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
           id: cardPrices.id,
           marketPrice: cardPrices.marketPrice,
           ebayLastSold: cardPrices.ebayLastSold,
+          imageUrl: cardPrices.imageUrl,
+          setId: cardPrices.setId,
+          cardNumber: cardPrices.cardNumber,
         })
           .from(cardPrices)
           .where(inArray(cardPrices.id, cardIds))
@@ -738,7 +790,6 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         console.error("[GET collections] card_prices query failed (table may be missing — run migrations):", err?.message ?? err)
       }
       console.log("[GET collections] card_prices lookup — cardIds:", cardIds, "| rows found:", rows.length)
-      if (rows.length > 0) console.log("[GET collections] sample row keys:", Object.keys(rows[0]))
       rows.forEach((r: any) => {
         const id = r.id != null ? String(r.id) : null
         if (id == null) return
@@ -746,8 +797,10 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         const rawEbay = r.ebayLastSold ?? r.ebay_last_sold
         const market = rawMarket != null && rawMarket !== '' ? parseFloat(String(rawMarket)) : null
         const ebay = rawEbay != null && rawEbay !== '' ? parseFloat(String(rawEbay)) : null
-        priceMap.set(id, { marketPrice: market, ebayLastSold: ebay })
-        console.log("[GET collections] priceMap set id=%s marketPrice=%s ebayLastSold=%s", id, market, ebay)
+        const imageUrl = r.imageUrl != null ? String(r.imageUrl).trim() || null : null
+        const setId = r.setId != null ? String(r.setId).trim() || null : null
+        const cardNumber = r.cardNumber != null ? String(r.cardNumber).trim() || null : null
+        priceMap.set(id, { marketPrice: market, ebayLastSold: ebay, imageUrl, setId, cardNumber })
       })
     }
     const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 16
@@ -756,12 +809,18 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
       const prices = cid ? priceMap.get(cid) : null
       const marketPrice = prices != null ? (prices.marketPrice ?? null) : null
       const ebayLastSold = prices?.ebayLastSold ?? null
-      console.log("[GET collections] collection id=%s name=%s cardId=%s marketPrice=%s ebayLastSold=%s", collection.id, collection.name, cid, marketPrice, ebayLastSold)
+      // Build image URL using set NAME (e.g. "Prismatic Evolutions") when available so we get correct code (sv8pt5), not Pokedata short code (PRE -> wrong "pre")
+      const setForImage = collection.set && String(collection.set).trim() ? String(collection.set).trim() : (prices?.setId ?? null)
+      const cardNumForImage = prices?.cardNumber ?? (collection.cardNumber != null ? String(collection.cardNumber) : null)
+      const cardImageUrl =
+        (setForImage && cardNumForImage ? buildImageUrl(setForImage, cardNumForImage) : null) ??
+        (prices?.imageUrl ?? null)
       return {
         ...collection,
         isListed: listedCardNames.has(collection.name.toLowerCase().trim()),
         marketPrice,
         ebayLastSold,
+        cardImageUrl: cardImageUrl ?? undefined,
       }
     })
 
