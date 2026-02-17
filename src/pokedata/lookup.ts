@@ -76,11 +76,12 @@ export async function getCardLookupOrFetch(
     const raw = pricing as any
     const cardNumber = raw.num ?? raw.number ?? null
     const setName = raw.set_name ?? raw.setName ?? null
-    // Prefer API set_code; else resolve set_name/set_id to images.pokemontcg.io set code via hardcoded map
-    const setId =
+    // Always resolve to images.pokemontcg.io set code (e.g. PRE -> sv8pt5). Never store Pokedata codes in URL.
+    const rawSet =
       raw.set_code != null && String(raw.set_code).trim()
         ? String(raw.set_code).trim()
-        : setToSetCode(setName ?? raw.set_id ?? raw.setId ?? raw.set) ?? raw.set_id ?? raw.setId ?? raw.set ?? null
+        : (setName ?? raw.set_id ?? raw.setId ?? raw.set ?? null)
+    const setId = setToSetCode(rawSet) ?? rawSet
     const setIdStr = setId != null ? String(setId).trim() || null : null
     const cardNumStr = cardNumber != null ? String(cardNumber).trim() || null : null
     const imageUrl =
