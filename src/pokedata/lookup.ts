@@ -1,7 +1,7 @@
 import { db, cardPrices } from "../db"
 import { eq } from "drizzle-orm"
 import { pokedataClient } from "./client"
-import { setToSetCode } from "./setCodeMap"
+import { setToSetCode, SET_CODES_NOT_ON_CDN } from "./setCodeMap"
 
 const CACHE_TTL_MS = 48 * 60 * 60 * 1000 // 48 hours
 
@@ -45,7 +45,10 @@ export async function getCardLookupOrFetch(
   if (cached && new Date(cached.lastFetchedAt) > cutoff) {
     const setId = cached.setId ?? null
     const cardNum = cached.cardNumber ?? null
-    const imageUrl = buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null
+    const setIdStr = setId != null ? String(setId).trim() || null : null
+    const imageUrl = (setIdStr && SET_CODES_NOT_ON_CDN.has(setIdStr))
+      ? (cached.imageUrl ?? null)
+      : (buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null)
     return {
       id: cached.id,
       cardName: cached.cardName,
@@ -76,19 +79,20 @@ export async function getCardLookupOrFetch(
     const raw = pricing as any
     const cardNumber = raw.num ?? raw.number ?? null
     const setName = raw.set_name ?? raw.setName ?? null
-    // Always resolve to images.pokemontcg.io set code (e.g. PRE -> sv8pt5). Never store Pokedata codes in URL.
-    const rawSet =
-      raw.set_code != null && String(raw.set_code).trim()
-        ? String(raw.set_code).trim()
-        : (setName ?? raw.set_id ?? raw.setId ?? raw.set ?? null)
-    const setId = setToSetCode(rawSet) ?? rawSet
-    const setIdStr = setId != null ? String(setId).trim() || null : null
+    // Set code and image URL from our list only (pokemonTcgSets.json). Pokedata is for pricing only.
+    const resolvedSetCode = setToSetCode(setName)
+    const setIdStr = resolvedSetCode != null ? String(resolvedSetCode).trim() || null : null
     const cardNumStr = cardNumber != null ? String(cardNumber).trim() || null : null
-    const imageUrl =
+    const builtUrl =
       setIdStr && cardNumStr
         ? `${POKEMON_TCG_IMAGE_BASE}/${encodeURIComponent(setIdStr)}/${encodeURIComponent(cardNumStr)}_hires.png`
         : null
-    console.log("[Pokedata API] Price return — marketPrice (USD):", marketPrice, "| ebayLastSold (USD):", ebayLastSold, "| setId (stored):", setIdStr, "| cardNumber:", cardNumStr, "| imageUrl:", imageUrl ?? "none")
+    const apiImageUrl =
+      (raw.image_url != null && String(raw.image_url).trim()) ? String(raw.image_url).trim() || null
+      : (raw.imageUrl != null && String(raw.imageUrl).trim()) ? String(raw.imageUrl).trim() || null
+      : null
+    const imageUrl = apiImageUrl ?? (setIdStr && SET_CODES_NOT_ON_CDN.has(setIdStr) ? null : builtUrl)
+    console.log("[Pokedata API] Price return — marketPrice (USD):", marketPrice, "| ebayLastSold (USD):", ebayLastSold, "| setId (stored):", setIdStr, "| cardNumber:", cardNumStr, "| imageUrl:", imageUrl ?? "none", apiImageUrl ? "| from API" : "| built")
 
     await db
       .insert(cardPrices)
@@ -140,7 +144,10 @@ export async function getCardLookupOrFetch(
     if (cached) {
       const setId = cached.setId ?? null
       const cardNum = cached.cardNumber ?? null
-      const imageUrl = buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null
+      const setIdStrCached = setId != null ? String(setId).trim() || null : null
+      const imageUrl = (setIdStrCached && SET_CODES_NOT_ON_CDN.has(setIdStrCached))
+        ? (cached.imageUrl ?? null)
+        : (buildImageUrl(setId, cardNum) ?? cached.imageUrl ?? null)
       return {
         id: cached.id,
         cardName: cached.cardName,

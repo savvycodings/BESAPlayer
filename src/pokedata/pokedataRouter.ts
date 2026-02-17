@@ -5,6 +5,7 @@ import { getCardPricing } from "./pricing"
 import { getCardLookup } from "./cardLookup"
 import { recognizeCard } from "./recognize"
 import { gradeCard } from "./grade"
+import { getSetValueHistory } from "./setValueHistory"
 
 const router = express.Router()
 const upload = multer({ dest: "uploads/temp/" })
@@ -23,6 +24,9 @@ router.get("/pricing", getCardPricing)
 
 // Lookup card price: DB first, then API only if cache older than 48h (credit-friendly)
 router.get("/card/:id", getCardLookup)
+
+// Get set value history for price trend graph (setName, days=7)
+router.get("/set-value", getSetValueHistory)
 
 export default router
 

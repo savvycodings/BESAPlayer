@@ -1,0 +1,863 @@
+{
+  "fetchedAt": "2026-02-17T22:44:17.034Z",
+  "count": 171,
+  "sets": [
+    {
+      "id": "base1",
+      "name": "Base"
+    },
+    {
+      "id": "base2",
+      "name": "Jungle"
+    },
+    {
+      "id": "basep",
+      "name": "Wizards Black Star Promos"
+    },
+    {
+      "id": "base3",
+      "name": "Fossil"
+    },
+    {
+      "id": "base4",
+      "name": "Base Set 2"
+    },
+    {
+      "id": "base5",
+      "name": "Team Rocket"
+    },
+    {
+      "id": "gym1",
+      "name": "Gym Heroes"
+    },
+    {
+      "id": "gym2",
+      "name": "Gym Challenge"
+    },
+    {
+      "id": "neo1",
+      "name": "Neo Genesis"
+    },
+    {
+      "id": "neo2",
+      "name": "Neo Discovery"
+    },
+    {
+      "id": "si1",
+      "name": "Southern Islands"
+    },
+    {
+      "id": "neo3",
+      "name": "Neo Revelation"
+    },
+    {
+      "id": "neo4",
+      "name": "Neo Destiny"
+    },
+    {
+      "id": "base6",
+      "name": "Legendary Collection"
+    },
+    {
+      "id": "ecard1",
+      "name": "Expedition Base Set"
+    },
+    {
+      "id": "ecard2",
+      "name": "Aquapolis"
+    },
+    {
+      "id": "ecard3",
+      "name": "Skyridge"
+    },
+    {
+      "id": "ex1",
+      "name": "Ruby & Sapphire"
+    },
+    {
+      "id": "ex2",
+      "name": "Sandstorm"
+    },
+    {
+      "id": "ex3",
+      "name": "Dragon"
+    },
+    {
+      "id": "np",
+      "name": "Nintendo Black Star Promos"
+    },
+    {
+      "id": "ex4",
+      "name": "Team Magma vs Team Aqua"
+    },
+    {
+      "id": "ex5",
+      "name": "Hidden Legends"
+    },
+    {
+      "id": "ex6",
+      "name": "FireRed & LeafGreen"
+    },
+    {
+      "id": "pop1",
+      "name": "POP Series 1"
+    },
+    {
+      "id": "ex7",
+      "name": "Team Rocket Returns"
+    },
+    {
+      "id": "ex8",
+      "name": "Deoxys"
+    },
+    {
+      "id": "ex9",
+      "name": "Emerald"
+    },
+    {
+      "id": "ex10",
+      "name": "Unseen Forces"
+    },
+    {
+      "id": "pop2",
+      "name": "POP Series 2"
+    },
+    {
+      "id": "ex11",
+      "name": "Delta Species"
+    },
+    {
+      "id": "ex12",
+      "name": "Legend Maker"
+    },
+    {
+      "id": "pop3",
+      "name": "POP Series 3"
+    },
+    {
+      "id": "ex13",
+      "name": "Holon Phantoms"
+    },
+    {
+      "id": "ex14",
+      "name": "Crystal Guardians"
+    },
+    {
+      "id": "pop4",
+      "name": "POP Series 4"
+    },
+    {
+      "id": "ex15",
+      "name": "Dragon Frontiers"
+    },
+    {
+      "id": "pop5",
+      "name": "POP Series 5"
+    },
+    {
+      "id": "ex16",
+      "name": "Power Keepers"
+    },
+    {
+      "id": "dp1",
+      "name": "Diamond & Pearl"
+    },
+    {
+      "id": "dpp",
+      "name": "DP Black Star Promos"
+    },
+    {
+      "id": "dp2",
+      "name": "Mysterious Treasures"
+    },
+    {
+      "id": "pop6",
+      "name": "POP Series 6"
+    },
+    {
+      "id": "dp3",
+      "name": "Secret Wonders"
+    },
+    {
+      "id": "dp4",
+      "name": "Great Encounters"
+    },
+    {
+      "id": "pop7",
+      "name": "POP Series 7"
+    },
+    {
+      "id": "dp5",
+      "name": "Majestic Dawn"
+    },
+    {
+      "id": "dp6",
+      "name": "Legends Awakened"
+    },
+    {
+      "id": "pop8",
+      "name": "POP Series 8"
+    },
+    {
+      "id": "dp7",
+      "name": "Stormfront"
+    },
+    {
+      "id": "pl1",
+      "name": "Platinum"
+    },
+    {
+      "id": "pop9",
+      "name": "POP Series 9"
+    },
+    {
+      "id": "pl2",
+      "name": "Rising Rivals"
+    },
+    {
+      "id": "pl3",
+      "name": "Supreme Victors"
+    },
+    {
+      "id": "pl4",
+      "name": "Arceus"
+    },
+    {
+      "id": "ru1",
+      "name": "Pokémon Rumble"
+    },
+    {
+      "id": "hgss1",
+      "name": "HeartGold & SoulSilver"
+    },
+    {
+      "id": "hsp",
+      "name": "HGSS Black Star Promos"
+    },
+    {
+      "id": "hgss2",
+      "name": "HS—Unleashed"
+    },
+    {
+      "id": "hgss3",
+      "name": "HS—Undaunted"
+    },
+    {
+      "id": "hgss4",
+      "name": "HS—Triumphant"
+    },
+    {
+      "id": "col1",
+      "name": "Call of Legends"
+    },
+    {
+      "id": "bwp",
+      "name": "BW Black Star Promos"
+    },
+    {
+      "id": "bw1",
+      "name": "Black & White"
+    },
+    {
+      "id": "mcd11",
+      "name": "McDonald's Collection 2011"
+    },
+    {
+      "id": "bw2",
+      "name": "Emerging Powers"
+    },
+    {
+      "id": "bw3",
+      "name": "Noble Victories"
+    },
+    {
+      "id": "bw4",
+      "name": "Next Destinies"
+    },
+    {
+      "id": "bw5",
+      "name": "Dark Explorers"
+    },
+    {
+      "id": "mcd12",
+      "name": "McDonald's Collection 2012"
+    },
+    {
+      "id": "bw6",
+      "name": "Dragons Exalted"
+    },
+    {
+      "id": "dv1",
+      "name": "Dragon Vault"
+    },
+    {
+      "id": "bw7",
+      "name": "Boundaries Crossed"
+    },
+    {
+      "id": "bw8",
+      "name": "Plasma Storm"
+    },
+    {
+      "id": "bw9",
+      "name": "Plasma Freeze"
+    },
+    {
+      "id": "bw10",
+      "name": "Plasma Blast"
+    },
+    {
+      "id": "xyp",
+      "name": "XY Black Star Promos"
+    },
+    {
+      "id": "bw11",
+      "name": "Legendary Treasures"
+    },
+    {
+      "id": "xy0",
+      "name": "Kalos Starter Set"
+    },
+    {
+      "id": "xy1",
+      "name": "XY"
+    },
+    {
+      "id": "xy2",
+      "name": "Flashfire"
+    },
+    {
+      "id": "xy3",
+      "name": "Furious Fists"
+    },
+    {
+      "id": "xy4",
+      "name": "Phantom Forces"
+    },
+    {
+      "id": "xy5",
+      "name": "Primal Clash"
+    },
+    {
+      "id": "dc1",
+      "name": "Double Crisis"
+    },
+    {
+      "id": "xy6",
+      "name": "Roaring Skies"
+    },
+    {
+      "id": "xy7",
+      "name": "Ancient Origins"
+    },
+    {
+      "id": "xy8",
+      "name": "BREAKthrough"
+    },
+    {
+      "id": "xy9",
+      "name": "BREAKpoint"
+    },
+    {
+      "id": "g1",
+      "name": "Generations"
+    },
+    {
+      "id": "xy10",
+      "name": "Fates Collide"
+    },
+    {
+      "id": "xy11",
+      "name": "Steam Siege"
+    },
+    {
+      "id": "mcd16",
+      "name": "McDonald's Collection 2016"
+    },
+    {
+      "id": "xy12",
+      "name": "Evolutions"
+    },
+    {
+      "id": "sm1",
+      "name": "Sun & Moon"
+    },
+    {
+      "id": "smp",
+      "name": "SM Black Star Promos"
+    },
+    {
+      "id": "sm2",
+      "name": "Guardians Rising"
+    },
+    {
+      "id": "sm3",
+      "name": "Burning Shadows"
+    },
+    {
+      "id": "sm35",
+      "name": "Shining Legends"
+    },
+    {
+      "id": "sm4",
+      "name": "Crimson Invasion"
+    },
+    {
+      "id": "sm5",
+      "name": "Ultra Prism"
+    },
+    {
+      "id": "sm6",
+      "name": "Forbidden Light"
+    },
+    {
+      "id": "sm7",
+      "name": "Celestial Storm"
+    },
+    {
+      "id": "sm75",
+      "name": "Dragon Majesty"
+    },
+    {
+      "id": "sm8",
+      "name": "Lost Thunder"
+    },
+    {
+      "id": "sm9",
+      "name": "Team Up"
+    },
+    {
+      "id": "det1",
+      "name": "Detective Pikachu"
+    },
+    {
+      "id": "sm10",
+      "name": "Unbroken Bonds"
+    },
+    {
+      "id": "sm11",
+      "name": "Unified Minds"
+    },
+    {
+      "id": "sm115",
+      "name": "Hidden Fates"
+    },
+    {
+      "id": "sma",
+      "name": "Hidden Fates Shiny Vault"
+    },
+    {
+      "id": "mcd19",
+      "name": "McDonald's Collection 2019"
+    },
+    {
+      "id": "sm12",
+      "name": "Cosmic Eclipse"
+    },
+    {
+      "id": "swshp",
+      "name": "SWSH Black Star Promos"
+    },
+    {
+      "id": "swsh1",
+      "name": "Sword & Shield"
+    },
+    {
+      "id": "swsh2",
+      "name": "Rebel Clash"
+    },
+    {
+      "id": "swsh3",
+      "name": "Darkness Ablaze"
+    },
+    {
+      "id": "swsh35",
+      "name": "Champion's Path"
+    },
+    {
+      "id": "swsh4",
+      "name": "Vivid Voltage"
+    },
+    {
+      "id": "swsh45",
+      "name": "Shining Fates"
+    },
+    {
+      "id": "swsh45sv",
+      "name": "Shining Fates Shiny Vault"
+    },
+    {
+      "id": "swsh5",
+      "name": "Battle Styles"
+    },
+    {
+      "id": "swsh6",
+      "name": "Chilling Reign"
+    },
+    {
+      "id": "swsh7",
+      "name": "Evolving Skies"
+    },
+    {
+      "id": "cel25",
+      "name": "Celebrations"
+    },
+    {
+      "id": "cel25c",
+      "name": "Celebrations: Classic Collection"
+    },
+    {
+      "id": "mcd14",
+      "name": "McDonald's Collection 2014"
+    },
+    {
+      "id": "mcd15",
+      "name": "McDonald's Collection 2015"
+    },
+    {
+      "id": "mcd18",
+      "name": "McDonald's Collection 2018"
+    },
+    {
+      "id": "mcd17",
+      "name": "McDonald's Collection 2017"
+    },
+    {
+      "id": "mcd21",
+      "name": "McDonald's Collection 2021"
+    },
+    {
+      "id": "bp",
+      "name": "Best of Game"
+    },
+    {
+      "id": "swsh8",
+      "name": "Fusion Strike"
+    },
+    {
+      "id": "fut20",
+      "name": "Pokémon Futsal Collection"
+    },
+    {
+      "id": "tk1a",
+      "name": "EX Trainer Kit Latias"
+    },
+    {
+      "id": "tk1b",
+      "name": "EX Trainer Kit Latios"
+    },
+    {
+      "id": "tk2a",
+      "name": "EX Trainer Kit 2 Plusle"
+    },
+    {
+      "id": "tk2b",
+      "name": "EX Trainer Kit 2 Minun"
+    },
+    {
+      "id": "swsh9",
+      "name": "Brilliant Stars"
+    },
+    {
+      "id": "swsh9tg",
+      "name": "Brilliant Stars Trainer Gallery"
+    },
+    {
+      "id": "swsh10",
+      "name": "Astral Radiance"
+    },
+    {
+      "id": "swsh10tg",
+      "name": "Astral Radiance Trainer Gallery"
+    },
+    {
+      "id": "pgo",
+      "name": "Pokémon GO"
+    },
+    {
+      "id": "swsh11",
+      "name": "Lost Origin"
+    },
+    {
+      "id": "swsh11tg",
+      "name": "Lost Origin Trainer Gallery"
+    },
+    {
+      "id": "swsh12",
+      "name": "Silver Tempest"
+    },
+    {
+      "id": "swsh12tg",
+      "name": "Silver Tempest Trainer Gallery"
+    },
+    {
+      "id": "mcd22",
+      "name": "McDonald's Collection 2022"
+    },
+    {
+      "id": "swsh12pt5",
+      "name": "Crown Zenith"
+    },
+    {
+      "id": "swsh12pt5gg",
+      "name": "Crown Zenith Galarian Gallery"
+    },
+    {
+      "id": "sv1",
+      "name": "Scarlet & Violet"
+    },
+    {
+      "id": "svp",
+      "name": "Scarlet & Violet Black Star Promos"
+    },
+    {
+      "id": "sv2",
+      "name": "Paldea Evolved"
+    },
+    {
+      "id": "sve",
+      "name": "Scarlet & Violet Energies"
+    },
+    {
+      "id": "sv3",
+      "name": "Obsidian Flames"
+    },
+    {
+      "id": "sv3pt5",
+      "name": "151"
+    },
+    {
+      "id": "sv4",
+      "name": "Paradox Rift"
+    },
+    {
+      "id": "sv4pt5",
+      "name": "Paldean Fates"
+    },
+    {
+      "id": "sv5",
+      "name": "Temporal Forces"
+    },
+    {
+      "id": "sv6",
+      "name": "Twilight Masquerade"
+    },
+    {
+      "id": "sv6pt5",
+      "name": "Shrouded Fable"
+    },
+    {
+      "id": "sv7",
+      "name": "Stellar Crown"
+    },
+    {
+      "id": "sv8",
+      "name": "Surging Sparks"
+    },
+    {
+      "id": "sv8pt5",
+      "name": "Prismatic Evolutions"
+    },
+    {
+      "id": "sv9",
+      "name": "Journey Together"
+    },
+    {
+      "id": "sv10",
+      "name": "Destined Rivals"
+    },
+    {
+      "id": "zsv10pt5",
+      "name": "Black Bolt"
+    },
+    {
+      "id": "rsv10pt5",
+      "name": "White Flare"
+    },
+    {
+      "id": "me1",
+      "name": "Mega Evolution"
+    },
+    {
+      "id": "me2",
+      "name": "Phantasmal Flames"
+    },
+    {
+      "id": "me2pt5",
+      "name": "Ascended Heroes"
+    }
+  ],
+  "nameToId": {
+    "151": "sv3pt5",
+    "base": "base1",
+    "jungle": "base2",
+    "wizards black star promos": "basep",
+    "fossil": "base3",
+    "base set 2": "base4",
+    "team rocket": "base5",
+    "gym heroes": "gym1",
+    "gym challenge": "gym2",
+    "neo genesis": "neo1",
+    "neo discovery": "neo2",
+    "southern islands": "si1",
+    "neo revelation": "neo3",
+    "neo destiny": "neo4",
+    "legendary collection": "base6",
+    "expedition base set": "ecard1",
+    "aquapolis": "ecard2",
+    "skyridge": "ecard3",
+    "ruby & sapphire": "ex1",
+    "sandstorm": "ex2",
+    "dragon": "ex3",
+    "nintendo black star promos": "np",
+    "team magma vs team aqua": "ex4",
+    "hidden legends": "ex5",
+    "firered & leafgreen": "ex6",
+    "pop series 1": "pop1",
+    "team rocket returns": "ex7",
+    "deoxys": "ex8",
+    "emerald": "ex9",
+    "unseen forces": "ex10",
+    "pop series 2": "pop2",
+    "delta species": "ex11",
+    "legend maker": "ex12",
+    "pop series 3": "pop3",
+    "holon phantoms": "ex13",
+    "crystal guardians": "ex14",
+    "pop series 4": "pop4",
+    "dragon frontiers": "ex15",
+    "pop series 5": "pop5",
+    "power keepers": "ex16",
+    "diamond & pearl": "dp1",
+    "dp black star promos": "dpp",
+    "mysterious treasures": "dp2",
+    "pop series 6": "pop6",
+    "secret wonders": "dp3",
+    "great encounters": "dp4",
+    "pop series 7": "pop7",
+    "majestic dawn": "dp5",
+    "legends awakened": "dp6",
+    "pop series 8": "pop8",
+    "stormfront": "dp7",
+    "platinum": "pl1",
+    "pop series 9": "pop9",
+    "rising rivals": "pl2",
+    "supreme victors": "pl3",
+    "arceus": "pl4",
+    "pokémon rumble": "ru1",
+    "heartgold & soulsilver": "hgss1",
+    "hgss black star promos": "hsp",
+    "hs—unleashed": "hgss2",
+    "hs—undaunted": "hgss3",
+    "hs—triumphant": "hgss4",
+    "call of legends": "col1",
+    "bw black star promos": "bwp",
+    "black & white": "bw1",
+    "mcdonald's collection 2011": "mcd11",
+    "emerging powers": "bw2",
+    "noble victories": "bw3",
+    "next destinies": "bw4",
+    "dark explorers": "bw5",
+    "mcdonald's collection 2012": "mcd12",
+    "dragons exalted": "bw6",
+    "dragon vault": "dv1",
+    "boundaries crossed": "bw7",
+    "plasma storm": "bw8",
+    "plasma freeze": "bw9",
+    "plasma blast": "bw10",
+    "xy black star promos": "xyp",
+    "legendary treasures": "bw11",
+    "kalos starter set": "xy0",
+    "xy": "xy1",
+    "flashfire": "xy2",
+    "furious fists": "xy3",
+    "phantom forces": "xy4",
+    "primal clash": "xy5",
+    "double crisis": "dc1",
+    "roaring skies": "xy6",
+    "ancient origins": "xy7",
+    "breakthrough": "xy8",
+    "breakpoint": "xy9",
+    "generations": "g1",
+    "fates collide": "xy10",
+    "steam siege": "xy11",
+    "mcdonald's collection 2016": "mcd16",
+    "evolutions": "xy12",
+    "sun & moon": "sm1",
+    "sm black star promos": "smp",
+    "guardians rising": "sm2",
+    "burning shadows": "sm3",
+    "shining legends": "sm35",
+    "crimson invasion": "sm4",
+    "ultra prism": "sm5",
+    "forbidden light": "sm6",
+    "celestial storm": "sm7",
+    "dragon majesty": "sm75",
+    "lost thunder": "sm8",
+    "team up": "sm9",
+    "detective pikachu": "det1",
+    "unbroken bonds": "sm10",
+    "unified minds": "sm11",
+    "hidden fates": "sm115",
+    "hidden fates shiny vault": "sma",
+    "mcdonald's collection 2019": "mcd19",
+    "cosmic eclipse": "sm12",
+    "swsh black star promos": "swshp",
+    "sword & shield": "swsh1",
+    "rebel clash": "swsh2",
+    "darkness ablaze": "swsh3",
+    "champion's path": "swsh35",
+    "vivid voltage": "swsh4",
+    "shining fates": "swsh45",
+    "shining fates shiny vault": "swsh45sv",
+    "battle styles": "swsh5",
+    "chilling reign": "swsh6",
+    "evolving skies": "swsh7",
+    "celebrations": "cel25",
+    "celebrations: classic collection": "cel25c",
+    "mcdonald's collection 2014": "mcd14",
+    "mcdonald's collection 2015": "mcd15",
+    "mcdonald's collection 2018": "mcd18",
+    "mcdonald's collection 2017": "mcd17",
+    "mcdonald's collection 2021": "mcd21",
+    "best of game": "bp",
+    "fusion strike": "swsh8",
+    "pokémon futsal collection": "fut20",
+    "ex trainer kit latias": "tk1a",
+    "ex trainer kit latios": "tk1b",
+    "ex trainer kit 2 plusle": "tk2a",
+    "ex trainer kit 2 minun": "tk2b",
+    "brilliant stars": "swsh9",
+    "brilliant stars trainer gallery": "swsh9tg",
+    "astral radiance": "swsh10",
+    "astral radiance trainer gallery": "swsh10tg",
+    "pokémon go": "pgo",
+    "lost origin": "swsh11",
+    "lost origin trainer gallery": "swsh11tg",
+    "silver tempest": "swsh12",
+    "silver tempest trainer gallery": "swsh12tg",
+    "mcdonald's collection 2022": "mcd22",
+    "crown zenith": "swsh12pt5",
+    "crown zenith galarian gallery": "swsh12pt5gg",
+    "scarlet & violet": "sv1",
+    "scarlet & violet black star promos": "svp",
+    "paldea evolved": "sv2",
+    "scarlet & violet energies": "sve",
+    "obsidian flames": "sv3",
+    "paradox rift": "sv4",
+    "paldean fates": "sv4pt5",
+    "temporal forces": "sv5",
+    "twilight masquerade": "sv6",
+    "shrouded fable": "sv6pt5",
+    "stellar crown": "sv7",
+    "surging sparks": "sv8",
+    "prismatic evolutions": "sv8pt5",
+    "journey together": "sv9",
+    "destined rivals": "sv10",
+    "black bolt": "zsv10pt5",
+    "white flare": "rsv10pt5",
+    "mega evolution": "me1",
+    "phantasmal flames": "me2",
+    "ascended heroes": "me2pt5"
+  }
+}

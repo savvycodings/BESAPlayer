@@ -1,6 +1,7 @@
 import express from 'express'
 import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, pool, cardPrices } from '../db'
 import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
+import { setToSetCode, SET_CODES_NOT_ON_CDN } from '../pokedata/setCodeMap'
 import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
@@ -809,12 +810,13 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
       const prices = cid ? priceMap.get(cid) : null
       const marketPrice = prices != null ? (prices.marketPrice ?? null) : null
       const ebayLastSold = prices?.ebayLastSold ?? null
-      // Build image URL using set NAME (e.g. "Prismatic Evolutions") when available so we get correct code (sv8pt5), not Pokedata short code (PRE -> wrong "pre")
+      // Same logic for every card: prefer stored imageUrl; use built URL only when set is on CDN (so Ascended Heroes etc. use API image or null, not 404).
       const setForImage = collection.set && String(collection.set).trim() ? String(collection.set).trim() : (prices?.setId ?? null)
       const cardNumForImage = prices?.cardNumber ?? (collection.cardNumber != null ? String(collection.cardNumber) : null)
-      const cardImageUrl =
-        (setForImage && cardNumForImage ? buildImageUrl(setForImage, cardNumForImage) : null) ??
-        (prices?.imageUrl ?? null)
+      const builtImageUrl = setForImage && cardNumForImage ? buildImageUrl(setForImage, cardNumForImage) : null
+      const setCodeForImage = setForImage ? setToSetCode(setForImage) : null
+      const useBuiltUrl = setCodeForImage && !SET_CODES_NOT_ON_CDN.has(setCodeForImage)
+      const cardImageUrl = (prices?.imageUrl ?? null) ?? (useBuiltUrl ? builtImageUrl : null)
       return {
         ...collection,
         isListed: listedCardNames.has(collection.name.toLowerCase().trim()),

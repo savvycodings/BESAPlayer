@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "tsx src/db/migrate.ts",
+    "fetch-tcg-sets": "tsx scripts/fetch-pokemon-tcg-sets.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
