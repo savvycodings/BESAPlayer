@@ -24,6 +24,7 @@ export const collections = dbSchema.collections
 export const stores = dbSchema.stores
 export const sessions = dbSchema.sessions
 export const cardPrices = dbSchema.cardPrices
+export const cardPriceHistory = dbSchema.cardPriceHistory
 export const pokedataSearchCache = dbSchema.pokedataSearchCache
 export const storeListings = dbSchema.storeListings
 export const orders = dbSchema.orders

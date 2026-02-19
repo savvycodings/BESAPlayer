@@ -153,6 +153,16 @@ export const cardPrices = pgTable('card_prices', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 })
 
+// Historical price points per card (one row per fetch for product chart)
+export const cardPriceHistory = pgTable('card_price_history', {
+  id: serial('id').primaryKey(),
+  cardId: text('card_id').notNull(), // Pokedata card ID
+  recordedAt: timestamp('recorded_at').defaultNow().notNull(),
+  marketPrice: decimal('market_price', { precision: 10, scale: 2 }),
+  ebayLastSold: decimal('ebay_last_sold', { precision: 10, scale: 2 }),
+  currency: varchar('currency', { length: 10 }).default('USD'),
+})
+
 // Store listings (items for sale)
 export const storeListings = pgTable('store_listings', {
   id: serial('id').primaryKey(),
@@ -335,6 +345,8 @@ export type Session = typeof sessions.$inferSelect
 export type NewSession = typeof sessions.$inferInsert
 export type CardPrice = typeof cardPrices.$inferSelect
 export type NewCardPrice = typeof cardPrices.$inferInsert
+export type CardPriceHistory = typeof cardPriceHistory.$inferSelect
+export type NewCardPriceHistory = typeof cardPriceHistory.$inferInsert
 export type StoreListing = typeof storeListings.$inferSelect
 export type NewStoreListing = typeof storeListings.$inferInsert
 export type Order = typeof orders.$inferSelect
