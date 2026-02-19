@@ -167,6 +167,7 @@ export const cardPriceHistory = pgTable('card_price_history', {
 export const storeListings = pgTable('store_listings', {
   id: serial('id').primaryKey(),
   storeId: integer('store_id').references(() => stores.id, { onDelete: 'cascade' }).notNull(),
+  collectionId: integer('collection_id').references(() => collections.id, { onDelete: 'set null' }), // which collection item is listed (for accurate "Listed" badge)
   cardId: varchar('card_id', { length: 100 }), // Pokedata card ID (optional, for price cache)
   cardName: varchar('card_name', { length: 255 }).notNull(),
   cardImage: text('card_image'), // URL to card image

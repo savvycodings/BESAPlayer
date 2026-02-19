@@ -349,7 +349,7 @@ router.get('/api/store/listings', authenticate, async (req, res) => {
 // POST /api/store/listings - Create a new listing
 router.post('/api/store/listings', authenticate, async (req, res) => {
   try {
-    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, cardId } = req.body
+    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, cardId, collectionId } = req.body
 
     if (!cardName || !price) {
       return res.status(400).json({ message: 'Card name and price are required' })
@@ -392,6 +392,7 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
 
     const [newListing] = await db.insert(storeListings).values({
       storeId: store.id,
+      collectionId: collectionId != null ? Number(collectionId) : null,
       cardId: cardId && String(cardId).trim() ? String(cardId).trim() : null,
       cardName,
       cardImage: cardImage || null,
@@ -768,8 +769,12 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         ))
     }
 
-    // Create a map of listed card names for quick lookup
-    const listedCardNames = new Set(activeListings.map(listing => listing.cardName.toLowerCase().trim()))
+    // Set of collection IDs that are actually listed on the store (one listing = one collection item)
+    const listedCollectionIds = new Set(
+      activeListings
+        .map((listing: any) => listing.collectionId != null ? Number(listing.collectionId) : null)
+        .filter((id: number | null): id is number => id != null)
+    )
 
     // Enrich with market price from card_prices (dynamic data; API only every 48h)
     const cardIds = [...new Set(userCollections.map((c: any) => c.cardId != null ? String(c.cardId) : null).filter(Boolean))] as string[]
@@ -819,7 +824,7 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
       const cardImageUrl = (prices?.imageUrl ?? null) ?? (useBuiltUrl ? builtImageUrl : null)
       return {
         ...collection,
-        isListed: listedCardNames.has(collection.name.toLowerCase().trim()),
+        isListed: listedCollectionIds.has(collection.id),
         marketPrice,
         ebayLastSold,
         cardImageUrl: cardImageUrl ?? undefined,
