@@ -64,6 +64,17 @@ This doc explains how the **two APIs** (Pokémon TCG and Pokedata) are used in t
 
 So on the profile page, **saving** = one row in **collections** (with image from our set list for cards) and, when `cardId` is set, one row (or update) in **card_prices** keyed by that `cardId`.
 
+### Exact code path (add card to profile)
+
+| Step | Where | What happens |
+|------|--------|---------------|
+| 1 | `profile.tsx` | User taps Add → `setIsAddCardModalVisible(true)` → `<AddCardModal onAdd={addCardToCollection} … />` |
+| 2 | `AddCardModal.tsx` | User fills type, name, **Set** (dropdown from `pokemonTcgSets.json`), **card number**; optional "Look up card" sets cardId/name/set/number. Image for cards = built URL only (no picker). |
+| 3 | `AddCardModal.tsx` → `handleAdd()` | For type `card`: `imageToSend = getPokemonTcgImageUrlFromSetNumber(set, cardNumber)` (TCG URL). Calls `onAdd({ type, name, set, cardNumber, image: imageToSend, cardId, condition, grade, notes, requestVaulting })`. |
+| 4 | `profile.tsx` → `addCardToCollection(data)` | If `data.image` is local → upload to Cloudinary; if external (e.g. TCG URL) → use as-is. `payload = { ...data, image: imageUrl }`. **POST** `DOMAIN/api/profile/collections` with `payload`. |
+| 5 | `storeRouter.ts` → **POST /api/profile/collections** | `db.insert(collections).values({ userId, type, name, image, cardId, set, cardNumber, … })`. If `cardId` present → `getCardLookupOrFetch(cardId, …)` to prime **card_prices**. |
+| 6 | `profile.tsx` (success) | `fetchCollections()` + `fetchUserProfile()`; modal closes. |
+
 ---
 
 ## 3. The card_prices table (what it is and who sets it)
@@ -157,3 +168,38 @@ So on the profile, **display** uses **collections** plus **card_prices**; both i
 - **Pokedata** = pricing (and set name + number we use only to resolve to our set code).  
 - **card_prices** = per–Pokedata-card-id cache: Pokedata provides pricing and set name/number; we provide set code and image URL from our list.  
 - **Profile** = saves to **collections** (with TCG image from our list) and primes **card_prices** when `cardId` is set; when loading, it enriches collections from **card_prices** so prices and images stay in sync with our set list.
+
+---
+
+## 6. How we fixed card_prices / image: old way vs new way (user module trail)
+
+### Old way (what we moved away from)
+
+- **card_prices** could store Pokedata’s own set code (e.g. `BLK`) or old hardcoded codes (e.g. `pfl`), so image URLs looked like `https://images.pokemontcg.io/BLK/172_hires.png` or `.../pfl/125_hires.png` and sometimes 404’d or showed the wrong asset.
+- Set code came from a mix of Pokedata `set_code`, static maps, and fallbacks instead of a single source of truth.
+
+### New way (current)
+
+- **Image only:** Set code and image URL come **only** from the Pokémon TCG API set list (`pokemonTcgSets.json`). Format is always `https://images.pokemontcg.io/{apiSetCode}/{number}_hires.png` (e.g. `zsv10pt5`, `me2` from the API).
+- **Price only:** Pokedata is used **only** for pricing (market price, eBay last sold). We take from Pokedata: `set_name` and card number, then resolve **set code** ourselves via our list; we do **not** use Pokedata’s `set_code` or `set_id` for the image or for `card_prices.set_id`.
+
+### Full file trail: card image in the user module
+
+Every place that touches **card image** (not price) in the profile/collections flow:
+
+| # | File | Role for card image |
+|---|------|----------------------|
+| 1 | **server/src/pokedata/pokemonTcgSets.json** | Source of truth for set codes. Fetched by `server/scripts/fetch-pokemon-tcg-sets.ts` from `GET https://api.pokemontcg.io/v2/sets`. Contains `sets: [{ id, name }]` and `nameToId` (normalized name → id). |
+| 2 | **server/src/pokedata/setCodeMap.ts** | Loads `pokemonTcgSets.json`; exposes `setToSetCode(setNameOrId)`. Returns **only** API set code from that JSON (no Pokedata codes, no fallbacks). Used everywhere we need a set code for an image URL. |
+| 3 | **server/src/pokedata/lookup.ts** | **Writes card_prices.** Uses **only** `setName` from Pokedata to resolve: `resolvedSetCode = setToSetCode(setName)`. We **do not** use `raw.set_code`. Stores `set_id = resolvedSetCode` and `image_url = https://images.pokemontcg.io/{resolvedSetCode}/{cardNumber}_hires.png`. Price fields from Pokedata; image fields from our list. `buildImageUrl(setId, cardNumber)` uses `setToSetCode(setId)` so cached reads use API codes. |
+| 4 | **server/src/store/storeRouter.ts** | **GET /api/profile/collections:** Enriches with `cardImageUrl`. Prefers `prices.imageUrl`; else `buildImageUrl(setForImage, cardNumForImage)` (which uses `setToSetCode`). **POST:** Saves `collections.image`; if `cardId` present, calls `getCardLookupOrFetch` so card_prices gets the new image logic. |
+| 5 | **app/src/utils/pokemonTcgSets.json** | Same shape as server; used for Set dropdown and for building TCG URLs. |
+| 6 | **app/src/utils/pokemonTcgSetCodes.ts** | App’s set list and resolution from `pokemonTcgSets.json`. Used when building image URLs on the client. |
+| 7 | **app/src/utils/pokemonTcgImages.ts** | `getPokemonTcgImageUrlFromSetNumber(set, number)` and `...IfOnCdn`. Both use app’s `setToSetCode(set)`. Build `https://images.pokemontcg.io/{setCode}/{number}_hires.png`. |
+| 8 | **app/src/components/profile/AddCardModal.tsx** | For type **card**, image sent = `getPokemonTcgImageUrlFromSetNumber(set, cardNumber)` (API set codes). Stored in **collections.image**. |
+| 9 | **app/src/screens/profile.tsx** | Sends modal payload (including `image`) to POST /api/profile/collections. Display: uses `collection.cardImageUrl` from API; fallbacks use `getPokemonTcgImageUrlFromSetNumberIfOnCdn` and `getPokemonTcgImageUrl(collection.cardId)` (app set list). |
+
+### Summary
+
+- **card_prices:** `set_id` and `image_url` are set **only** from our API set list (setCodeMap + pokemonTcgSets.json). Pokedata gives set **name** and card number; we resolve to API set code and build the image URL. Price columns are from Pokedata only.
+- **User-facing image** in the profile comes from collections.image (from Add Card, API codes), or card_prices.image_url (from lookup, API codes), or a URL built with the same API set list. The whole user module uses the new set codes for the card image; price is separate and from Pokedata.
