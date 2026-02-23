@@ -197,7 +197,7 @@ router.get('/api/store', authenticate, async (req, res) => {
 // POST /api/store - Create a new store for the user
 router.post('/api/store', authenticate, async (req, res) => {
   try {
-    const { storeName, description, bannerUrl, profileImage } = req.body
+    const { storeName, description, bannerUrl, profileImage, twitchUrl, youtubeUrl } = req.body
 
     // Check if store already exists
     const [existingStore] = await db.select()
@@ -228,7 +228,9 @@ router.post('/api/store', authenticate, async (req, res) => {
       storeName: defaultStoreName,
       description: description || null,
       bannerUrl: bannerUrl || null,
-      profileImage: profileImage || user?.avatar || null, // Use user avatar as default
+      profileImage: profileImage || user?.avatar || null,
+      twitchUrl: twitchUrl || null,
+      youtubeUrl: youtubeUrl || null,
       isActive: true,
     }).returning()
 
@@ -245,7 +247,7 @@ router.post('/api/store', authenticate, async (req, res) => {
 // PUT /api/store - Update store information
 router.put('/api/store', authenticate, async (req, res) => {
   try {
-    const { storeName, description, bannerUrl, profileImage } = req.body
+    const { storeName, description, bannerUrl, profileImage, twitchUrl, youtubeUrl } = req.body
 
     // Get existing store
     const [existingStore] = await db.select()
@@ -263,8 +265,9 @@ router.put('/api/store', authenticate, async (req, res) => {
         storeName: storeName || existingStore.storeName,
         description: description !== undefined ? description : existingStore.description,
         bannerUrl: bannerUrl !== undefined ? bannerUrl : existingStore.bannerUrl,
-        // Note: profileImage is now managed via user avatar, but we keep it in sync
         profileImage: profileImage !== undefined ? profileImage : existingStore.profileImage,
+        twitchUrl: twitchUrl !== undefined ? twitchUrl : existingStore.twitchUrl,
+        youtubeUrl: youtubeUrl !== undefined ? youtubeUrl : existingStore.youtubeUrl,
         updatedAt: new Date(),
       })
       .where(eq(stores.id, existingStore.id))
@@ -617,7 +620,31 @@ router.get('/api/store/iso', authenticate, async (req, res) => {
       ))
       .orderBy(isoItems.createdAt)
 
-    res.json({ isoItems: isoItemsList })
+    // Enrich with price from card_prices (one query by set names – eco-friendly)
+    const setNames = [...new Set(isoItemsList.map((i: any) => i.set).filter(Boolean))] as string[]
+    const priceBySetAndNumber = new Map<string, number | null>()
+    if (setNames.length > 0) {
+      try {
+        const rows = await db.select({
+          setName: cardPrices.setName,
+          cardNumber: cardPrices.cardNumber,
+          marketPrice: cardPrices.marketPrice,
+        })
+          .from(cardPrices)
+          .where(inArray(cardPrices.setName, setNames))
+        rows.forEach((r: any) => {
+          const key = `${r.setName ?? ''}|${r.cardNumber ?? ''}`
+          const val = r.marketPrice != null ? parseFloat(String(r.marketPrice)) : null
+          priceBySetAndNumber.set(key, val)
+        })
+      } catch (_) { /* card_prices may be missing */ }
+    }
+    const enriched = isoItemsList.map((item: any) => ({
+      ...item,
+      marketPrice: priceBySetAndNumber.get(`${item.set ?? ''}|${item.cardNumber ?? ''}`) ?? null,
+    }))
+
+    res.json({ isoItems: enriched })
   } catch (error: any) {
     console.error('Get ISO items error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
@@ -740,6 +767,32 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
     })
   } catch (error: any) {
     console.error('[Add Card] Error:', error?.message ?? error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// DELETE /api/profile/collections/:id - Remove a collection item from the user's profile
+router.delete('/api/profile/collections/:id', authenticate, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id, 10)
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid collection ID' })
+    }
+
+    const [existing] = await db.select()
+      .from(collections)
+      .where(and(eq(collections.id, id), eq(collections.userId, req.user!.id)))
+      .limit(1)
+
+    if (!existing) {
+      return res.status(404).json({ message: 'Collection item not found' })
+    }
+
+    await db.delete(collections).where(eq(collections.id, id))
+
+    res.json({ success: true })
+  } catch (error: any) {
+    console.error('[Delete Collection] Error:', error?.message ?? error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
@@ -882,6 +935,8 @@ router.get('/api/profile/user', authenticate, async (req, res) => {
       lastName: users.lastName,
       name: users.name,
       avatar: users.avatar,
+      phone: users.phone,
+      pudoAddress: users.pudoAddress,
       isPremium: users.isPremium,
       level: users.level,
       currentXP: users.currentXP,
@@ -990,7 +1045,7 @@ router.post('/api/profile/vaulting/bulk', authenticate, async (req, res) => {
 // PUT /api/profile/user - Update user profile (including avatar)
 router.put('/api/profile/user', authenticate, async (req, res) => {
   try {
-    const { avatar, firstName, lastName, name, bio, location } = req.body
+    const { avatar, firstName, lastName, name, bio, location, pudoAddress, phone } = req.body
 
     // Get existing user
     const [existingUser] = await db.select()
@@ -1011,6 +1066,8 @@ router.put('/api/profile/user', authenticate, async (req, res) => {
         name: name !== undefined ? name : existingUser.name,
         bio: bio !== undefined ? bio : existingUser.bio,
         location: location !== undefined ? location : existingUser.location,
+        pudoAddress: pudoAddress !== undefined ? pudoAddress : (existingUser as any).pudoAddress,
+        phone: phone !== undefined ? phone : existingUser.phone,
         updatedAt: new Date(),
       })
       .where(eq(users.id, req.user!.id))
@@ -1022,6 +1079,8 @@ router.put('/api/profile/user', authenticate, async (req, res) => {
         avatar: users.avatar,
         bio: users.bio,
         location: users.location,
+        pudoAddress: users.pudoAddress,
+        phone: users.phone,
         isPremium: users.isPremium,
         level: users.level,
         currentXP: users.currentXP,
@@ -1202,6 +1261,64 @@ router.get('/api/stores/search', async (req, res) => {
       error: error.message,
       code: error.code || 'UNKNOWN_ERROR'
     })
+  }
+})
+
+// GET /api/stores/:storeId/iso - Get ISO items for a store (public, for view profile)
+router.get('/api/stores/:storeId/iso', async (req, res) => {
+  try {
+    const storeId = parseInt(req.params.storeId, 10)
+    if (isNaN(storeId)) {
+      return res.status(400).json({ message: 'Invalid store ID' })
+    }
+
+    const [store] = await db.select()
+      .from(stores)
+      .where(and(
+        eq(stores.id, storeId),
+        eq(stores.isActive, true)
+      ))
+      .limit(1)
+
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' })
+    }
+
+    const isoItemsList = await db.select()
+      .from(isoItems)
+      .where(and(
+        eq(isoItems.storeId, store.id),
+        eq(isoItems.isActive, true)
+      ))
+      .orderBy(isoItems.createdAt)
+
+    const setNames = [...new Set(isoItemsList.map((i: any) => i.set).filter(Boolean))] as string[]
+    const priceBySetAndNumber = new Map<string, number | null>()
+    if (setNames.length > 0) {
+      try {
+        const rows = await db.select({
+          setName: cardPrices.setName,
+          cardNumber: cardPrices.cardNumber,
+          marketPrice: cardPrices.marketPrice,
+        })
+          .from(cardPrices)
+          .where(inArray(cardPrices.setName, setNames))
+        rows.forEach((r: any) => {
+          const key = `${r.setName ?? ''}|${r.cardNumber ?? ''}`
+          const val = r.marketPrice != null ? parseFloat(String(r.marketPrice)) : null
+          priceBySetAndNumber.set(key, val)
+        })
+      } catch (_) { /* card_prices may be missing */ }
+    }
+    const enriched = isoItemsList.map((item: any) => ({
+      ...item,
+      marketPrice: priceBySetAndNumber.get(`${item.set ?? ''}|${item.cardNumber ?? ''}`) ?? null,
+    }))
+
+    res.json({ isoItems: enriched })
+  } catch (error: any) {
+    console.error('Get store ISO items error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
 

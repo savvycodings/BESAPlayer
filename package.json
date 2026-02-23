@@ -13,6 +13,7 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "tsx src/db/migrate.ts",
+    "db:migrate:stores-social": "tsx scripts/migrate-stores-social.ts",
     "fetch-tcg-sets": "tsx scripts/fetch-pokemon-tcg-sets.ts",
     "fetch-card-price-history": "tsx scripts/fetch-card-price-history.ts",
     "test": "echo \"Error: no test specified\" && exit 1"

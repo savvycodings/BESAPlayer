@@ -169,6 +169,20 @@
       "when": 1771538800034,
       "tag": "0023_tearful_prodigy",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1771540000000,
+      "tag": "0024_users_pudo_address",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1771543041732,
+      "tag": "0025_wealthy_miss_america",
+      "breakpoints": true
     }
   ]
 }

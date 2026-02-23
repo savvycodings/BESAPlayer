@@ -1,4 +1,4 @@
-import { db, cardPrices } from "../db"
+import { db, cardPrices, cardPriceHistory } from "../db"
 import { eq } from "drizzle-orm"
 import { pokedataClient } from "./client"
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from "./setCodeMap"
@@ -123,6 +123,19 @@ export async function getCardLookupOrFetch(
           updatedAt: now,
         },
       })
+
+    // Append one point to price history so charts can show 2+ days when script runs or cache refreshes
+    try {
+      await db.insert(cardPriceHistory).values({
+        cardId: id,
+        recordedAt: now,
+        marketPrice: marketPrice != null ? String(marketPrice) : null,
+        ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : null,
+        currency,
+      })
+    } catch (e) {
+      console.warn("[Pokedata] card_price_history insert skipped:", (e as Error)?.message)
+    }
 
     console.log("[Pokedata] Stored in card_prices id=%s imageUrl=%s marketPrice=%s ebayLastSold=%s", id, imageUrl ?? "none", marketPrice, ebayLastSold)
 

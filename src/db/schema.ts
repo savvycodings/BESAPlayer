@@ -16,6 +16,7 @@ export const users = pgTable('users', {
   image: text('image'), // Better Auth expects "image" field (alias for avatar)
   bio: text('bio'), // User bio/description
   location: varchar('location', { length: 255 }),
+  pudoAddress: text('pudo_address'), // Pudo locker/delivery address (single field)
   dateOfBirth: timestamp('date_of_birth'),
   isPremium: boolean('is_premium').default(false),
   isVerified: boolean('is_verified').default(false),
@@ -76,6 +77,8 @@ export const stores = pgTable('stores', {
   rating: decimal('rating', { precision: 3, scale: 2 }).default('0'),
   totalReviews: integer('total_reviews').default(0),
   isActive: boolean('is_active').default(true),
+  twitchUrl: text('twitch_url'),
+  youtubeUrl: text('youtube_url'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
 })
