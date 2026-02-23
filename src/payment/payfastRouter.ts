@@ -2,6 +2,7 @@ import express from 'express'
 import crypto from 'crypto'
 import { db, users, stores, storeListings, collections, orders } from '../db'
 import { eq, and, sql } from 'drizzle-orm'
+import { applySaleRewards } from '../lib/rewards'
 
 const router = express.Router()
 
@@ -794,6 +795,14 @@ async function transferCardOwnership(
       .where(eq(stores.id, listing.storeId))
 
     console.log('✅ [OWNERSHIP TRANSFER] Store totalSales incremented for storeId:', listing.storeId)
+
+    // Grant XP to buyer and seller, level them up, and update store verification (rings)
+    await applySaleRewards({
+      buyerId: buyerIdStr,
+      sellerId: sellerIdStr,
+      storeId: listing.storeId,
+    })
+
     console.log('🔄 ========== CARD OWNERSHIP TRANSFER SUCCESS ==========\n')
   } catch (error: any) {
     console.error('\n❌ ========== CARD OWNERSHIP TRANSFER ERROR ==========')
