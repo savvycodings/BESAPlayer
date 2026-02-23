@@ -788,6 +788,9 @@ router.delete('/api/profile/collections/:id', authenticate, async (req, res) => 
       return res.status(404).json({ message: 'Collection item not found' })
     }
 
+    // Remove any store listing that was tied to this collection item (so store and profile stay in sync)
+    await db.delete(storeListings).where(eq(storeListings.collectionId, id))
+
     await db.delete(collections).where(eq(collections.id, id))
 
     res.json({ success: true })
