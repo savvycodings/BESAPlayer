@@ -174,6 +174,8 @@ export const storeListings = pgTable('store_listings', {
   cardId: varchar('card_id', { length: 100 }), // Pokedata card ID (optional, for price cache)
   cardName: varchar('card_name', { length: 255 }).notNull(),
   cardImage: text('card_image'), // URL to card image
+  cardImageBack: text('card_image_back'), // Back of card photo
+  cardImageClose: text('card_image_close'), // Up close / damage photo
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   vaultingStatus: varchar('vaulting_status', { length: 50 }).default('seller-has'), // 'vaulted', 'seller-has', 'vaulting-in-process', 'unverified'
   purchaseType: varchar('purchase_type', { length: 50 }).default('both'), // 'instant', 'auction', 'both'
@@ -192,10 +194,12 @@ export const orders = pgTable('orders', {
   buyerId: text('buyer_id').references(() => users.id).notNull(),
   itemName: varchar('item_name', { length: 255 }).notNull(),
   itemImage: text('item_image'),
-  price: decimal('price', { precision: 10, scale: 2 }).notNull(),
+  price: decimal('price', { precision: 10, scale: 2 }).notNull(), // total paid (item + shipping)
   quantity: integer('quantity').default(1),
+  shippingFeeZar: decimal('shipping_fee_zar', { precision: 10, scale: 2 }).default('100.00'),
   orderDate: timestamp('order_date').defaultNow().notNull(),
   status: varchar('status', { length: 50 }).default('processing'), // 'processing', 'shipped', 'completed', 'cancelled'
+  trackingStatus: varchar('tracking_status', { length: 50 }).default('order_placed'), // 'order_placed' | 'deposited' | 'in_transit' | 'delivered'
   orderNumber: varchar('order_number', { length: 100 }).notNull().unique(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate

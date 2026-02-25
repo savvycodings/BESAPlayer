@@ -352,7 +352,7 @@ router.get('/api/store/listings', authenticate, async (req, res) => {
 // POST /api/store/listings - Create a new listing
 router.post('/api/store/listings', authenticate, async (req, res) => {
   try {
-    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, cardId, collectionId } = req.body
+    const { cardName, cardImage, cardImageBack, cardImageClose, price, vaultingStatus, purchaseType, description, cardId, collectionId } = req.body
 
     if (!cardName || !price) {
       return res.status(400).json({ message: 'Card name and price are required' })
@@ -373,23 +373,25 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Store not found' })
     }
 
-    // Enforce 20% minimum of market price when listing a card with known Pokedata price
+    // Enforce 20% minimum of market price when listing a card with known Pokedata price (prices in ZAR)
     const cardIdStr = cardId && String(cardId).trim() ? String(cardId).trim() : null
+    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 16
     if (cardIdStr) {
       try {
         const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
           .from(cardPrices)
           .where(eq(cardPrices.id, cardIdStr))
           .limit(1)
-        const marketPrice = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
+        const marketPriceUsd = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
           ? parseFloat(String(priceRow.marketPrice))
           : null
-        if (marketPrice != null && marketPrice > 0) {
-          const minPrice = 0.2 * marketPrice
+        if (marketPriceUsd != null && marketPriceUsd > 0) {
+          const marketPriceZar = marketPriceUsd * USD_TO_ZAR
+          const minPriceZar = 0.2 * marketPriceZar
           const submittedPrice = parseFloat(String(price))
-          if (Number.isFinite(submittedPrice) && submittedPrice < minPrice) {
+          if (Number.isFinite(submittedPrice) && submittedPrice < minPriceZar) {
             return res.status(400).json({
-              message: `Listing price cannot be below 20% of market value. Minimum: $${minPrice.toFixed(2)} (market: $${marketPrice.toFixed(2)})`,
+              message: `Listing price cannot be below 20% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
             })
           }
         }
@@ -424,6 +426,8 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       cardId: cardId && String(cardId).trim() ? String(cardId).trim() : null,
       cardName,
       cardImage: cardImage || null,
+      cardImageBack: cardImageBack && typeof cardImageBack === 'string' && cardImageBack.trim() ? cardImageBack.trim() : null,
+      cardImageClose: cardImageClose && typeof cardImageClose === 'string' && cardImageClose.trim() ? cardImageClose.trim() : null,
       price: price.toString(),
       vaultingStatus: finalVaultingStatus,
       purchaseType: purchaseType || 'both',
@@ -474,24 +478,26 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Listing not found' })
     }
 
-    // When updating price, enforce 20% minimum of market price if listing has a cardId
+    // When updating price, enforce 20% minimum of market price if listing has a cardId (prices in ZAR)
     const priceToUse = price ? price.toString() : listing.price
     const listingCardId = listing.cardId && String(listing.cardId).trim() ? String(listing.cardId).trim() : null
+    const USD_TO_ZAR_UPDATE = Number(process.env.USD_TO_ZAR) || 16
     if (listingCardId && priceToUse) {
       try {
         const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
           .from(cardPrices)
           .where(eq(cardPrices.id, listingCardId))
           .limit(1)
-        const marketPrice = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
+        const marketPriceUsd = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
           ? parseFloat(String(priceRow.marketPrice))
           : null
-        if (marketPrice != null && marketPrice > 0) {
-          const minPrice = 0.2 * marketPrice
+        if (marketPriceUsd != null && marketPriceUsd > 0) {
+          const marketPriceZar = marketPriceUsd * USD_TO_ZAR_UPDATE
+          const minPriceZar = 0.2 * marketPriceZar
           const submittedPrice = parseFloat(String(priceToUse))
-          if (Number.isFinite(submittedPrice) && submittedPrice < minPrice) {
+          if (Number.isFinite(submittedPrice) && submittedPrice < minPriceZar) {
             return res.status(400).json({
-              message: `Listing price cannot be below 20% of market value. Minimum: $${minPrice.toFixed(2)} (market: $${marketPrice.toFixed(2)})`,
+              message: `Listing price cannot be below 20% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
             })
           }
         }

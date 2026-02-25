@@ -769,11 +769,13 @@ async function transferCardOwnership(
     const [newOrder] = await db.insert(orders).values({
       storeId: listing.storeId,
       buyerId: buyerIdStr,
-      itemName: listing.cardName, // Use listing.cardName for consistency
+      itemName: listing.cardName,
       itemImage: listing.cardImage || null,
-      price: orderPrice, // Already formatted as string with 2 decimal places
+      price: orderPrice,
       quantity: 1,
+      shippingFeeZar: '100.00',
       status: 'completed',
+      trackingStatus: 'deposited',
       orderNumber: orderNumber,
     }).returning()
 

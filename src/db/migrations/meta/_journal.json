@@ -183,6 +183,13 @@
       "when": 1771543041732,
       "tag": "0025_wealthy_miss_america",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1772057427552,
+      "tag": "0026_complete_warhawk",
+      "breakpoints": true
     }
   ]
 }
