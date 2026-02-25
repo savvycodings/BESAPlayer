@@ -52,7 +52,7 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
 
     if (cached) {
       console.log("[Pokedata search] Cache HIT — key:", cacheKey, "| results:", (cached.results as any[])?.length ?? 0)
-      return res.json({
+      res.json({
         results: cached.results as any[],
         fromCache: true,
         rateLimit: {
@@ -61,6 +61,7 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
           resetTime: new Date(rateLimitResult.resetTime).toISOString(),
         },
       })
+      return
     }
 
     console.log("[Pokedata search] Cache MISS — calling API for:", cacheKey)
