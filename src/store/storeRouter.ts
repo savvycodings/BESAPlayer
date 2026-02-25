@@ -373,6 +373,31 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Store not found' })
     }
 
+    // Enforce 20% minimum of market price when listing a card with known Pokedata price
+    const cardIdStr = cardId && String(cardId).trim() ? String(cardId).trim() : null
+    if (cardIdStr) {
+      try {
+        const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
+          .from(cardPrices)
+          .where(eq(cardPrices.id, cardIdStr))
+          .limit(1)
+        const marketPrice = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
+          ? parseFloat(String(priceRow.marketPrice))
+          : null
+        if (marketPrice != null && marketPrice > 0) {
+          const minPrice = 0.2 * marketPrice
+          const submittedPrice = parseFloat(String(price))
+          if (Number.isFinite(submittedPrice) && submittedPrice < minPrice) {
+            return res.status(400).json({
+              message: `Listing price cannot be below 20% of market value. Minimum: $${minPrice.toFixed(2)} (market: $${marketPrice.toFixed(2)})`,
+            })
+          }
+        }
+      } catch (_) {
+        // card_prices table may be missing or lookup failed; allow listing
+      }
+    }
+
     // Check if there's a vaulting request for this card
     const [vaultingRequest] = await db.select()
       .from(vaultedRequests)
@@ -447,6 +472,32 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
 
     if (!listing) {
       return res.status(404).json({ message: 'Listing not found' })
+    }
+
+    // When updating price, enforce 20% minimum of market price if listing has a cardId
+    const priceToUse = price ? price.toString() : listing.price
+    const listingCardId = listing.cardId && String(listing.cardId).trim() ? String(listing.cardId).trim() : null
+    if (listingCardId && priceToUse) {
+      try {
+        const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
+          .from(cardPrices)
+          .where(eq(cardPrices.id, listingCardId))
+          .limit(1)
+        const marketPrice = priceRow?.marketPrice != null && priceRow.marketPrice !== ''
+          ? parseFloat(String(priceRow.marketPrice))
+          : null
+        if (marketPrice != null && marketPrice > 0) {
+          const minPrice = 0.2 * marketPrice
+          const submittedPrice = parseFloat(String(priceToUse))
+          if (Number.isFinite(submittedPrice) && submittedPrice < minPrice) {
+            return res.status(400).json({
+              message: `Listing price cannot be below 20% of market value. Minimum: $${minPrice.toFixed(2)} (market: $${marketPrice.toFixed(2)})`,
+            })
+          }
+        }
+      } catch (_) {
+        // allow update if card_prices lookup fails
+      }
     }
 
     const [updatedListing] = await db.update(storeListings)
