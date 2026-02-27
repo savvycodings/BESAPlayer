@@ -35,6 +35,8 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
     const query = req.query.query as string
     const assetType = (req.query.asset_type as AssetType) || "CARD"
     const language = req.query.language as Language | undefined
+    const limitParam = req.query.limit
+    const limit = Math.min(Math.max(parseInt(String(limitParam), 10) || 3, 1), 20)
 
     if (!query) {
       res.status(400).json({ error: "Query parameter is required" })
@@ -51,9 +53,10 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
       .limit(1)
 
     if (cached) {
-      console.log("[Pokedata search] Cache HIT — key:", cacheKey, "| results:", (cached.results as any[])?.length ?? 0)
+      const cachedResults = (cached.results as any[]).slice(0, limit)
+      console.log(`[Pokedata search] Cache HIT — key: ${cacheKey} | returning ${cachedResults.length} (eco: no API call)`)
       res.json({
-        results: cached.results as any[],
+        results: cachedResults,
         fromCache: true,
         rateLimit: {
           limit: 60,
@@ -64,9 +67,10 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
       return
     }
 
-    console.log("[Pokedata search] Cache MISS — calling API for:", cacheKey)
-    const results = await pokedataClient.searchCards(query, assetType, language)
-    const resultsForCache = results.map((r: any) => ({
+    console.log("[Pokedata search] Cache MISS — calling API (limit=" + limit + ")")
+    const results = await pokedataClient.searchCards(query, assetType, language, limit)
+    const limited = results.slice(0, limit)
+    const resultsForCache = limited.map((r: any) => ({
       id: r.id,
       name: r.name,
       set: r.set,
@@ -88,8 +92,10 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
         },
       })
 
+    console.log(`[Pokedata search] Eco: cached ${resultsForCache.length} results for key "${cacheKey}" (next same query = cache HIT, no API call)`)
+
     res.json({
-      results,
+      results: limited,
       fromCache: false,
       rateLimit: {
         limit: 60,

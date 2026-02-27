@@ -78,24 +78,39 @@ export class PokedataClient {
    * @param query Search query (card name, set name, etc.)
    * @param assetType Type of asset to search (default: "CARD")
    * @param language Language code (optional)
-   * @returns Array of matching cards
+   * @param limit Max results to return (default 3); we usually use the first one (after sort by card number). Extra 1–2 let user tap a different set if needed.
+   * @returns Array of matching cards (at most limit)
    */
   async searchCards(
     query: string,
     assetType: AssetType = "CARD",
-    language?: Language
+    language?: Language,
+    limit: number = 3
   ): Promise<PokedataCard[]> {
     const params = new URLSearchParams({
       query,
       asset_type: assetType,
       ...(language && { language }),
     })
+    params.set("limit", String(Math.min(limit, 20)))
 
-    console.log(`🔍 Searching Pokedata for: "${query}" (${assetType})`)
-    const results = await this.request<PokedataCard[]>(`/search?${params}`)
-    console.log(`✅ Found ${results.length} cards`)
-    
-    return results
+    console.log(`[Pokedata search] Request: query="${query}" | limit=${limit} (eco: only request what we need)`)
+    let results: PokedataCard[]
+    try {
+      results = await this.request<PokedataCard[]>(`/search?${params}`)
+    } catch (err) {
+      params.delete("limit")
+      console.log(`[Pokedata search] Retry without limit param (API may not support it)`)
+      results = await this.request<PokedataCard[]>(`/search?${params}`)
+    }
+    const use = results.slice(0, limit)
+    const wasted = results.length - use.length
+    if (wasted > 0) {
+      console.log(`[Pokedata search] Eco: API returned ${results.length}, we use first ${use.length} (${wasted} unused — not cached)`)
+    } else {
+      console.log(`[Pokedata search] Eco: API returned ${results.length}, using all (caching ${use.length})`)
+    }
+    return use
   }
 
   /**
