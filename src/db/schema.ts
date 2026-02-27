@@ -201,6 +201,10 @@ export const orders = pgTable('orders', {
   status: varchar('status', { length: 50 }).default('processing'), // 'processing', 'shipped', 'completed', 'cancelled'
   trackingStatus: varchar('tracking_status', { length: 50 }).default('order_placed'), // 'order_placed' | 'deposited' | 'in_transit' | 'delivered'
   orderNumber: varchar('order_number', { length: 100 }).notNull().unique(),
+  /** PUDO locker-to-locker: buyer's locker code for delivery */
+  buyerPudoLockerCode: varchar('buyer_pudo_locker_code', { length: 100 }),
+  /** Full address or locker name/location for shipping */
+  buyerShippingAddress: text('buyer_shipping_address'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
 })

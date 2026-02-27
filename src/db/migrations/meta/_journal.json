@@ -190,6 +190,13 @@
       "when": 1772057427552,
       "tag": "0026_complete_warhawk",
       "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1772235325922,
+      "tag": "0027_lazy_callisto",
+      "breakpoints": true
     }
   ]
 }

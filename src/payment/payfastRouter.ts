@@ -164,6 +164,8 @@ router.post('/create-payment', (req, res) => {
       buyerId, // Store buyer ID for ownership transfer
       sellerId, // Store seller ID for ownership transfer
       backendUrl: clientBackendUrl, // URL from client (needed for mobile)
+      pudoLockerCode, // PUDO locker-to-locker: buyer's locker code
+      shippingAddress, // Full address or locker name for shipping
     } = req.body
 
     // Validate required fields
@@ -315,6 +317,8 @@ router.post('/create-payment', (req, res) => {
       listingId: parsedListingId,
       buyerId: parsedBuyerId, // Keep as string for Better Auth
       sellerId: parsedSellerId, // Keep as string for Better Auth
+      pudoLockerCode: pudoLockerCode || undefined,
+      shippingAddress: shippingAddress || undefined,
     })
 
     // Return payment data
@@ -390,7 +394,8 @@ router.get('/return', async (req, res) => {
                 existingPayment.buyerId,
                 existingPayment.sellerId,
                 listing.cardName,
-                existingPayment.amount || listing.price.toString()
+                existingPayment.amount || listing.price.toString(),
+                (existingPayment.pudoLockerCode || existingPayment.shippingAddress) ? { pudoLockerCode: existingPayment.pudoLockerCode, shippingAddress: existingPayment.shippingAddress } : undefined
               )
               console.log('✅ [PAYMENT RETURN] Ownership transfer completed')
             } else {
@@ -547,6 +552,10 @@ const paymentStatusStore = new Map<string, {
   listingId?: number
   buyerId?: string | number // Better Auth uses string IDs
   sellerId?: string | number // Better Auth uses string IDs
+  /** PUDO locker-to-locker: buyer's locker code */
+  pudoLockerCode?: string
+  /** Full address or locker name for shipping */
+  shippingAddress?: string
 }>()
 
 // Function to transfer card ownership after successful payment
@@ -556,7 +565,8 @@ async function transferCardOwnership(
   buyerId: string | number, // Better Auth uses string IDs
   sellerId: string | number, // Better Auth uses string IDs
   itemName: string,
-  amount: string
+  amount: string,
+  shipping?: { pudoLockerCode?: string; shippingAddress?: string }
 ) {
   // Convert to strings if needed (Better Auth uses string IDs)
   const buyerIdStr: string = typeof buyerId === 'string' ? buyerId : String(buyerId)
@@ -777,6 +787,8 @@ async function transferCardOwnership(
       status: 'completed',
       trackingStatus: 'deposited',
       orderNumber: orderNumber,
+      buyerPudoLockerCode: shipping?.pudoLockerCode || null,
+      buyerShippingAddress: shipping?.shippingAddress || null,
     }).returning()
 
     console.log('✅ [OWNERSHIP TRANSFER] Order created successfully:', {
@@ -845,13 +857,14 @@ router.post('/manual-transfer', async (req, res) => {
       return res.status(404).json({ error: 'Listing not found' })
     }
     
-    // Transfer ownership
+      // Transfer ownership (manual transfer has no shipping data)
     await transferCardOwnership(
       typeof listingId === 'string' ? parseInt(listingId) : listingId,
       buyerId,
       sellerId,
       itemName || listing.cardName,
-      amount || listing.price.toString()
+      amount || listing.price.toString(),
+      undefined
     )
     
     res.json({ 
@@ -957,7 +970,7 @@ router.post('/itn', async (req, res) => {
       // Get stored payment data
       const storedPayment = paymentStatusStore.get(m_payment_id)
       
-      // Store payment status for app to check
+      // Store payment status for app to check (preserve shipping data)
       paymentStatusStore.set(m_payment_id, {
         status: 'complete',
         mPaymentId: m_payment_id,
@@ -967,17 +980,23 @@ router.post('/itn', async (req, res) => {
         listingId: storedPayment?.listingId,
         buyerId: storedPayment?.buyerId,
         sellerId: storedPayment?.sellerId,
+        pudoLockerCode: storedPayment?.pudoLockerCode,
+        shippingAddress: storedPayment?.shippingAddress,
       })
       
       // Transfer card ownership if listingId, buyerId, and sellerId are available
       if (storedPayment?.listingId && storedPayment?.buyerId && storedPayment?.sellerId) {
         console.log('🔄 [ITN] Transferring card ownership with stored IDs')
+        const shipping = (storedPayment.pudoLockerCode || storedPayment.shippingAddress)
+          ? { pudoLockerCode: storedPayment.pudoLockerCode, shippingAddress: storedPayment.shippingAddress }
+          : undefined
         await transferCardOwnership(
           storedPayment.listingId,
           storedPayment.buyerId,
           storedPayment.sellerId,
           data.item_name,
-          data.amount_gross
+          data.amount_gross,
+          shipping
         )
       } else {
         console.log('⚠️ [ITN] Missing payment metadata, attempting to find listing and buyer')
