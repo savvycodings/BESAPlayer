@@ -3,7 +3,7 @@
 ## What is an ITN?
 
 An **ITN (Instant Transaction Notification)** is PayFast's way of notifying your server that a payment has been processed. It's sent as a POST request to your `notify_url` endpoint.
-
+.
 ## ITN Payload Breakdown
 
 Here's what each field in your ITN payload means:
