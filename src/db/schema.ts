@@ -16,7 +16,8 @@ export const users = pgTable('users', {
   image: text('image'), // Better Auth expects "image" field (alias for avatar)
   bio: text('bio'), // User bio/description
   location: varchar('location', { length: 255 }),
-  pudoAddress: text('pudo_address'), // Pudo locker/delivery address (single field)
+  pudoAddress: text('pudo_address'), // Full address or locker location for shipping
+  pudoLockerCode: varchar('pudo_locker_code', { length: 100 }), // PUDO locker code (e.g. ABC123) for locker-to-locker; pulled into payment form and stored on order for seller
   dateOfBirth: timestamp('date_of_birth'),
   isPremium: boolean('is_premium').default(false),
   isVerified: boolean('is_verified').default(false),
@@ -187,6 +188,15 @@ export const storeListings = pgTable('store_listings', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
 })
 
+// Listing bids: one row per bid so we can show who bid what (listing + bidder + amount)
+export const listingBids = pgTable('listing_bids', {
+  id: serial('id').primaryKey(),
+  listingId: integer('listing_id').references(() => storeListings.id, { onDelete: 'cascade' }).notNull(),
+  bidderId: text('bidder_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // Orders
 export const orders = pgTable('orders', {
   id: serial('id').primaryKey(),
@@ -290,10 +300,22 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }))
 
-export const storeListingsRelations = relations(storeListings, ({ one }) => ({
+export const storeListingsRelations = relations(storeListings, ({ one, many }) => ({
   store: one(stores, {
     fields: [storeListings.storeId],
     references: [stores.id],
+  }),
+  bids: many(listingBids),
+}))
+
+export const listingBidsRelations = relations(listingBids, ({ one }) => ({
+  listing: one(storeListings, {
+    fields: [listingBids.listingId],
+    references: [storeListings.id],
+  }),
+  bidder: one(users, {
+    fields: [listingBids.bidderId],
+    references: [users.id],
   }),
 }))
 
@@ -361,6 +383,8 @@ export type CardPriceHistory = typeof cardPriceHistory.$inferSelect
 export type NewCardPriceHistory = typeof cardPriceHistory.$inferInsert
 export type StoreListing = typeof storeListings.$inferSelect
 export type NewStoreListing = typeof storeListings.$inferInsert
+export type ListingBid = typeof listingBids.$inferSelect
+export type NewListingBid = typeof listingBids.$inferInsert
 export type Order = typeof orders.$inferSelect
 export type NewOrder = typeof orders.$inferInsert
 export type Auction = typeof auctions.$inferSelect
