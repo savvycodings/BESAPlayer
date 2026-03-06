@@ -1,10 +1,11 @@
 import express from 'express'
-import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, pool, cardPrices } from '../db'
+import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices } from '../db'
 import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from '../pokedata/setCodeMap'
 import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
+import { sendExpoPush } from '../lib/expoPush'
 
 const router = express.Router()
 
@@ -373,9 +374,9 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Store not found' })
     }
 
-    // Enforce 20% minimum of market price when listing a card with known Pokedata price (prices in ZAR)
+    // Enforce 80% minimum of market price when listing a card with known Pokedata price (prices in ZAR)
     const cardIdStr = cardId && String(cardId).trim() ? String(cardId).trim() : null
-    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 16
+    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 17
     if (cardIdStr) {
       try {
         const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
@@ -387,11 +388,11 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
           : null
         if (marketPriceUsd != null && marketPriceUsd > 0) {
           const marketPriceZar = marketPriceUsd * USD_TO_ZAR
-          const minPriceZar = 0.2 * marketPriceZar
+          const minPriceZar = 0.8 * marketPriceZar
           const submittedPrice = parseFloat(String(price))
           if (Number.isFinite(submittedPrice) && submittedPrice < minPriceZar) {
             return res.status(400).json({
-              message: `Listing price cannot be below 20% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
+              message: `Listing price cannot be below 80% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
             })
           }
         }
@@ -478,10 +479,10 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Listing not found' })
     }
 
-    // When updating price, enforce 20% minimum of market price if listing has a cardId (prices in ZAR)
+    // When updating price, enforce 80% minimum of market price if listing has a cardId (prices in ZAR)
     const priceToUse = price ? price.toString() : listing.price
     const listingCardId = listing.cardId && String(listing.cardId).trim() ? String(listing.cardId).trim() : null
-    const USD_TO_ZAR_UPDATE = Number(process.env.USD_TO_ZAR) || 16
+    const USD_TO_ZAR_UPDATE = Number(process.env.USD_TO_ZAR) || 17
     if (listingCardId && priceToUse) {
       try {
         const [priceRow] = await db.select({ marketPrice: cardPrices.marketPrice })
@@ -493,11 +494,11 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
           : null
         if (marketPriceUsd != null && marketPriceUsd > 0) {
           const marketPriceZar = marketPriceUsd * USD_TO_ZAR_UPDATE
-          const minPriceZar = 0.2 * marketPriceZar
+          const minPriceZar = 0.8 * marketPriceZar
           const submittedPrice = parseFloat(String(priceToUse))
           if (Number.isFinite(submittedPrice) && submittedPrice < minPriceZar) {
             return res.status(400).json({
-              message: `Listing price cannot be below 20% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
+              message: `Listing price cannot be below 80% of market value. Minimum: R${minPriceZar.toFixed(2)} (market: R${marketPriceZar.toFixed(2)})`,
             })
           }
         }
@@ -787,16 +788,18 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
       notes: notes || null,
     }).returning()
 
-    // If user requested vaulting, create a vaulting request
+    // If user requested vaulting, create a vaulting request and return its id for verification payment
+    let vaultedRequestId: number | undefined
     if (requestVaulting) {
-      await db.insert(vaultedRequests).values({
+      const [newRequest] = await db.insert(vaultedRequests).values({
         userId: req.user!.id,
         collectionId: newCollection.id,
         cardName: name,
         cardImage: image || null,
         set: set || null,
         status: 'pending',
-      })
+      }).returning()
+      vaultedRequestId = newRequest?.id
     }
 
     // Prime price cache so GET collections has marketPrice (await so cache is filled before client refetches)
@@ -821,6 +824,7 @@ router.post('/api/profile/collections', authenticate, async (req, res) => {
     res.json({
       success: true,
       collection: newCollection,
+      ...(vaultedRequestId != null && { vaultedRequestId }),
     })
   } catch (error: any) {
     console.error('[Add Card] Error:', error?.message ?? error)
@@ -922,7 +926,7 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         priceMap.set(id, { marketPrice: market, ebayLastSold: ebay, imageUrl, setId, cardNumber })
       })
     }
-    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 16
+    const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 17
     const collectionsWithListedStatus = userCollections.map((collection: any) => {
       const cid = collection.cardId != null ? String(collection.cardId) : null
       const prices = cid ? priceMap.get(cid) : null
@@ -1098,6 +1102,100 @@ router.post('/api/profile/vaulting/bulk', authenticate, async (req, res) => {
     })
   } catch (error: any) {
     console.error('Create bulk vaulting requests error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// GET /api/profile/verification-orders - List current user's verification orders (for in-app status / ops)
+router.get('/api/profile/verification-orders', authenticate, async (req, res) => {
+  try {
+    const list = await db.select({
+      id: verificationOrders.id,
+      paymentId: verificationOrders.paymentId,
+      amount: verificationOrders.amount,
+      dropoffCode: verificationOrders.dropoffCode,
+      trackingStatus: verificationOrders.trackingStatus,
+      expiresAt: verificationOrders.expiresAt,
+      paidAt: verificationOrders.paidAt,
+      pudoLockerCode: verificationOrders.pudoLockerCode,
+      pudoAddress: verificationOrders.pudoAddress,
+    })
+      .from(verificationOrders)
+      .where(eq(verificationOrders.userId, req.user!.id))
+      .orderBy(desc(verificationOrders.paidAt))
+
+    res.json({ verificationOrders: list })
+  } catch (error: any) {
+    console.error('Get verification orders error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// PUT /api/profile/push-token - Save Expo push token for the current user (for dropoff code etc.)
+router.put('/api/profile/push-token', authenticate, async (req, res) => {
+  try {
+    const { expoPushToken } = req.body
+    if (typeof expoPushToken !== 'string' || !expoPushToken.trim()) {
+      return res.status(400).json({ message: 'expoPushToken is required' })
+    }
+    const token = expoPushToken.trim()
+    if (!token.startsWith('ExponentPushToken[')) {
+      return res.status(400).json({ message: 'Invalid Expo push token format' })
+    }
+    await db.update(users)
+      .set({ expoPushToken: token })
+      .where(eq(users.id, req.user!.id))
+    res.json({ success: true })
+  } catch (error: any) {
+    console.error('Save push token error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// PATCH /api/verification-orders/:id/dropoff-code - Set dropoff code (after manual payment to service provider) and notify user via Expo push.
+// Protect with X-Admin-Secret header; set ADMIN_SECRET in env so only your team can call this.
+router.patch('/api/verification-orders/:id/dropoff-code', async (req, res) => {
+  try {
+    const expectedSecret = process.env.ADMIN_SECRET
+    const provided = req.headers['x-admin-secret'] || req.body?.adminSecret
+    if (!expectedSecret || provided !== expectedSecret) {
+      return res.status(403).json({ message: 'Forbidden' })
+    }
+    const id = parseInt(req.params.id, 10)
+    if (isNaN(id)) return res.status(400).json({ message: 'Invalid verification order id' })
+    const { dropoffCode } = req.body
+    if (typeof dropoffCode !== 'string' || !dropoffCode.trim()) {
+      return res.status(400).json({ message: 'dropoffCode is required' })
+    }
+    const code = dropoffCode.trim()
+    const [order] = await db.select()
+      .from(verificationOrders)
+      .where(eq(verificationOrders.id, id))
+      .limit(1)
+    if (!order) return res.status(404).json({ message: 'Verification order not found' })
+    await db.update(verificationOrders)
+      .set({ dropoffCode: code, updatedAt: new Date() })
+      .where(eq(verificationOrders.id, id))
+    const [user] = await db.select({ expoPushToken: users.expoPushToken })
+      .from(users)
+      .where(eq(users.id, order.userId))
+      .limit(1)
+    if (user?.expoPushToken) {
+      const expiresStr = order.expiresAt ? new Date(order.expiresAt).toLocaleString() : '24 hours'
+      const pushResult = await sendExpoPush(user.expoPushToken, {
+        title: 'Your drop-off code is ready',
+        body: `Code: ${code}. You have until ${expiresStr} to drop off your package at your PUDO.`,
+        data: { type: 'verification_dropoff_code', verificationOrderId: id, dropoffCode: code },
+      })
+      if (!pushResult.success) {
+        console.warn('[Dropoff code] Push failed:', pushResult.error)
+      }
+    } else {
+      console.warn('[Dropoff code] No expo push token for user', order.userId)
+    }
+    res.json({ success: true, dropoffCode: code })
+  } catch (error: any) {
+    console.error('Set dropoff code error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
@@ -1487,6 +1585,7 @@ router.get('/api/stores/:storeId', async (req, res) => {
         id: listing.id,
         cardName: listing.cardName,
         cardImage: listing.cardImage,
+        cardId: listing.cardId || undefined,
         price: parseFloat(listing.price.toString()),
         vaultingStatus: listing.vaultingStatus,
         purchaseType: listing.purchaseType,

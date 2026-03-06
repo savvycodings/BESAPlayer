@@ -32,6 +32,8 @@ export const auctions = dbSchema.auctions
 export const isoItems = dbSchema.isoItems
 export const followers = dbSchema.followers
 export const vaultedRequests = dbSchema.vaultedRequests
+export const verificationOrders = dbSchema.verificationOrders
+export const verificationOrderItems = dbSchema.verificationOrderItems
 
 // Test the database connection
 export async function testConnection(): Promise<boolean> {

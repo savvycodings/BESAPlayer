@@ -124,17 +124,30 @@ export async function getCardLookupOrFetch(
         },
       })
 
-    // Append one point to price history so charts can show 2+ days when script runs or cache refreshes
+    // Append or update one point per calendar day so charts show history (we build it; Pokedata gives only today's price)
     try {
-      await db.insert(cardPriceHistory).values({
-        cardId: id,
-        recordedAt: now,
-        marketPrice: marketPrice != null ? String(marketPrice) : null,
-        ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : null,
-        currency,
-      })
+      const now = new Date()
+      const recordedDateStr = now.toLocaleDateString('en-CA', { timeZone: 'Africa/Johannesburg' }) // YYYY-MM-DD in Cape Town / SA
+      await db
+        .insert(cardPriceHistory)
+        .values({
+          cardId: id,
+          recordedAt: now,
+          recordedDate: recordedDateStr,
+          marketPrice: marketPrice != null ? String(marketPrice) : null,
+          ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : null,
+          currency,
+        })
+        .onConflictDoUpdate({
+          target: [cardPriceHistory.cardId, cardPriceHistory.recordedDate],
+          set: {
+            marketPrice: marketPrice != null ? String(marketPrice) : undefined,
+            ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : undefined,
+            recordedAt: now,
+          },
+        })
     } catch (e) {
-      console.warn("[Pokedata] card_price_history insert skipped:", (e as Error)?.message)
+      console.warn("[Pokedata] card_price_history upsert skipped:", (e as Error)?.message)
     }
 
     console.log("[Pokedata] Stored in card_prices id=%s imageUrl=%s marketPrice=%s ebayLastSold=%s", id, imageUrl ?? "none", marketPrice, ebayLastSold)

@@ -1,6 +1,6 @@
 /**
- * Fetch the next historical price point for every card in card_prices from Pokedata,
- * and append one row per card to card_price_history for the product chart.
+ * Fetch today's price from Pokedata for every card in card_prices and upsert one row per card
+ * per calendar day into card_price_history (we build history internally; charts read from this table).
  *
  * Run from server/: pnpm run fetch-card-price-history
  * Or: npx tsx scripts/fetch-card-price-history.ts
@@ -31,9 +31,10 @@ async function main() {
     return
   }
 
-  console.log(`Found ${ids.length} cards in card_prices. Fetching next price point from Pokedata...`)
+  console.log(`Found ${ids.length} cards in card_prices. Fetching today's price from Pokedata (one row per card per day, date in SA)...`)
 
   const now = new Date()
+  const recordedDateStr = now.toLocaleDateString('en-CA', { timeZone: 'Africa/Johannesburg' }) // YYYY-MM-DD in Cape Town / SA
   let ok = 0
   let err = 0
 
@@ -51,9 +52,17 @@ async function main() {
       await db.insert(cardPriceHistory).values({
         cardId: id,
         recordedAt: now,
+        recordedDate: recordedDateStr,
         marketPrice: marketPrice != null ? String(marketPrice) : null,
         ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : null,
         currency: 'USD',
+      }).onConflictDoUpdate({
+        target: [cardPriceHistory.cardId, cardPriceHistory.recordedDate],
+        set: {
+          marketPrice: marketPrice != null ? String(marketPrice) : undefined,
+          ebayLastSold: ebayLastSold != null ? String(ebayLastSold) : undefined,
+          recordedAt: now,
+        },
       })
       ok++
       if ((i + 1) % 10 === 0 || i === ids.length - 1) {
@@ -69,7 +78,7 @@ async function main() {
     }
   }
 
-  console.log(`Done. Inserted ${ok} history rows, ${err} errors.`)
+  console.log(`Done. Upserted ${ok} history rows for ${recordedDateStr}, ${err} errors.`)
 }
 
 main().catch((e) => {

@@ -1,7 +1,7 @@
 import express from 'express'
 import crypto from 'crypto'
-import { db, users, stores, storeListings, collections, orders } from '../db'
-import { eq, and, sql } from 'drizzle-orm'
+import { db, users, stores, storeListings, collections, orders, verificationOrders, verificationOrderItems, vaultedRequests } from '../db'
+import { eq, and, sql, inArray } from 'drizzle-orm'
 import { applySaleRewards } from '../lib/rewards'
 
 const router = express.Router()
@@ -166,11 +166,24 @@ router.post('/create-payment', (req, res) => {
       backendUrl: clientBackendUrl, // URL from client (needed for mobile)
       pudoLockerCode, // PUDO locker-to-locker: buyer's locker code
       shippingAddress, // Full address or locker name for shipping
+      paymentType, // 'listing' | 'verify' - verify = R100 verification fee for vaulted requests
+      vaultedRequestIds, // For verify: array of vaulted_request ids included in this payment
     } = req.body
 
-    // Validate required fields
+    const isVerifyPayment = paymentType === 'verify'
+
+    // Validate required fields: listing flow needs amount+itemName; verify needs amount+itemName+vaultedRequestIds+userId
     if (!amount || !itemName) {
       return res.status(400).json({ error: 'Amount and item name are required' })
+    }
+    if (isVerifyPayment) {
+      if (!Array.isArray(vaultedRequestIds) || vaultedRequestIds.length === 0) {
+        return res.status(400).json({ error: 'Verification payment requires vaultedRequestIds (array)' })
+      }
+      const userId = buyerId || req.body.userId
+      if (!userId) {
+        return res.status(400).json({ error: 'Verification payment requires buyerId or userId' })
+      }
     }
     
     // Log received data for debugging
@@ -186,8 +199,8 @@ router.post('/create-payment', (req, res) => {
       hasSellerId: !!sellerId,
     })
     
-    // Warn if IDs are missing (but don't fail - ITN fallback will handle it)
-    if (!listingId || !buyerId || !sellerId) {
+    // Warn if IDs are missing (but don't fail - ITN fallback will handle it) — only for listing payments
+    if (!isVerifyPayment && (!listingId || !buyerId || !sellerId)) {
       console.warn('⚠️ [CREATE PAYMENT] Missing IDs - payment will be created but transfer may fail:', {
         missingListingId: !listingId,
         missingBuyerId: !buyerId,
@@ -244,6 +257,7 @@ router.post('/create-payment', (req, res) => {
       ? (PAYFAST_CONFIG.sandboxPassphrase || process.env.PAYFAST_SANDBOX_PASSPHRASE || '')
       : PAYFAST_CONFIG.passphrase
     
+    const amountNum = isVerifyPayment ? 100 : parseFloat(amount)
     const paymentParams: Record<string, string> = {
       merchant_id: merchantId,
       merchant_key: merchantKey,
@@ -255,7 +269,7 @@ router.post('/create-payment', (req, res) => {
       email_address: userEmail || 'user@example.com',
       cell_number: cellNumber || '',
       m_payment_id: paymentId,
-      amount: parseFloat(amount).toFixed(2),
+      amount: amountNum.toFixed(2),
       item_name: itemName,
       item_description: itemDescription || itemName,
     }
@@ -294,31 +308,29 @@ router.post('/create-payment', (req, res) => {
     
     const directPayFastUrl = `${paymentUrl}?${payfastParams.toString()}`
 
-    // Store initial payment status as pending with listing/buyer info
-    // Better Auth uses string IDs, so keep them as strings (only listingId needs to be number)
-    const parsedListingId = listingId ? (typeof listingId === 'string' ? parseInt(listingId) : listingId) : undefined
+    const parsedListingId = listingId && !isVerifyPayment ? (typeof listingId === 'string' ? parseInt(listingId) : listingId) : undefined
     const parsedBuyerId = buyerId ? (typeof buyerId === 'string' ? buyerId : String(buyerId)) : undefined
-    const parsedSellerId = sellerId ? (typeof sellerId === 'string' ? sellerId : String(sellerId)) : undefined
-    
-    console.log('💾 [CREATE PAYMENT] Storing payment data:', {
-      paymentId,
-      listingId: parsedListingId,
-      buyerId: parsedBuyerId,
-      sellerId: parsedSellerId,
-      rawListingId: listingId,
-      rawBuyerId: buyerId,
-      rawSellerId: sellerId,
-    })
-    
+    const parsedSellerId = sellerId && !isVerifyPayment ? (typeof sellerId === 'string' ? sellerId : String(sellerId)) : undefined
+    const parsedVaultedRequestIds = isVerifyPayment && Array.isArray(vaultedRequestIds)
+      ? vaultedRequestIds.map((id: unknown) => typeof id === 'string' ? parseInt(id, 10) : Number(id)).filter((n: number) => !isNaN(n))
+      : undefined
+
     paymentStatusStore.set(paymentId, {
       status: 'pending',
       mPaymentId: paymentId,
       timestamp: Date.now(),
       listingId: parsedListingId,
-      buyerId: parsedBuyerId, // Keep as string for Better Auth
-      sellerId: parsedSellerId, // Keep as string for Better Auth
+      buyerId: parsedBuyerId,
+      sellerId: parsedSellerId,
       pudoLockerCode: pudoLockerCode || undefined,
       shippingAddress: shippingAddress || undefined,
+      paymentType: isVerifyPayment ? 'verify' : 'listing',
+      vaultedRequestIds: parsedVaultedRequestIds,
+      ...(isVerifyPayment && {
+        userEmail: userEmail || undefined,
+        userNameFirst: userNameFirst || undefined,
+        userNameLast: userNameLast || undefined,
+      }),
     })
 
     // Return payment data
@@ -377,8 +389,26 @@ router.get('/return', async (req, res) => {
           hasAllData: !!(existingPayment.listingId && existingPayment.buyerId && existingPayment.sellerId),
         })
         
-        // Trigger ownership transfer if we have all required data
-        if (existingPayment.listingId && existingPayment.buyerId && existingPayment.sellerId) {
+        // Trigger verify order creation (R100 verification) or ownership transfer (listing)
+        if (existingPayment.paymentType === 'verify' && existingPayment.buyerId && existingPayment.vaultedRequestIds?.length) {
+          console.log('🔄 [PAYMENT RETURN] Processing verification payment')
+          try {
+            await processVerifyPayment(
+              m_payment_id,
+              String(existingPayment.buyerId),
+              existingPayment.amount || '100.00',
+              existingPayment.userEmail || '',
+              existingPayment.userNameFirst || 'User',
+              existingPayment.userNameLast || '',
+              existingPayment.pudoLockerCode,
+              existingPayment.shippingAddress,
+              existingPayment.vaultedRequestIds
+            )
+            console.log('✅ [PAYMENT RETURN] Verification order created')
+          } catch (error: any) {
+            console.error('❌ [PAYMENT RETURN] Error creating verification order:', error?.message)
+          }
+        } else if (existingPayment.listingId && existingPayment.buyerId && existingPayment.sellerId) {
           console.log('🔄 [PAYMENT RETURN] Transferring card ownership with stored IDs')
           try {
             // Get listing to get card name and amount
@@ -542,7 +572,6 @@ router.get('/return', async (req, res) => {
 })
 
 // In-memory payment status store (in production, use a database)
-// Updated to use string IDs for Better Auth compatibility
 const paymentStatusStore = new Map<string, {
   status: 'pending' | 'complete' | 'failed' | 'cancelled'
   mPaymentId: string
@@ -550,13 +579,76 @@ const paymentStatusStore = new Map<string, {
   amount?: string
   timestamp: number
   listingId?: number
-  buyerId?: string | number // Better Auth uses string IDs
-  sellerId?: string | number // Better Auth uses string IDs
-  /** PUDO locker-to-locker: buyer's locker code */
+  buyerId?: string | number
+  sellerId?: string | number
   pudoLockerCode?: string
-  /** Full address or locker name for shipping */
   shippingAddress?: string
+  paymentType?: 'listing' | 'verify'
+  vaultedRequestIds?: number[]
+  userEmail?: string
+  userNameFirst?: string
+  userNameLast?: string
 }>()
+
+/** Process verification (R100) payment: create verification_order + items, set 24h expiry and dropoff code */
+async function processVerifyPayment(
+  paymentId: string,
+  userId: string,
+  amount: string,
+  userEmail: string,
+  userNameFirst: string,
+  userNameLast: string,
+  pudoLockerCode?: string,
+  pudoAddress?: string,
+  vaultedRequestIds?: number[]
+) {
+  if (!vaultedRequestIds?.length) {
+    console.warn('⚠️ [VERIFY PAYMENT] No vaultedRequestIds')
+    return
+  }
+  const existing = await db.select().from(verificationOrders).where(eq(verificationOrders.paymentId, paymentId)).limit(1)
+  if (existing.length > 0) {
+    console.log('✅ [VERIFY PAYMENT] Verification order already exists for', paymentId)
+    return
+  }
+  const userName = [userNameFirst, userNameLast].filter(Boolean).join(' ').trim() || 'User'
+  const dropoffCode = 'V' + Math.random().toString(36).substring(2, 8).toUpperCase()
+  const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24h from now
+  const paidAt = new Date()
+
+  const [order] = await db.insert(verificationOrders).values({
+    userId,
+    paymentId,
+    amount: amount || '100.00',
+    userEmail: userEmail || null,
+    userName: userName || null,
+    pudoLockerCode: pudoLockerCode || null,
+    pudoAddress: pudoAddress || null,
+    dropoffCode,
+    trackingStatus: 'pending_dropoff',
+    expiresAt,
+    paidAt,
+  }).returning()
+
+  for (const vrId of vaultedRequestIds) {
+    await db.insert(verificationOrderItems).values({
+      verificationOrderId: order.id,
+      vaultedRequestId: vrId,
+    })
+  }
+  await db.update(vaultedRequests)
+    .set({ status: 'approved', updatedAt: new Date() })
+    .where(inArray(vaultedRequests.id, vaultedRequestIds))
+
+  console.log('✅ [VERIFY PAYMENT] Created verification order:', {
+    verificationOrderId: order.id,
+    paymentId,
+    userId,
+    dropoffCode,
+    expiresAt: expiresAt.toISOString(),
+    vaultedRequestIds,
+  })
+}
 
 // Function to transfer card ownership after successful payment
 // Updated to use string IDs for Better Auth compatibility
@@ -881,7 +973,7 @@ router.post('/manual-transfer', async (req, res) => {
 })
 
 // Check payment status endpoint
-router.get('/status/:paymentId', (req, res) => {
+router.get('/status/:paymentId', async (req, res) => {
   try {
     const { paymentId } = req.params
     const payment = paymentStatusStore.get(paymentId)
@@ -891,19 +983,25 @@ router.get('/status/:paymentId', (req, res) => {
       return res.status(404).json({ error: 'Payment not found' })
     }
     
-    console.log('📊 [STATUS CHECK] Payment status retrieved:', {
-      paymentId,
-      status: payment.status,
-      timestamp: new Date(payment.timestamp).toISOString(),
-    })
-    
-    res.json({
+    const payload: Record<string, unknown> = {
       success: true,
       status: payment.status,
       mPaymentId: payment.mPaymentId,
       pfPaymentId: payment.pfPaymentId,
       amount: payment.amount,
-    })
+    }
+    if (payment.paymentType === 'verify' && payment.status === 'complete') {
+      const [vo] = await db.select().from(verificationOrders).where(eq(verificationOrders.paymentId, paymentId)).limit(1)
+      if (vo) {
+        payload.verificationOrder = {
+          dropoffCode: vo.dropoffCode,
+          expiresAt: vo.expiresAt,
+          trackingStatus: vo.trackingStatus,
+        }
+      }
+    }
+    
+    res.json(payload)
   } catch (error) {
     console.error('Payment status check error:', error)
     res.status(500).json({ error: 'Failed to check payment status' })
@@ -984,8 +1082,26 @@ router.post('/itn', async (req, res) => {
         shippingAddress: storedPayment?.shippingAddress,
       })
       
-      // Transfer card ownership if listingId, buyerId, and sellerId are available
-      if (storedPayment?.listingId && storedPayment?.buyerId && storedPayment?.sellerId) {
+      // Verification (R100) payment: create verification order
+      if (storedPayment?.paymentType === 'verify' && storedPayment.buyerId && storedPayment.vaultedRequestIds?.length) {
+        console.log('🔄 [ITN] Processing verification payment')
+        try {
+          await processVerifyPayment(
+            m_payment_id,
+            String(storedPayment.buyerId),
+            data.amount_gross || '100.00',
+            data.email_address || storedPayment.userEmail || '',
+            data.name_first || storedPayment.userNameFirst || 'User',
+            data.name_last || storedPayment.userNameLast || '',
+            storedPayment.pudoLockerCode,
+            storedPayment.shippingAddress,
+            storedPayment.vaultedRequestIds
+          )
+          console.log('✅ [ITN] Verification order created')
+        } catch (error: any) {
+          console.error('❌ [ITN] Error creating verification order:', error?.message)
+        }
+      } else if (storedPayment?.listingId && storedPayment?.buyerId && storedPayment?.sellerId) {
         console.log('🔄 [ITN] Transferring card ownership with stored IDs')
         const shipping = (storedPayment.pudoLockerCode || storedPayment.shippingAddress)
           ? { pudoLockerCode: storedPayment.pudoLockerCode, shippingAddress: storedPayment.shippingAddress }

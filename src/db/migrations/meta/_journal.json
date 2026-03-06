@@ -204,6 +204,13 @@
       "when": 1772754313886,
       "tag": "0028_cynical_redwing",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1772763841142,
+      "tag": "0029_chief_captain_britain",
+      "breakpoints": true
     }
   ]
 }

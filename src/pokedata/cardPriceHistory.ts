@@ -5,7 +5,8 @@ import { eq, and, gte } from "drizzle-orm"
 
 /**
  * GET /pokedata/card/:id/price-history
- * Returns historical price points for a card (from card_price_history) for the product chart.
+ * Returns historical price points for a card from our card_price_history table (we build it;
+ * Pokedata gives only today's price). One row per card per calendar day.
  * Query: days=30 (default 30, max 365)
  */
 export const getCardPriceHistory = asyncHandler(async (req: Request, res: Response) => {

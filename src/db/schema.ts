@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, timestamp, boolean, integer, decimal, jsonb } from 'drizzle-orm/pg-core'
+import { pgTable, serial, varchar, text, timestamp, boolean, integer, decimal, jsonb, uniqueIndex } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 // Users table with comprehensive profile information
@@ -35,6 +35,8 @@ export const users = pgTable('users', {
     notifications?: boolean
     language?: string
   }>(),
+  /** Expo push token for sending notifications (e.g. dropoff code ready) */
+  expoPushToken: text('expo_push_token'),
   // Timestamps
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
@@ -157,15 +159,19 @@ export const cardPrices = pgTable('card_prices', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
 })
 
-// Historical price points per card (one row per fetch for product chart)
+// Historical price points per card — one row per card per calendar day (we build history internally; Pokedata gives only today's price)
 export const cardPriceHistory = pgTable('card_price_history', {
   id: serial('id').primaryKey(),
   cardId: text('card_id').notNull(), // Pokedata card ID
   recordedAt: timestamp('recorded_at').defaultNow().notNull(),
+  /** Calendar day (YYYY-MM-DD) so we store at most one row per card per day from client-driven lookups */
+  recordedDate: varchar('recorded_date', { length: 10 }).notNull(),
   marketPrice: decimal('market_price', { precision: 10, scale: 2 }),
   ebayLastSold: decimal('ebay_last_sold', { precision: 10, scale: 2 }),
   currency: varchar('currency', { length: 10 }).default('USD'),
-})
+}, (t) => ({
+  cardDateUnique: uniqueIndex('card_price_history_card_date_unique').on(t.cardId, t.recordedDate),
+}))
 
 // Store listings (items for sale)
 export const storeListings = pgTable('store_listings', {
@@ -262,6 +268,34 @@ export const vaultedRequests = pgTable('vaulted_requests', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
 })
 
+// Verification orders - one per R100 payment for verification; links to vaulted_requests for courier/ops
+export const verificationOrders = pgTable('verification_orders', {
+  id: serial('id').primaryKey(),
+  userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  paymentId: varchar('payment_id', { length: 100 }).notNull().unique(), // PayFast m_payment_id
+  amount: decimal('amount', { precision: 10, scale: 2 }).default('100.00'),
+  userEmail: varchar('user_email', { length: 255 }),
+  userName: varchar('user_name', { length: 255 }), // Full name for courier
+  pudoLockerCode: varchar('pudo_locker_code', { length: 100 }),
+  pudoAddress: text('pudo_address'),
+  dropoffCode: varchar('dropoff_code', { length: 50 }), // Code user gets to drop off at Pudo (e.g. 24h window)
+  trackingStatus: varchar('tracking_status', { length: 50 }).default('pending_dropoff'), // pending_dropoff | deposited | in_transit | verified
+  expiresAt: timestamp('expires_at'), // e.g. 24h from payment for user to drop off
+  paidAt: timestamp('paid_at'),
+  /** When the user first saw the dropoff code in the app (for "new" badge, no push needed) */
+  userSeenDropoffCodeAt: timestamp('user_seen_dropoff_code_at'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+})
+
+// Which vaulted_requests are included in a verification order (one payment can cover multiple cards)
+export const verificationOrderItems = pgTable('verification_order_items', {
+  id: serial('id').primaryKey(),
+  verificationOrderId: integer('verification_order_id').references(() => verificationOrders.id, { onDelete: 'cascade' }).notNull(),
+  vaultedRequestId: integer('vaulted_request_id').references(() => vaultedRequests.id, { onDelete: 'cascade' }).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // Relations
 export const usersRelations = relations(users, ({ many, one }) => ({
   collections: many(collections),
@@ -355,6 +389,16 @@ export const vaultedRequestsRelations = relations(vaultedRequests, ({ one }) => 
   }),
 }))
 
+export const verificationOrdersRelations = relations(verificationOrders, ({ one, many }) => ({
+  user: one(users, { fields: [verificationOrders.userId], references: [users.id] }),
+  items: many(verificationOrderItems),
+}))
+
+export const verificationOrderItemsRelations = relations(verificationOrderItems, ({ one }) => ({
+  verificationOrder: one(verificationOrders, { fields: [verificationOrderItems.verificationOrderId], references: [verificationOrders.id] }),
+  vaultedRequest: one(vaultedRequests, { fields: [verificationOrderItems.vaultedRequestId], references: [vaultedRequests.id] }),
+}))
+
 export const followersRelations = relations(followers, ({ one }) => ({
   follower: one(users, {
     fields: [followers.followerId],
@@ -395,6 +439,10 @@ export type Follower = typeof followers.$inferSelect
 export type NewFollower = typeof followers.$inferInsert
 export type VaultedRequest = typeof vaultedRequests.$inferSelect
 export type NewVaultedRequest = typeof vaultedRequests.$inferInsert
+export type VerificationOrder = typeof verificationOrders.$inferSelect
+export type NewVerificationOrder = typeof verificationOrders.$inferInsert
+export type VerificationOrderItem = typeof verificationOrderItems.$inferSelect
+export type NewVerificationOrderItem = typeof verificationOrderItems.$inferInsert
 export type Account = typeof accounts.$inferSelect
 export type NewAccount = typeof accounts.$inferInsert
 export type VerificationToken = typeof verificationTokens.$inferSelect
