@@ -21,7 +21,7 @@ Compile TypeScript to JavaScript:
 cd server
 npm run build
 ```
-
+.
 This will compile all TypeScript files (including the new `grade.ts`) to the `dist` folder.
 
 ## 3. Start the Server
