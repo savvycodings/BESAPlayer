@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "pudo_locker_name" varchar(255);

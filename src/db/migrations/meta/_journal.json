@@ -218,6 +218,13 @@
       "when": 1773088283673,
       "tag": "0030_panoramic_kitty_pryde",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1773096124941,
+      "tag": "0031_long_dreaming_celestial",
+      "breakpoints": true
     }
   ]
 }

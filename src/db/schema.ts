@@ -16,8 +16,12 @@ export const users = pgTable('users', {
   image: text('image'), // Better Auth expects "image" field (alias for avatar)
   bio: text('bio'), // User bio/description
   location: varchar('location', { length: 255 }),
-  pudoAddress: text('pudo_address'), // Full address or locker location for shipping
-  pudoLockerCode: varchar('pudo_locker_code', { length: 100 }), // PUDO locker code (e.g. ABC123) for locker-to-locker; pulled into payment form and stored on order for seller
+  /** Chosen PUDO locker: code used as terminal_id for L2L/D2L (e.g. CG54). Set at sign-up or in settings. */
+  pudoLockerCode: varchar('pudo_locker_code', { length: 100 }),
+  /** Human-readable locker name (e.g. Sasol Rivonia Uplifted). For display and processing. */
+  pudoLockerName: varchar('pudo_locker_name', { length: 255 }),
+  /** Full address or locker location for shipping (e.g. 375 Rivonia Rd, Rivonia, Sandton). */
+  pudoAddress: text('pudo_address'),
   dateOfBirth: timestamp('date_of_birth'),
   isPremium: boolean('is_premium').default(false),
   isVerified: boolean('is_verified').default(false),

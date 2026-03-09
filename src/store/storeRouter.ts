@@ -990,6 +990,56 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
   }
 })
 
+// GET /api/pudo/lockers - Proxy to PUDO API for locker list (sign-up & L2L orders). Falls back to static list if API returns 404.
+// Doc: https://api-pudo.co.za/ — GET lockers-data; live API often returns 404 so we use fallback to keep sign-up working.
+const PUDO_BASE = process.env.PUDO_API_BASE_URL?.replace(/\/$/, '') || 'https://api-pudo.co.za'
+const PUDO_LOCKERS_PATHS = ['/lockers-data', '/lockers']
+
+/** Fallback lockers when PUDO API returns 404 (doc shape: code, name, address). Replace with real API when available. */
+const PUDO_LOCKERS_FALLBACK: Array<{ code: string; name: string; address: string }> = [
+  { code: 'CG54', name: 'Sasol Rivonia Uplifted', address: '375 Rivonia Rd, Rivonia, Sandton, 2191, South Africa' },
+  { code: 'CG10', name: 'PUDO Locker CG10', address: 'South Africa' },
+  { code: 'CG63', name: 'PUDO Locker CG63', address: 'South Africa' },
+  { code: 'CG107', name: 'PUDO Locker CG107', address: 'South Africa' },
+  { code: 'CG276', name: 'PUDO Locker CG276', address: 'South Africa' },
+  { code: 'K067', name: 'PUDO Locker K067', address: 'South Africa' },
+]
+
+router.get('/api/pudo/lockers', async (req, res) => {
+  try {
+    const apiKey = process.env.PUDO_API_KEY?.trim()
+    if (!apiKey) {
+      console.warn('[PUDO lockers] PUDO_API_KEY not set — returning fallback list')
+      return res.json(PUDO_LOCKERS_FALLBACK)
+    }
+    const headers: Record<string, string> = { Accept: 'application/json' }
+    const authHeader = process.env.PUDO_USE_AUTH_HEADER === 'true'
+    if (authHeader) headers['Authorization'] = `Bearer ${apiKey}`
+
+    let lastStatus = 0
+    let lastText = ''
+    for (const path of PUDO_LOCKERS_PATHS) {
+      const url = authHeader ? `${PUDO_BASE}${path}` : `${PUDO_BASE}${path}?api_key=${encodeURIComponent(apiKey)}`
+      const response = await fetch(url, { headers })
+      lastStatus = response.status
+      lastText = await response.text()
+      if (response.ok) {
+        const raw = JSON.parse(lastText)
+        const list = Array.isArray(raw) ? raw : (raw?.data && Array.isArray(raw.data) ? raw.data : raw?.lockers || [])
+        return res.json(list)
+      }
+      if (response.status !== 404) break
+      console.warn('[PUDO lockers] 404 for', path, '- trying next path')
+    }
+    // API returned 404 or error — return fallback so sign-up locker picker still works
+    console.warn('[PUDO lockers] API returned', lastStatus, '— using fallback locker list')
+    return res.json(PUDO_LOCKERS_FALLBACK)
+  } catch (error: any) {
+    console.error('PUDO lockers error:', error?.message ?? error, '— using fallback')
+    return res.json(PUDO_LOCKERS_FALLBACK)
+  }
+})
+
 // GET /api/pokedata/refresh-prices - One link to refresh all stale card prices (48h TTL). Optional ?limit=N (default 200). Use in cron or bookmark.
 const CACHE_TTL_MS = 48 * 60 * 60 * 1000
 router.get('/api/pokedata/refresh-prices', async (req, res) => {
@@ -1064,6 +1114,8 @@ router.get('/api/profile/user', authenticate, async (req, res) => {
       name: users.name,
       avatar: users.avatar,
       phone: users.phone,
+      pudoLockerCode: users.pudoLockerCode,
+      pudoLockerName: users.pudoLockerName,
       pudoAddress: users.pudoAddress,
       isPremium: users.isPremium,
       level: users.level,
@@ -1267,7 +1319,7 @@ router.patch('/api/verification-orders/:id/dropoff-code', async (req, res) => {
 // PUT /api/profile/user - Update user profile (including avatar)
 router.put('/api/profile/user', authenticate, async (req, res) => {
   try {
-    const { avatar, firstName, lastName, name, bio, location, pudoAddress, phone } = req.body
+    const { avatar, firstName, lastName, name, bio, location, pudoAddress, pudoLockerCode, pudoLockerName, phone } = req.body
 
     // Get existing user
     const [existingUser] = await db.select()
@@ -1289,6 +1341,8 @@ router.put('/api/profile/user', authenticate, async (req, res) => {
         bio: bio !== undefined ? bio : existingUser.bio,
         location: location !== undefined ? location : existingUser.location,
         pudoAddress: pudoAddress !== undefined ? pudoAddress : (existingUser as any).pudoAddress,
+        pudoLockerCode: pudoLockerCode !== undefined ? pudoLockerCode : (existingUser as any).pudoLockerCode,
+        pudoLockerName: pudoLockerName !== undefined ? pudoLockerName : (existingUser as any).pudoLockerName,
         phone: phone !== undefined ? phone : existingUser.phone,
         updatedAt: new Date(),
       })
@@ -1302,6 +1356,8 @@ router.put('/api/profile/user', authenticate, async (req, res) => {
         bio: users.bio,
         location: users.location,
         pudoAddress: users.pudoAddress,
+        pudoLockerCode: users.pudoLockerCode,
+        pudoLockerName: users.pudoLockerName,
         phone: users.phone,
         isPremium: users.isPremium,
         level: users.level,
