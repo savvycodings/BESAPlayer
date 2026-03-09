@@ -1,8 +1,8 @@
 import express from 'express'
-import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices, storeReviews } from '../db'
+import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices, cardPriceHistory, storeReviews } from '../db'
 import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from '../pokedata/setCodeMap'
-import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc, ne } from 'drizzle-orm'
+import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc, ne, lt, gte } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
 import { sendExpoPush } from '../lib/expoPush'
@@ -986,6 +986,70 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
     })
   } catch (error: any) {
     console.error('Get collections error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// GET /api/pokedata/refresh-prices - One link to refresh all stale card prices (48h TTL). Optional ?limit=N (default 200). Use in cron or bookmark.
+const CACHE_TTL_MS = 48 * 60 * 60 * 1000
+router.get('/api/pokedata/refresh-prices', async (req, res) => {
+  try {
+    const limit = Math.min(parseInt(String(req.query.limit), 10) || 200, 500)
+    const cutoff = new Date(Date.now() - CACHE_TTL_MS)
+    const stale = await db.select({ id: cardPrices.id })
+      .from(cardPrices)
+      .where(lt(cardPrices.lastFetchedAt, cutoff))
+      .limit(limit)
+    const ids = stale.map((r) => r.id)
+    let refreshed = 0
+    for (const id of ids) {
+      try {
+        await getCardLookupOrFetch(id, 'CARD')
+        refreshed += 1
+      } catch (e: any) {
+        console.warn('[refresh-prices] Skip card', id, e?.message ?? e)
+      }
+    }
+    res.json({ ok: true, refreshed, totalStale: ids.length, ids })
+  } catch (error: any) {
+    console.error('Refresh prices error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// GET /api/profile/portfolio/history - Aggregated portfolio value history from card_price_history
+router.get('/api/profile/portfolio/history', authenticate, async (req, res) => {
+  try {
+    const daysParam = String(req.query.days || '30')
+    const days = Math.min(365, Math.max(1, parseInt(daysParam, 10) || 30))
+    const since = new Date()
+    since.setDate(since.getDate() - days)
+
+    // Join user's collections with card_price_history on cardId and aggregate by recordedDate
+    const rows = await db.select({
+      recordedDate: cardPriceHistory.recordedDate,
+      totalMarketPrice: sql<number>`COALESCE(SUM(${cardPriceHistory.marketPrice}), 0)`,
+    })
+      .from(cardPriceHistory)
+      .innerJoin(collections, eq(collections.cardId, cardPriceHistory.cardId))
+      .where(and(
+        eq(collections.userId, req.user!.id),
+        gte(cardPriceHistory.recordedAt, since),
+      ))
+      .groupBy(cardPriceHistory.recordedDate)
+      .orderBy(cardPriceHistory.recordedDate)
+
+    const history = rows.map((row: any) => ({
+      date: row.recordedDate,
+      totalMarketPriceUsd: row.totalMarketPrice != null ? parseFloat(String(row.totalMarketPrice)) : 0,
+    }))
+
+    res.json({
+      days,
+      history,
+    })
+  } catch (error: any) {
+    console.error('Get portfolio history error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
