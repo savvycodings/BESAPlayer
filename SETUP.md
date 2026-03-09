@@ -31,7 +31,7 @@ Run the development server:
 ```bash
 npm run dev
 ```
-
+.
 This will:
 - Watch for TypeScript changes and recompile
 - Start the server on port 3050
