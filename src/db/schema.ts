@@ -254,6 +254,17 @@ export const isoItems = pgTable('iso_items', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
 })
 
+// Store reviews: buyer feedback after completed orders
+export const storeReviews = pgTable('store_reviews', {
+  id: serial('id').primaryKey(),
+  storeId: integer('store_id').references(() => stores.id, { onDelete: 'cascade' }).notNull(),
+  buyerId: text('buyer_id').references(() => users.id, { onDelete: 'cascade' }).notNull(),
+  orderId: integer('order_id').references(() => orders.id, { onDelete: 'set null' }),
+  rating: integer('rating').notNull(), // 1–5 stars
+  comment: text('comment'),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+})
+
 // Vaulted requests - for cards that need to be vaulted before selling
 export const vaultedRequests = pgTable('vaulted_requests', {
   id: serial('id').primaryKey(),
@@ -325,6 +336,7 @@ export const storesRelations = relations(stores, ({ one, many }) => ({
   orders: many(orders),
   auctions: many(auctions),
   isoItems: many(isoItems),
+  reviews: many(storeReviews),
 }))
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -361,6 +373,21 @@ export const ordersRelations = relations(orders, ({ one }) => ({
   buyer: one(users, {
     fields: [orders.buyerId],
     references: [users.id],
+  }),
+}))
+
+export const storeReviewsRelations = relations(storeReviews, ({ one }) => ({
+  store: one(stores, {
+    fields: [storeReviews.storeId],
+    references: [stores.id],
+  }),
+  buyer: one(users, {
+    fields: [storeReviews.buyerId],
+    references: [users.id],
+  }),
+  order: one(orders, {
+    fields: [storeReviews.orderId],
+    references: [orders.id],
   }),
 }))
 
@@ -447,3 +474,5 @@ export type Account = typeof accounts.$inferSelect
 export type NewAccount = typeof accounts.$inferInsert
 export type VerificationToken = typeof verificationTokens.$inferSelect
 export type NewVerificationToken = typeof verificationTokens.$inferInsert
+export type StoreReview = typeof storeReviews.$inferSelect
+export type NewStoreReview = typeof storeReviews.$inferInsert

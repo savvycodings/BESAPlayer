@@ -34,6 +34,7 @@ export const followers = dbSchema.followers
 export const vaultedRequests = dbSchema.vaultedRequests
 export const verificationOrders = dbSchema.verificationOrders
 export const verificationOrderItems = dbSchema.verificationOrderItems
+export const storeReviews = dbSchema.storeReviews
 
 // Test the database connection
 export async function testConnection(): Promise<boolean> {

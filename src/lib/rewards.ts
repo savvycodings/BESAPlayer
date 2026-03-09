@@ -83,11 +83,15 @@ export async function grantXpToUser(userId: string, xpToAdd: number): Promise<vo
 }
 
 /**
- * Set the store's verificationLevel (rings) based on its totalSales count.
+ * Set the store's verificationLevel (rank/rings) based on its totalSales count.
  * Call after incrementing totalSales so the ring tier updates (bronze → silver → gold → platinum → diamond).
+ * Does NOT set to 'unverified' when totalSales is 0 — leaves existing level so manually verified stores keep their rank.
  */
 export async function updateStoreVerificationLevel(storeId: number): Promise<void> {
-  const [store] = await db.select({ totalSales: stores.totalSales })
+  const [store] = await db.select({
+    totalSales: stores.totalSales,
+    verificationLevel: stores.verificationLevel,
+  })
     .from(stores)
     .where(eq(stores.id, storeId))
     .limit(1)
@@ -98,13 +102,19 @@ export async function updateStoreVerificationLevel(storeId: number): Promise<voi
   }
 
   const totalSales = store.totalSales ?? 0
-  let verificationLevel = 'unverified'
+  let verificationLevel: string | null = null
 
   for (const { minSales, level } of VERIFICATION_BY_SALES) {
     if (totalSales >= minSales) {
       verificationLevel = level
       break
     }
+  }
+
+  // Only update when we have a tier from sales; never overwrite with 'unverified' (preserves manual verification)
+  if (verificationLevel === null) {
+    console.log('[REWARDS] Store verification unchanged (totalSales < 1):', { storeId, totalSales, currentLevel: store.verificationLevel })
+    return
   }
 
   await db.update(stores)

@@ -1,8 +1,8 @@
 import express from 'express'
-import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices } from '../db'
+import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices, storeReviews } from '../db'
 import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from '../pokedata/setCodeMap'
-import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc } from 'drizzle-orm'
+import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc, ne } from 'drizzle-orm'
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
 import { sendExpoPush } from '../lib/expoPush'
@@ -1422,6 +1422,65 @@ router.get('/api/stores/search', async (req, res) => {
   }
 })
 
+// GET /api/stores/verified - List verified (non-unverified) active stores for carousel
+router.get('/api/stores/verified', async (req, res) => {
+  try {
+    const { limit = '12' } = req.query
+    const limitNum = Math.min(parseInt(limit as string, 10) || 12, 24)
+
+    const foundStores = await db.select({
+      id: stores.id,
+      userId: stores.userId,
+      storeName: stores.storeName,
+      description: stores.description,
+      bannerUrl: stores.bannerUrl,
+      profileImage: stores.profileImage,
+      verificationLevel: stores.verificationLevel,
+      totalSales: stores.totalSales,
+      rating: stores.rating,
+      totalReviews: stores.totalReviews,
+      isActive: stores.isActive,
+      userFirstName: users.firstName,
+      userLastName: users.lastName,
+      userName: users.name,
+      userAvatar: users.avatar,
+    })
+      .from(stores)
+      .innerJoin(users, eq(stores.userId, users.id))
+      .where(and(
+        eq(stores.isActive, true),
+        ne(stores.verificationLevel, 'unverified')
+      ))
+      .orderBy(desc(stores.totalSales), desc(stores.rating))
+      .limit(limitNum)
+
+    res.json({
+      success: true,
+      stores: foundStores.map(store => ({
+        id: store.id,
+        userId: store.userId,
+        storeName: store.storeName,
+        description: store.description,
+        bannerUrl: store.bannerUrl,
+        profileImage: store.profileImage || store.userAvatar,
+        verificationLevel: store.verificationLevel,
+        totalSales: store.totalSales,
+        rating: store.rating,
+        totalReviews: store.totalReviews,
+        owner: {
+          firstName: store.userFirstName,
+          lastName: store.userLastName,
+          name: store.userName,
+          avatar: store.userAvatar,
+        },
+      })),
+    })
+  } catch (error: any) {
+    console.error('GET /api/stores/verified error:', error)
+    res.status(500).json({ success: false, message: 'Internal server error', error: error.message })
+  }
+})
+
 // GET /api/stores/:storeId/iso - Get ISO items for a store (public, for view profile)
 router.get('/api/stores/:storeId/iso', async (req, res) => {
   try {
@@ -1476,6 +1535,137 @@ router.get('/api/stores/:storeId/iso', async (req, res) => {
     res.json({ isoItems: enriched })
   } catch (error: any) {
     console.error('Get store ISO items error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// GET /api/stores/:storeId/reviews - Public reviews for a store (used on view profile)
+router.get('/api/stores/:storeId/reviews', async (req, res) => {
+  try {
+    const storeId = parseInt(req.params.storeId, 10)
+    if (isNaN(storeId)) {
+      return res.status(400).json({ message: 'Invalid store ID' })
+    }
+
+    const [store] = await db.select()
+      .from(stores)
+      .where(and(eq(stores.id, storeId), eq(stores.isActive, true)))
+      .limit(1)
+
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' })
+    }
+
+    const reviews = await db.select({
+      id: storeReviews.id,
+      rating: storeReviews.rating,
+      comment: storeReviews.comment,
+      createdAt: storeReviews.createdAt,
+      buyerId: storeReviews.buyerId,
+      buyerFirstName: users.firstName,
+      buyerLastName: users.lastName,
+      buyerName: users.name,
+      buyerAvatar: users.avatar,
+    })
+      .from(storeReviews)
+      .innerJoin(users, eq(storeReviews.buyerId, users.id))
+      .where(eq(storeReviews.storeId, storeId))
+      .orderBy(desc(storeReviews.createdAt))
+
+    res.json({ reviews })
+  } catch (error: any) {
+    console.error('Get store reviews error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
+// POST /api/stores/:storeId/reviews - Create a review for a store (requires completed order)
+router.post('/api/stores/:storeId/reviews', authenticate, async (req, res) => {
+  try {
+    const storeId = parseInt(req.params.storeId, 10)
+    if (isNaN(storeId)) {
+      return res.status(400).json({ message: 'Invalid store ID' })
+    }
+
+    const { rating, comment } = req.body as { rating?: number; comment?: string }
+    const numericRating = Number(rating)
+    if (!numericRating || numericRating < 1 || numericRating > 5) {
+      return res.status(400).json({ message: 'Rating must be between 1 and 5' })
+    }
+
+    // Ensure the store exists and is active
+    const [store] = await db.select()
+      .from(stores)
+      .where(and(eq(stores.id, storeId), eq(stores.isActive, true)))
+      .limit(1)
+
+    if (!store) {
+      return res.status(404).json({ message: 'Store not found' })
+    }
+
+    // Only allow reviews from buyers with at least one completed order for this store
+    const [completedOrder] = await db.select({ id: orders.id })
+      .from(orders)
+      .where(and(
+        eq(orders.storeId, storeId),
+        eq(orders.buyerId, req.user!.id),
+        eq(orders.status, 'completed'),
+      ))
+      .limit(1)
+
+    if (!completedOrder) {
+      return res.status(403).json({ message: 'You can only review stores you have purchased from.' })
+    }
+
+    // Check if this buyer has already reviewed this store; allow multiple but prevent accidental spam by limiting to a few
+    const [existingReview] = await db.select({ id: storeReviews.id })
+      .from(storeReviews)
+      .where(and(
+        eq(storeReviews.storeId, storeId),
+        eq(storeReviews.buyerId, req.user!.id),
+      ))
+      .limit(1)
+
+    if (existingReview) {
+      // For now, prevent multiple reviews per buyer/store to keep it simple
+      return res.status(400).json({ message: 'You have already reviewed this store.' })
+    }
+
+    // Insert review
+    const [newReview] = await db.insert(storeReviews)
+      .values({
+        storeId,
+        buyerId: req.user!.id,
+        orderId: completedOrder.id,
+        rating: numericRating,
+        comment: comment?.toString().trim() || null,
+      })
+      .returning()
+
+    // Update store aggregate rating + totalReviews
+    const currentRating = parseFloat(store.rating?.toString() || '0') || 0
+    const currentTotalReviews = store.totalReviews || 0
+    const newTotalReviews = currentTotalReviews + 1
+    const newRating = (currentRating * currentTotalReviews + numericRating) / newTotalReviews
+
+    await db.update(stores)
+      .set({
+        rating: newRating.toFixed(2),
+        totalReviews: newTotalReviews,
+      })
+      .where(eq(stores.id, storeId))
+
+    res.status(201).json({
+      success: true,
+      review: newReview,
+      store: {
+        id: store.id,
+        rating: newRating,
+        totalReviews: newTotalReviews,
+      },
+    })
+  } catch (error: any) {
+    console.error('Create store review error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
   }
 })
