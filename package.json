@@ -16,7 +16,9 @@
     "db:migrate:stores-social": "tsx scripts/migrate-stores-social.ts",
     "fetch-tcg-sets": "tsx scripts/fetch-pokemon-tcg-sets.ts",
     "fetch-card-price-history": "tsx scripts/fetch-card-price-history.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "healthcheck": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/healthcheck.ps1",
+    "healthcheck:sh": "bash scripts/healthcheck.sh"
   },
   "keywords": [],
   "author": "",

@@ -93,8 +93,8 @@ app.use('/', storeRouter)
 
 // Start server and test database connection
 const PORT = process.env.PORT || 3050
-app.listen(PORT, async () => {
-  console.log(`Server started on port ${PORT}`)
+app.listen(Number(PORT), '0.0.0.0', async () => {
+  console.log(`Server started on http://0.0.0.0:${PORT} (LAN devices use your PC IP, e.g. http://192.168.x.x:${PORT})`)
   
   // Test database connection
   if (process.env.DATABASE_URL) {
