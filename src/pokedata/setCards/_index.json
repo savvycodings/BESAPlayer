@@ -1,0 +1,173 @@
+{
+  "updatedAt": "2026-05-19T00:26:28.410Z",
+  "bySetId": {
+    "532": {
+      "setName": "Pokemon Card 151",
+      "cardCount": 361,
+      "fetchedAt": "2026-05-19T00:26:28.408Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/532.json",
+      "slugFile": "sets/532-pokemon-card-151.json"
+    },
+    "536": {
+      "setName": "Paradox Rift",
+      "cardCount": 428,
+      "fetchedAt": "2026-05-19T00:17:00.802Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/536.json",
+      "slugFile": "sets/536-paradox-rift.json"
+    },
+    "539": {
+      "setName": "Paldean Fates",
+      "cardCount": 326,
+      "fetchedAt": "2026-05-19T00:13:39.200Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/539.json",
+      "slugFile": "sets/539-paldean-fates.json"
+    },
+    "542": {
+      "setName": "Temporal Forces",
+      "cardCount": 358,
+      "fetchedAt": "2026-05-19T00:10:41.386Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/542.json",
+      "slugFile": "sets/542-temporal-forces.json"
+    },
+    "545": {
+      "setName": "Twilight Masquerade",
+      "cardCount": 373,
+      "fetchedAt": "2026-05-19T00:07:59.718Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/545.json",
+      "slugFile": "sets/545-twilight-masquerade.json"
+    },
+    "548": {
+      "setName": "Shrouded Fable",
+      "cardCount": 162,
+      "fetchedAt": "2026-05-19T00:05:18.303Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/548.json",
+      "slugFile": "sets/548-shrouded-fable.json"
+    },
+    "549": {
+      "setName": "Stellar Crown",
+      "cardCount": 300,
+      "fetchedAt": "2026-05-18T23:59:56.651Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/549.json",
+      "slugFile": "sets/549-stellar-crown.json"
+    },
+    "554": {
+      "setName": "Trick or Trade 2024",
+      "cardCount": 30,
+      "fetchedAt": "2026-05-19T00:02:37.915Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/554.json",
+      "slugFile": "sets/554-trick-or-trade-2024.json"
+    },
+    "555": {
+      "setName": "Surging Sparks",
+      "cardCount": 417,
+      "fetchedAt": "2026-05-18T23:33:26.964Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/555.json",
+      "slugFile": "sets/555-surging-sparks.json"
+    },
+    "557": {
+      "setName": "Prismatic Evolutions",
+      "cardCount": 448,
+      "fetchedAt": "2026-05-18T23:30:45.563Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/557.json",
+      "slugFile": "sets/557-prismatic-evolutions.json"
+    },
+    "559": {
+      "setName": "Mcdonald's Dragon Discovery",
+      "cardCount": 15,
+      "fetchedAt": "2026-05-18T23:29:04.572Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/559.json",
+      "slugFile": "sets/559-mcdonalds-dragon-discovery.json"
+    },
+    "561": {
+      "setName": "Trading Card Game Classic",
+      "cardCount": 102,
+      "fetchedAt": "2026-05-19T00:14:19.940Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/561.json",
+      "slugFile": "sets/561-trading-card-game-classic.json"
+    },
+    "562": {
+      "setName": "Journey Together",
+      "cardCount": 333,
+      "fetchedAt": "2026-05-18T23:18:38.911Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/562.json",
+      "slugFile": "sets/562-journey-together.json"
+    },
+    "567": {
+      "setName": "Destined Rivals",
+      "cardCount": 409,
+      "fetchedAt": "2026-05-18T23:18:16.988Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/567.json",
+      "slugFile": "sets/567-destined-rivals.json"
+    },
+    "570": {
+      "setName": "Black Bolt",
+      "cardCount": 413,
+      "fetchedAt": "2026-05-18T23:17:53.507Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/570.json",
+      "slugFile": "sets/570-black-bolt.json"
+    },
+    "571": {
+      "setName": "White Flare",
+      "cardCount": 415,
+      "fetchedAt": "2026-05-18T23:18:05.709Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/571.json",
+      "slugFile": "sets/571-white-flare.json"
+    },
+    "574": {
+      "setName": "Mega Evolution",
+      "cardCount": 311,
+      "fetchedAt": "2026-05-18T23:17:17.016Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/574.json",
+      "slugFile": "sets/574-mega-evolution.json"
+    },
+    "575": {
+      "setName": "Mega Evolution Promos",
+      "cardCount": 67,
+      "fetchedAt": "2026-05-18T23:17:38.174Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/575.json",
+      "slugFile": "sets/575-mega-evolution-promos.json"
+    },
+    "3589": {
+      "setName": "Phantasmal Flames",
+      "cardCount": 215,
+      "fetchedAt": "2026-05-18T23:16:17.530Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/3589.json",
+      "slugFile": "sets/3589-phantasmal-flames.json"
+    },
+    "3591": {
+      "setName": "Ascended Heroes",
+      "cardCount": 615,
+      "fetchedAt": "2026-05-18T23:14:26.948Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/3591.json",
+      "slugFile": "sets/3591-ascended-heroes.json"
+    },
+    "3665": {
+      "setName": "Perfect Order",
+      "cardCount": 203,
+      "fetchedAt": "2026-05-18T23:09:29.634Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/3665.json",
+      "slugFile": "sets/3665-perfect-order.json"
+    }
+  }
+}

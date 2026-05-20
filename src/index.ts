@@ -8,6 +8,8 @@ import pokedataRouter from './pokedata/pokedataRouter'
 import payfastRouter from './payment/payfastRouter'
 import authRouter from './auth/authRouter'
 import storeRouter from './store/storeRouter'
+import marketRouter from './market/marketRouter'
+import adminRouter from './admin/adminRouter'
 import bodyParser from 'body-parser'
 import 'dotenv/config'
 import { testConnection } from './db'
@@ -90,6 +92,8 @@ app.use('/pokedata', pokedataRouter)
 app.use('/payment', payfastRouter)
 app.use('/', authRouter)  // Keep custom auth for backward compatibility
 app.use('/', storeRouter)
+app.use('/', marketRouter)
+app.use('/', adminRouter)
 
 // Start server and test database connection
 const PORT = process.env.PORT || 3050

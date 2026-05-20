@@ -1,4 +1,4 @@
-import { pgTable, serial, varchar, text, timestamp, boolean, integer, decimal, jsonb, uniqueIndex } from 'drizzle-orm/pg-core'
+import { pgTable, serial, varchar, text, timestamp, boolean, integer, decimal, jsonb, uniqueIndex, index } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm'
 
 // Users table with comprehensive profile information
@@ -140,6 +140,52 @@ export const verificationTokens = pgTable('verification_tokens', {
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Missing field!
 })
 
+/** Local catalog of Pokémon sets (synced from Pokedata via pnpm run update-db). Market UI reads this only. */
+export const marketSets = pgTable('market_sets', {
+  pokedataSetId: integer('pokedata_set_id').primaryKey(),
+  name: varchar('name', { length: 255 }).notNull(),
+  code: varchar('code', { length: 32 }),
+  language: varchar('language', { length: 20 }).notNull().default('ENGLISH'),
+  releaseDate: timestamp('release_date'),
+  tcg: varchar('tcg', { length: 50 }),
+  /** Number of cards in market_cards for this set (synced from Pokedata /v0/set). */
+  cardCount: integer('card_count').notNull().default(0),
+  /** When cards-in-set were last synced (null = never). */
+  cardsSyncedAt: timestamp('cards_synced_at'),
+  /** images.pokemontcg.io set id when name matches pokemonTcgSets.json */
+  tcgSetId: varchar('tcg_set_id', { length: 32 }),
+  lastSyncedAt: timestamp('last_synced_at').defaultNow().notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+})
+
+/** Cards in a set — synced one set at a time via pnpm run fetch-set-cards (5 credits/set). */
+export const marketCards = pgTable(
+  'market_cards',
+  {
+    pokedataCardId: integer('pokedata_card_id').primaryKey(),
+    pokedataSetId: integer('pokedata_set_id')
+      .notNull()
+      .references(() => marketSets.pokedataSetId, { onDelete: 'cascade' }),
+    name: varchar('name', { length: 255 }).notNull(),
+    num: varchar('num', { length: 32 }).notNull(),
+    language: varchar('language', { length: 20 }).notNull().default('ENGLISH'),
+    setCode: varchar('set_code', { length: 32 }),
+    setName: varchar('set_name', { length: 255 }),
+    secret: boolean('secret').default(false).notNull(),
+    releaseDate: timestamp('release_date'),
+    lastSyncedAt: timestamp('last_synced_at').defaultNow().notNull(),
+    /** Last successful daily price sync (from sync-card-prices job). */
+    lastPriceSyncedAt: timestamp('last_price_synced_at'),
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+  },
+  (table) => ({
+    setIdIdx: index('market_cards_set_id_idx').on(table.pokedataSetId),
+    setNumIdx: index('market_cards_set_num_idx').on(table.pokedataSetId, table.num),
+    nameIdx: index('market_cards_name_idx').on(table.name),
+  }),
+)
+
 // Cached Pokedata search results (same query within TTL = no API call)
 export const pokedataSearchCache = pgTable('pokedata_search_cache', {
   cacheKey: text('cache_key').primaryKey(), // normalized: query|assetType|language
@@ -176,6 +222,42 @@ export const cardPriceHistory = pgTable('card_price_history', {
 }, (t) => ({
   cardDateUnique: uniqueIndex('card_price_history_card_date_unique').on(t.cardId, t.recordedDate),
 }))
+
+/** Daily bulk price sync over market_cards (checkpointed, cron-friendly). */
+export const priceSyncJobs = pgTable('price_sync_jobs', {
+  id: varchar('id', { length: 36 }).primaryKey(),
+  recordedDate: varchar('recorded_date', { length: 10 }).notNull(),
+  status: varchar('status', { length: 20 }).notNull().default('pending'), // pending|running|paused|completed|failed
+  cursorCardId: integer('cursor_card_id').notNull().default(0),
+  totalCards: integer('total_cards').notNull().default(0),
+  processed: integer('processed').notNull().default(0),
+  succeeded: integer('succeeded').notNull().default(0),
+  failed: integer('failed').notNull().default(0),
+  errorSummary: text('error_summary'),
+  startedAt: timestamp('started_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
+  completedAt: timestamp('completed_at'),
+}, (t) => ({
+  recordedDateIdx: index('price_sync_jobs_recorded_date_idx').on(t.recordedDate),
+  statusIdx: index('price_sync_jobs_status_idx').on(t.status),
+}))
+
+export const priceSyncFailures = pgTable(
+  'price_sync_failures',
+  {
+    id: serial('id').primaryKey(),
+    jobId: varchar('job_id', { length: 36 })
+      .notNull()
+      .references(() => priceSyncJobs.id, { onDelete: 'cascade' }),
+    pokedataCardId: integer('pokedata_card_id').notNull(),
+    error: text('error').notNull(),
+    attempts: integer('attempts').notNull().default(1),
+    lastAttemptAt: timestamp('last_attempt_at').defaultNow().notNull(),
+  },
+  (t) => ({
+    jobCardUnique: uniqueIndex('price_sync_failures_job_card_unique').on(t.jobId, t.pokedataCardId),
+  }),
+)
 
 // Store listings (items for sale)
 export const storeListings = pgTable('store_listings', {

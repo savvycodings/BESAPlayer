@@ -1,0 +1,3211 @@
+{
+  "fetchedAt": "2026-05-18T22:53:31.405Z",
+  "source": "https://www.pokedata.io/v0/sets",
+  "creditsPerRequest": 5,
+  "languagesFetched": [
+    "ENGLISH"
+  ],
+  "count": 179,
+  "sets": [
+    {
+      "code": "POR",
+      "id": 3665,
+      "language": "ENGLISH",
+      "name": "Perfect Order",
+      "release_date": "Fri, 27 Mar 2026 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "ASC",
+      "id": 3591,
+      "language": "ENGLISH",
+      "name": "Ascended Heroes",
+      "release_date": "Fri, 30 Jan 2026 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PFL",
+      "id": 3589,
+      "language": "ENGLISH",
+      "name": "Phantasmal Flames",
+      "release_date": "Thu, 13 Nov 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MEG",
+      "id": 574,
+      "language": "ENGLISH",
+      "name": "Mega Evolution",
+      "release_date": "Fri, 26 Sep 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MEP",
+      "id": 575,
+      "language": "ENGLISH",
+      "name": "Mega Evolution Promos",
+      "release_date": "Thu, 25 Sep 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BLK",
+      "id": 570,
+      "language": "ENGLISH",
+      "name": "Black Bolt",
+      "release_date": "Fri, 18 Jul 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "WHT",
+      "id": 571,
+      "language": "ENGLISH",
+      "name": "White Flare",
+      "release_date": "Fri, 18 Jul 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DRI",
+      "id": 567,
+      "language": "ENGLISH",
+      "name": "Destined Rivals",
+      "release_date": "Fri, 30 May 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "JTG",
+      "id": 562,
+      "language": "ENGLISH",
+      "name": "Journey Together",
+      "release_date": "Fri, 28 Mar 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M24",
+      "id": 559,
+      "language": "ENGLISH",
+      "name": "Mcdonald's Dragon Discovery",
+      "release_date": "Tue, 21 Jan 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PRE",
+      "id": 557,
+      "language": "ENGLISH",
+      "name": "Prismatic Evolutions",
+      "release_date": "Fri, 17 Jan 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SSP",
+      "id": 555,
+      "language": "ENGLISH",
+      "name": "Surging Sparks",
+      "release_date": "Fri, 08 Nov 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SCR",
+      "id": 549,
+      "language": "ENGLISH",
+      "name": "Stellar Crown",
+      "release_date": "Fri, 13 Sep 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TTBB24",
+      "id": 554,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2024",
+      "release_date": "Fri, 30 Aug 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SFA",
+      "id": 548,
+      "language": "ENGLISH",
+      "name": "Shrouded Fable",
+      "release_date": "Fri, 02 Aug 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TWM",
+      "id": 545,
+      "language": "ENGLISH",
+      "name": "Twilight Masquerade",
+      "release_date": "Sat, 25 May 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TEF",
+      "id": 542,
+      "language": "ENGLISH",
+      "name": "Temporal Forces",
+      "release_date": "Fri, 22 Mar 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PAF",
+      "id": 539,
+      "language": "ENGLISH",
+      "name": "Paldean Fates",
+      "release_date": "Fri, 26 Jan 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CL",
+      "id": 561,
+      "language": "ENGLISH",
+      "name": "Trading Card Game Classic",
+      "release_date": "Fri, 17 Nov 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PAR",
+      "id": 536,
+      "language": "ENGLISH",
+      "name": "Paradox Rift",
+      "release_date": "Fri, 03 Nov 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MEW",
+      "id": 532,
+      "language": "ENGLISH",
+      "name": "Pokemon Card 151",
+      "release_date": "Fri, 22 Sep 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TTBB23",
+      "id": 531,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2023",
+      "release_date": "Fri, 01 Sep 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "OBF",
+      "id": 517,
+      "language": "ENGLISH",
+      "name": "Obsidian Flames",
+      "release_date": "Fri, 11 Aug 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M23",
+      "id": 530,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2023",
+      "release_date": "Thu, 27 Jul 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PAL",
+      "id": 513,
+      "language": "ENGLISH",
+      "name": "Paldea Evolved",
+      "release_date": "Fri, 09 Jun 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SVI",
+      "id": 510,
+      "language": "ENGLISH",
+      "name": "Scarlet & Violet Base",
+      "release_date": "Fri, 31 Mar 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CRZ",
+      "id": 506,
+      "language": "ENGLISH",
+      "name": "Crown Zenith",
+      "release_date": "Fri, 20 Jan 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SVP",
+      "id": 515,
+      "language": "ENGLISH",
+      "name": "Scarlet & Violet Promos",
+      "release_date": "Sun, 01 Jan 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH12",
+      "id": 503,
+      "language": "ENGLISH",
+      "name": "Silver Tempest",
+      "release_date": "Fri, 11 Nov 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH11",
+      "id": 400,
+      "language": "ENGLISH",
+      "name": "Lost Origin",
+      "release_date": "Fri, 09 Sep 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TTBB",
+      "id": 504,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2022",
+      "release_date": "Thu, 01 Sep 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M22",
+      "id": 399,
+      "language": "ENGLISH",
+      "name": "Mcdonald's Promos 2022",
+      "release_date": "Tue, 16 Aug 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PGO",
+      "id": 387,
+      "language": "ENGLISH",
+      "name": "Pokemon GO",
+      "release_date": "Fri, 01 Jul 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH10",
+      "id": 182,
+      "language": "ENGLISH",
+      "name": "Astral Radiance",
+      "release_date": "Fri, 27 May 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH09",
+      "id": 178,
+      "language": "ENGLISH",
+      "name": "Brilliant Stars",
+      "release_date": "Fri, 25 Feb 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH08",
+      "id": 172,
+      "language": "ENGLISH",
+      "name": "Fusion Strike",
+      "release_date": "Sun, 31 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CLB",
+      "id": 112,
+      "language": "ENGLISH",
+      "name": "Celebrations",
+      "release_date": "Fri, 08 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CCC",
+      "id": 111,
+      "language": "ENGLISH",
+      "name": "Celebrations: Classic Collection",
+      "release_date": "Thu, 07 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH07",
+      "id": 108,
+      "language": "ENGLISH",
+      "name": "Evolving Skies",
+      "release_date": "Fri, 27 Aug 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH06",
+      "id": 26,
+      "language": "ENGLISH",
+      "name": "Chilling Reign",
+      "release_date": "Fri, 18 Jun 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH05",
+      "id": 20,
+      "language": "ENGLISH",
+      "name": "Battle Styles",
+      "release_date": "Fri, 19 Mar 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SHF",
+      "id": 21,
+      "language": "ENGLISH",
+      "name": "Shining Fates",
+      "release_date": "Fri, 19 Feb 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M21",
+      "id": 171,
+      "language": "ENGLISH",
+      "name": "Mcdonald's 25th Anniversary",
+      "release_date": "Tue, 09 Feb 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH04",
+      "id": 3,
+      "language": "ENGLISH",
+      "name": "Vivid Voltage",
+      "release_date": "Fri, 13 Nov 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CHP",
+      "id": 2,
+      "language": "ENGLISH",
+      "name": "Champion's Path",
+      "release_date": "Fri, 25 Sep 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH03",
+      "id": 4,
+      "language": "ENGLISH",
+      "name": "Darkness Ablaze",
+      "release_date": "Fri, 14 Aug 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH02",
+      "id": 5,
+      "language": "ENGLISH",
+      "name": "Rebel Clash",
+      "release_date": "Fri, 01 May 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSH01",
+      "id": 6,
+      "language": "ENGLISH",
+      "name": "Sword & Shield",
+      "release_date": "Fri, 07 Feb 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM12",
+      "id": 7,
+      "language": "ENGLISH",
+      "name": "Cosmic Eclipse",
+      "release_date": "Fri, 01 Nov 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M19",
+      "id": 521,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2019",
+      "release_date": "Tue, 15 Oct 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SWSD",
+      "id": 109,
+      "language": "ENGLISH",
+      "name": "Sword & Shield Promo",
+      "release_date": "Tue, 01 Oct 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "HIF",
+      "id": 1,
+      "language": "ENGLISH",
+      "name": "Hidden Fates",
+      "release_date": "Fri, 23 Aug 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM11",
+      "id": 8,
+      "language": "ENGLISH",
+      "name": "Unified Minds",
+      "release_date": "Fri, 02 Aug 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM10",
+      "id": 24,
+      "language": "ENGLISH",
+      "name": "Unbroken Bonds",
+      "release_date": "Fri, 03 May 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DEP",
+      "id": 23,
+      "language": "ENGLISH",
+      "name": "Detective Pikachu",
+      "release_date": "Fri, 29 Mar 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM9",
+      "id": 9,
+      "language": "ENGLISH",
+      "name": "Team Up",
+      "release_date": "Fri, 01 Feb 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM8",
+      "id": 10,
+      "language": "ENGLISH",
+      "name": "Lost Thunder",
+      "release_date": "Fri, 02 Nov 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M18",
+      "id": 522,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2018",
+      "release_date": "Fri, 19 Oct 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DRM",
+      "id": 11,
+      "language": "ENGLISH",
+      "name": "Dragon Majesty",
+      "release_date": "Fri, 07 Sep 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CES",
+      "id": 12,
+      "language": "ENGLISH",
+      "name": "Celestial Storm",
+      "release_date": "Fri, 03 Aug 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM06",
+      "id": 13,
+      "language": "ENGLISH",
+      "name": "Forbidden Light",
+      "release_date": "Fri, 04 May 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM05",
+      "id": 14,
+      "language": "ENGLISH",
+      "name": "Ultra Prism",
+      "release_date": "Fri, 02 Feb 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM04",
+      "id": 15,
+      "language": "ENGLISH",
+      "name": "Crimson Invasion",
+      "release_date": "Fri, 03 Nov 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SHL",
+      "id": 16,
+      "language": "ENGLISH",
+      "name": "Shining Legends",
+      "release_date": "Fri, 06 Oct 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM03",
+      "id": 17,
+      "language": "ENGLISH",
+      "name": "Burning Shadows",
+      "release_date": "Fri, 04 Aug 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M17",
+      "id": 523,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2017",
+      "release_date": "Thu, 03 Aug 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM02",
+      "id": 18,
+      "language": "ENGLISH",
+      "name": "Guardians Rising",
+      "release_date": "Fri, 05 May 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SM01",
+      "id": 19,
+      "language": "ENGLISH",
+      "name": "Sun & Moon",
+      "release_date": "Fri, 03 Feb 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SMP",
+      "id": 25,
+      "language": "ENGLISH",
+      "name": "Sun & Moon Black Star Promo",
+      "release_date": "Mon, 03 Oct 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "EVO",
+      "id": 22,
+      "language": "ENGLISH",
+      "name": "Evolutions",
+      "release_date": "Sun, 02 Oct 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M16",
+      "id": 524,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2016",
+      "release_date": "Sat, 20 Aug 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "STS",
+      "id": 31,
+      "language": "ENGLISH",
+      "name": "Steam Siege",
+      "release_date": "Wed, 03 Aug 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "FCO",
+      "id": 32,
+      "language": "ENGLISH",
+      "name": "Fates Collide",
+      "release_date": "Mon, 02 May 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "GEN",
+      "id": 33,
+      "language": "ENGLISH",
+      "name": "Generations",
+      "release_date": "Mon, 22 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "GEN",
+      "id": 169,
+      "language": "ENGLISH",
+      "name": "Generations Radiant Collection",
+      "release_date": "Mon, 22 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BKP",
+      "id": 34,
+      "language": "ENGLISH",
+      "name": "BREAKpoint",
+      "release_date": "Wed, 03 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M15",
+      "id": 525,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2015",
+      "release_date": "Fri, 27 Nov 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BKT",
+      "id": 35,
+      "language": "ENGLISH",
+      "name": "BREAKthrough",
+      "release_date": "Sun, 04 Oct 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "AOR",
+      "id": 36,
+      "language": "ENGLISH",
+      "name": "Ancient Origins",
+      "release_date": "Wed, 12 Aug 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "ROS",
+      "id": 37,
+      "language": "ENGLISH",
+      "name": "Roaring Skies",
+      "release_date": "Wed, 06 May 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DCR",
+      "id": 291,
+      "language": "ENGLISH",
+      "name": "Double Crisis",
+      "release_date": "Wed, 25 Mar 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PRC",
+      "id": 38,
+      "language": "ENGLISH",
+      "name": "Primal Clash",
+      "release_date": "Wed, 04 Feb 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PHF",
+      "id": 39,
+      "language": "ENGLISH",
+      "name": "Phantom Forces",
+      "release_date": "Sun, 05 Oct 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "FFI",
+      "id": 40,
+      "language": "ENGLISH",
+      "name": "Furious Fists",
+      "release_date": "Wed, 13 Aug 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 174,
+      "language": "ENGLISH",
+      "name": "Alternate Art Promos",
+      "release_date": "Wed, 13 Aug 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M14",
+      "id": 526,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2014",
+      "release_date": "Fri, 23 May 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "FLF",
+      "id": 41,
+      "language": "ENGLISH",
+      "name": "Flashfire",
+      "release_date": "Wed, 07 May 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "XY",
+      "id": 42,
+      "language": "ENGLISH",
+      "name": "XY Base",
+      "release_date": "Wed, 05 Feb 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "LTR",
+      "id": 170,
+      "language": "ENGLISH",
+      "name": "Legendary Treasures Radiant Collection",
+      "release_date": "Wed, 06 Nov 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "LTR",
+      "id": 43,
+      "language": "ENGLISH",
+      "name": "Legendary Treasures",
+      "release_date": "Wed, 06 Nov 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 175,
+      "language": "ENGLISH",
+      "name": "XY Black Star Promos",
+      "release_date": "Tue, 01 Oct 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PLB",
+      "id": 44,
+      "language": "ENGLISH",
+      "name": "Plasma Blast",
+      "release_date": "Wed, 14 Aug 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PLF",
+      "id": 45,
+      "language": "ENGLISH",
+      "name": "Plasma Freeze",
+      "release_date": "Wed, 08 May 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PLS",
+      "id": 46,
+      "language": "ENGLISH",
+      "name": "Plasma Storm",
+      "release_date": "Wed, 06 Feb 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DRV",
+      "id": 389,
+      "language": "ENGLISH",
+      "name": "Dragon Vault",
+      "release_date": "Fri, 12 Oct 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BCR",
+      "id": 47,
+      "language": "ENGLISH",
+      "name": "Boundaries Crossed",
+      "release_date": "Sun, 07 Oct 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DRX",
+      "id": 48,
+      "language": "ENGLISH",
+      "name": "Dragons Exalted",
+      "release_date": "Wed, 15 Aug 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M12",
+      "id": 528,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2012",
+      "release_date": "Fri, 15 Jun 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DEX",
+      "id": 49,
+      "language": "ENGLISH",
+      "name": "Dark Explorers",
+      "release_date": "Wed, 09 May 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "NXD",
+      "id": 97,
+      "language": "ENGLISH",
+      "name": "Next Destinies",
+      "release_date": "Wed, 08 Feb 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "NVI",
+      "id": 50,
+      "language": "ENGLISH",
+      "name": "Noble Victories",
+      "release_date": "Sun, 16 Oct 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "EPO",
+      "id": 51,
+      "language": "ENGLISH",
+      "name": "Emerging Powers",
+      "release_date": "Wed, 31 Aug 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "M11",
+      "id": 529,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2011",
+      "release_date": "Fri, 17 Jun 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BLW",
+      "id": 30,
+      "language": "ENGLISH",
+      "name": "Black and White",
+      "release_date": "Mon, 25 Apr 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 292,
+      "language": "ENGLISH",
+      "name": "Black and White Promos",
+      "release_date": "Tue, 01 Mar 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CL",
+      "id": 52,
+      "language": "ENGLISH",
+      "name": "Call of Legends",
+      "release_date": "Wed, 09 Feb 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TM",
+      "id": 53,
+      "language": "ENGLISH",
+      "name": "Triumphant",
+      "release_date": "Sun, 03 Oct 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "UD",
+      "id": 54,
+      "language": "ENGLISH",
+      "name": "Undaunted",
+      "release_date": "Wed, 18 Aug 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "UL",
+      "id": 55,
+      "language": "ENGLISH",
+      "name": "Unleashed",
+      "release_date": "Wed, 12 May 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "HS",
+      "id": 80,
+      "language": "ENGLISH",
+      "name": "HeartGold SoulSilver",
+      "release_date": "Wed, 10 Feb 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 518,
+      "language": "ENGLISH",
+      "name": "HGSS Black Star Promo",
+      "release_date": "Mon, 01 Feb 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MCAP",
+      "id": 176,
+      "language": "ENGLISH",
+      "name": "Miscellaneous Promos",
+      "release_date": "Fri, 01 Jan 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "RUM",
+      "id": 553,
+      "language": "ENGLISH",
+      "name": "Pokemon Rumble",
+      "release_date": "Wed, 02 Dec 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "AR",
+      "id": 56,
+      "language": "ENGLISH",
+      "name": "Arceus",
+      "release_date": "Sun, 04 Oct 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SV",
+      "id": 57,
+      "language": "ENGLISH",
+      "name": "Supreme Victors",
+      "release_date": "Wed, 19 Aug 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "RR",
+      "id": 100,
+      "language": "ENGLISH",
+      "name": "Rising Rivals",
+      "release_date": "Sat, 16 May 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 398,
+      "language": "ENGLISH",
+      "name": "Pop Series 9",
+      "release_date": "Sun, 01 Mar 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PL",
+      "id": 98,
+      "language": "ENGLISH",
+      "name": "Platinum",
+      "release_date": "Wed, 11 Feb 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SF",
+      "id": 105,
+      "language": "ENGLISH",
+      "name": "Stormfront",
+      "release_date": "Wed, 01 Oct 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 397,
+      "language": "ENGLISH",
+      "name": "Pop Series 8",
+      "release_date": "Mon, 01 Sep 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "LA",
+      "id": 58,
+      "language": "ENGLISH",
+      "name": "Legends Awakened",
+      "release_date": "Fri, 01 Aug 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MD",
+      "id": 87,
+      "language": "ENGLISH",
+      "name": "Majestic Dawn",
+      "release_date": "Thu, 01 May 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 396,
+      "language": "ENGLISH",
+      "name": "Pop Series 7",
+      "release_date": "Sat, 01 Mar 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "GE",
+      "id": 59,
+      "language": "ENGLISH",
+      "name": "Great Encounters",
+      "release_date": "Fri, 01 Feb 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SW",
+      "id": 103,
+      "language": "ENGLISH",
+      "name": "Secret Wonders",
+      "release_date": "Mon, 01 Oct 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 395,
+      "language": "ENGLISH",
+      "name": "Pop Series 6",
+      "release_date": "Sat, 01 Sep 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MT",
+      "id": 88,
+      "language": "ENGLISH",
+      "name": "Mysterious Treasures",
+      "release_date": "Wed, 01 Aug 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DP",
+      "id": 60,
+      "language": "ENGLISH",
+      "name": "Diamond & Pearl",
+      "release_date": "Tue, 01 May 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 113,
+      "language": "ENGLISH",
+      "name": "Diamond and Pearl Promo",
+      "release_date": "Tue, 01 May 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 394,
+      "language": "ENGLISH",
+      "name": "Pop Series 5",
+      "release_date": "Thu, 01 Mar 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PK",
+      "id": 99,
+      "language": "ENGLISH",
+      "name": "Power Keepers",
+      "release_date": "Thu, 01 Feb 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DF",
+      "id": 61,
+      "language": "ENGLISH",
+      "name": "Dragon Frontiers",
+      "release_date": "Sun, 01 Oct 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "CG",
+      "id": 62,
+      "language": "ENGLISH",
+      "name": "Crystal Guardians",
+      "release_date": "Tue, 01 Aug 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 393,
+      "language": "ENGLISH",
+      "name": "Pop Series 4",
+      "release_date": "Tue, 01 Aug 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "HP",
+      "id": 82,
+      "language": "ENGLISH",
+      "name": "Holon Phantoms",
+      "release_date": "Mon, 01 May 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 392,
+      "language": "ENGLISH",
+      "name": "Pop Series 3",
+      "release_date": "Sat, 01 Apr 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "LM",
+      "id": 85,
+      "language": "ENGLISH",
+      "name": "Legend Maker",
+      "release_date": "Mon, 13 Feb 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DS",
+      "id": 63,
+      "language": "ENGLISH",
+      "name": "Delta Species",
+      "release_date": "Mon, 31 Oct 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 391,
+      "language": "ENGLISH",
+      "name": "Pop Series 2",
+      "release_date": "Mon, 01 Aug 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "UF",
+      "id": 64,
+      "language": "ENGLISH",
+      "name": "Unseen Forces",
+      "release_date": "Mon, 01 Aug 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "EM",
+      "id": 65,
+      "language": "ENGLISH",
+      "name": "Emerald",
+      "release_date": "Sun, 01 May 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DX",
+      "id": 66,
+      "language": "ENGLISH",
+      "name": "Deoxys",
+      "release_date": "Tue, 01 Feb 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "RR",
+      "id": 107,
+      "language": "ENGLISH",
+      "name": "Team Rocket Returns",
+      "release_date": "Fri, 01 Oct 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "POP",
+      "id": 390,
+      "language": "ENGLISH",
+      "name": "Pop Series 1",
+      "release_date": "Wed, 01 Sep 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "RG",
+      "id": 75,
+      "language": "ENGLISH",
+      "name": "Fire Red Leaf Green",
+      "release_date": "Wed, 01 Sep 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "HL",
+      "id": 81,
+      "language": "ENGLISH",
+      "name": "Hidden Legends",
+      "release_date": "Tue, 01 Jun 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "MA",
+      "id": 106,
+      "language": "ENGLISH",
+      "name": "Team Magma vs Team Aqua",
+      "release_date": "Mon, 01 Mar 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 519,
+      "language": "ENGLISH",
+      "name": "Nintendo Black Star Promo",
+      "release_date": "Wed, 01 Oct 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "DR",
+      "id": 67,
+      "language": "ENGLISH",
+      "name": "Dragon",
+      "release_date": "Thu, 18 Sep 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SS",
+      "id": 102,
+      "language": "ENGLISH",
+      "name": "Sandstorm",
+      "release_date": "Thu, 18 Sep 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "RS",
+      "id": 101,
+      "language": "ENGLISH",
+      "name": "Ruby and Sapphire",
+      "release_date": "Tue, 01 Jul 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SK",
+      "id": 104,
+      "language": "ENGLISH",
+      "name": "Skyridge",
+      "release_date": "Mon, 12 May 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "AQ",
+      "id": 68,
+      "language": "ENGLISH",
+      "name": "Aquapolis",
+      "release_date": "Wed, 15 Jan 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "EX",
+      "id": 74,
+      "language": "ENGLISH",
+      "name": "Expedition",
+      "release_date": "Sun, 15 Sep 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "LC",
+      "id": 86,
+      "language": "ENGLISH",
+      "name": "Legendary Collection",
+      "release_date": "Fri, 24 May 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N4",
+      "id": 89,
+      "language": "ENGLISH",
+      "name": "Neo Destiny",
+      "release_date": "Thu, 28 Feb 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N4",
+      "id": 90,
+      "language": "ENGLISH",
+      "name": "Neo Destiny 1st Edition",
+      "release_date": "Wed, 27 Feb 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N3",
+      "id": 95,
+      "language": "ENGLISH",
+      "name": "Neo Revelation",
+      "release_date": "Fri, 21 Sep 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N3",
+      "id": 96,
+      "language": "ENGLISH",
+      "name": "Neo Revelation 1st Edition",
+      "release_date": "Thu, 20 Sep 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "SI",
+      "id": 290,
+      "language": "ENGLISH",
+      "name": "Southern Islands",
+      "release_date": "Tue, 31 Jul 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N2",
+      "id": 91,
+      "language": "ENGLISH",
+      "name": "Neo Discovery",
+      "release_date": "Sat, 02 Jun 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N2",
+      "id": 92,
+      "language": "ENGLISH",
+      "name": "Neo Discovery 1st Edition",
+      "release_date": "Fri, 01 Jun 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N1",
+      "id": 93,
+      "language": "ENGLISH",
+      "name": "Neo Genesis",
+      "release_date": "Sat, 16 Dec 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "N1",
+      "id": 94,
+      "language": "ENGLISH",
+      "name": "Neo Genesis 1st Edition",
+      "release_date": "Fri, 15 Dec 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "G2",
+      "id": 76,
+      "language": "ENGLISH",
+      "name": "Gym Challenge",
+      "release_date": "Mon, 16 Oct 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "G2",
+      "id": 77,
+      "language": "ENGLISH",
+      "name": "Gym Challenge 1st Edition",
+      "release_date": "Sun, 15 Oct 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "G1",
+      "id": 78,
+      "language": "ENGLISH",
+      "name": "Gym Heroes",
+      "release_date": "Mon, 14 Aug 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "G1",
+      "id": 79,
+      "language": "ENGLISH",
+      "name": "Gym Heroes 1st Edition",
+      "release_date": "Sun, 13 Aug 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TR",
+      "id": 69,
+      "language": "ENGLISH",
+      "name": "Team Rocket",
+      "release_date": "Mon, 24 Apr 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "TR",
+      "id": 70,
+      "language": "ENGLISH",
+      "name": "Team Rocket 1st Edition",
+      "release_date": "Sun, 23 Apr 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BS2",
+      "id": 73,
+      "language": "ENGLISH",
+      "name": "Base Set 2",
+      "release_date": "Thu, 24 Feb 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "FO",
+      "id": 71,
+      "language": "ENGLISH",
+      "name": "Fossil",
+      "release_date": "Sun, 10 Oct 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "FO",
+      "id": 72,
+      "language": "ENGLISH",
+      "name": "Fossil 1st Edition",
+      "release_date": "Sat, 09 Oct 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "PR",
+      "id": 110,
+      "language": "ENGLISH",
+      "name": "WOTC Promo",
+      "release_date": "Thu, 01 Jul 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "JU",
+      "id": 83,
+      "language": "ENGLISH",
+      "name": "Jungle",
+      "release_date": "Wed, 16 Jun 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "JU",
+      "id": 84,
+      "language": "ENGLISH",
+      "name": "Jungle 1st Edition",
+      "release_date": "Tue, 15 Jun 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BS",
+      "id": 27,
+      "language": "ENGLISH",
+      "name": "Base Set Unlimited",
+      "release_date": "Tue, 12 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BSS",
+      "id": 29,
+      "language": "ENGLISH",
+      "name": "Base Set Shadowless",
+      "release_date": "Mon, 11 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    {
+      "code": "BSS",
+      "id": 28,
+      "language": "ENGLISH",
+      "name": "Base Set 1st Edition",
+      "release_date": "Sun, 10 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    }
+  ],
+  "byId": {
+    "1": {
+      "code": "HIF",
+      "id": 1,
+      "language": "ENGLISH",
+      "name": "Hidden Fates",
+      "release_date": "Fri, 23 Aug 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "2": {
+      "code": "CHP",
+      "id": 2,
+      "language": "ENGLISH",
+      "name": "Champion's Path",
+      "release_date": "Fri, 25 Sep 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "3": {
+      "code": "SWSH04",
+      "id": 3,
+      "language": "ENGLISH",
+      "name": "Vivid Voltage",
+      "release_date": "Fri, 13 Nov 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "4": {
+      "code": "SWSH03",
+      "id": 4,
+      "language": "ENGLISH",
+      "name": "Darkness Ablaze",
+      "release_date": "Fri, 14 Aug 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "5": {
+      "code": "SWSH02",
+      "id": 5,
+      "language": "ENGLISH",
+      "name": "Rebel Clash",
+      "release_date": "Fri, 01 May 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "6": {
+      "code": "SWSH01",
+      "id": 6,
+      "language": "ENGLISH",
+      "name": "Sword & Shield",
+      "release_date": "Fri, 07 Feb 2020 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "7": {
+      "code": "SM12",
+      "id": 7,
+      "language": "ENGLISH",
+      "name": "Cosmic Eclipse",
+      "release_date": "Fri, 01 Nov 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "8": {
+      "code": "SM11",
+      "id": 8,
+      "language": "ENGLISH",
+      "name": "Unified Minds",
+      "release_date": "Fri, 02 Aug 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "9": {
+      "code": "SM9",
+      "id": 9,
+      "language": "ENGLISH",
+      "name": "Team Up",
+      "release_date": "Fri, 01 Feb 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "10": {
+      "code": "SM8",
+      "id": 10,
+      "language": "ENGLISH",
+      "name": "Lost Thunder",
+      "release_date": "Fri, 02 Nov 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "11": {
+      "code": "DRM",
+      "id": 11,
+      "language": "ENGLISH",
+      "name": "Dragon Majesty",
+      "release_date": "Fri, 07 Sep 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "12": {
+      "code": "CES",
+      "id": 12,
+      "language": "ENGLISH",
+      "name": "Celestial Storm",
+      "release_date": "Fri, 03 Aug 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "13": {
+      "code": "SM06",
+      "id": 13,
+      "language": "ENGLISH",
+      "name": "Forbidden Light",
+      "release_date": "Fri, 04 May 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "14": {
+      "code": "SM05",
+      "id": 14,
+      "language": "ENGLISH",
+      "name": "Ultra Prism",
+      "release_date": "Fri, 02 Feb 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "15": {
+      "code": "SM04",
+      "id": 15,
+      "language": "ENGLISH",
+      "name": "Crimson Invasion",
+      "release_date": "Fri, 03 Nov 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "16": {
+      "code": "SHL",
+      "id": 16,
+      "language": "ENGLISH",
+      "name": "Shining Legends",
+      "release_date": "Fri, 06 Oct 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "17": {
+      "code": "SM03",
+      "id": 17,
+      "language": "ENGLISH",
+      "name": "Burning Shadows",
+      "release_date": "Fri, 04 Aug 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "18": {
+      "code": "SM02",
+      "id": 18,
+      "language": "ENGLISH",
+      "name": "Guardians Rising",
+      "release_date": "Fri, 05 May 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "19": {
+      "code": "SM01",
+      "id": 19,
+      "language": "ENGLISH",
+      "name": "Sun & Moon",
+      "release_date": "Fri, 03 Feb 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "20": {
+      "code": "SWSH05",
+      "id": 20,
+      "language": "ENGLISH",
+      "name": "Battle Styles",
+      "release_date": "Fri, 19 Mar 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "21": {
+      "code": "SHF",
+      "id": 21,
+      "language": "ENGLISH",
+      "name": "Shining Fates",
+      "release_date": "Fri, 19 Feb 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "22": {
+      "code": "EVO",
+      "id": 22,
+      "language": "ENGLISH",
+      "name": "Evolutions",
+      "release_date": "Sun, 02 Oct 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "23": {
+      "code": "DEP",
+      "id": 23,
+      "language": "ENGLISH",
+      "name": "Detective Pikachu",
+      "release_date": "Fri, 29 Mar 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "24": {
+      "code": "SM10",
+      "id": 24,
+      "language": "ENGLISH",
+      "name": "Unbroken Bonds",
+      "release_date": "Fri, 03 May 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "25": {
+      "code": "SMP",
+      "id": 25,
+      "language": "ENGLISH",
+      "name": "Sun & Moon Black Star Promo",
+      "release_date": "Mon, 03 Oct 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "26": {
+      "code": "SWSH06",
+      "id": 26,
+      "language": "ENGLISH",
+      "name": "Chilling Reign",
+      "release_date": "Fri, 18 Jun 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "27": {
+      "code": "BS",
+      "id": 27,
+      "language": "ENGLISH",
+      "name": "Base Set Unlimited",
+      "release_date": "Tue, 12 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "28": {
+      "code": "BSS",
+      "id": 28,
+      "language": "ENGLISH",
+      "name": "Base Set 1st Edition",
+      "release_date": "Sun, 10 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "29": {
+      "code": "BSS",
+      "id": 29,
+      "language": "ENGLISH",
+      "name": "Base Set Shadowless",
+      "release_date": "Mon, 11 Jan 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "30": {
+      "code": "BLW",
+      "id": 30,
+      "language": "ENGLISH",
+      "name": "Black and White",
+      "release_date": "Mon, 25 Apr 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "31": {
+      "code": "STS",
+      "id": 31,
+      "language": "ENGLISH",
+      "name": "Steam Siege",
+      "release_date": "Wed, 03 Aug 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "32": {
+      "code": "FCO",
+      "id": 32,
+      "language": "ENGLISH",
+      "name": "Fates Collide",
+      "release_date": "Mon, 02 May 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "33": {
+      "code": "GEN",
+      "id": 33,
+      "language": "ENGLISH",
+      "name": "Generations",
+      "release_date": "Mon, 22 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "34": {
+      "code": "BKP",
+      "id": 34,
+      "language": "ENGLISH",
+      "name": "BREAKpoint",
+      "release_date": "Wed, 03 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "35": {
+      "code": "BKT",
+      "id": 35,
+      "language": "ENGLISH",
+      "name": "BREAKthrough",
+      "release_date": "Sun, 04 Oct 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "36": {
+      "code": "AOR",
+      "id": 36,
+      "language": "ENGLISH",
+      "name": "Ancient Origins",
+      "release_date": "Wed, 12 Aug 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "37": {
+      "code": "ROS",
+      "id": 37,
+      "language": "ENGLISH",
+      "name": "Roaring Skies",
+      "release_date": "Wed, 06 May 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "38": {
+      "code": "PRC",
+      "id": 38,
+      "language": "ENGLISH",
+      "name": "Primal Clash",
+      "release_date": "Wed, 04 Feb 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "39": {
+      "code": "PHF",
+      "id": 39,
+      "language": "ENGLISH",
+      "name": "Phantom Forces",
+      "release_date": "Sun, 05 Oct 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "40": {
+      "code": "FFI",
+      "id": 40,
+      "language": "ENGLISH",
+      "name": "Furious Fists",
+      "release_date": "Wed, 13 Aug 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "41": {
+      "code": "FLF",
+      "id": 41,
+      "language": "ENGLISH",
+      "name": "Flashfire",
+      "release_date": "Wed, 07 May 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "42": {
+      "code": "XY",
+      "id": 42,
+      "language": "ENGLISH",
+      "name": "XY Base",
+      "release_date": "Wed, 05 Feb 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "43": {
+      "code": "LTR",
+      "id": 43,
+      "language": "ENGLISH",
+      "name": "Legendary Treasures",
+      "release_date": "Wed, 06 Nov 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "44": {
+      "code": "PLB",
+      "id": 44,
+      "language": "ENGLISH",
+      "name": "Plasma Blast",
+      "release_date": "Wed, 14 Aug 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "45": {
+      "code": "PLF",
+      "id": 45,
+      "language": "ENGLISH",
+      "name": "Plasma Freeze",
+      "release_date": "Wed, 08 May 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "46": {
+      "code": "PLS",
+      "id": 46,
+      "language": "ENGLISH",
+      "name": "Plasma Storm",
+      "release_date": "Wed, 06 Feb 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "47": {
+      "code": "BCR",
+      "id": 47,
+      "language": "ENGLISH",
+      "name": "Boundaries Crossed",
+      "release_date": "Sun, 07 Oct 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "48": {
+      "code": "DRX",
+      "id": 48,
+      "language": "ENGLISH",
+      "name": "Dragons Exalted",
+      "release_date": "Wed, 15 Aug 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "49": {
+      "code": "DEX",
+      "id": 49,
+      "language": "ENGLISH",
+      "name": "Dark Explorers",
+      "release_date": "Wed, 09 May 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "50": {
+      "code": "NVI",
+      "id": 50,
+      "language": "ENGLISH",
+      "name": "Noble Victories",
+      "release_date": "Sun, 16 Oct 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "51": {
+      "code": "EPO",
+      "id": 51,
+      "language": "ENGLISH",
+      "name": "Emerging Powers",
+      "release_date": "Wed, 31 Aug 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "52": {
+      "code": "CL",
+      "id": 52,
+      "language": "ENGLISH",
+      "name": "Call of Legends",
+      "release_date": "Wed, 09 Feb 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "53": {
+      "code": "TM",
+      "id": 53,
+      "language": "ENGLISH",
+      "name": "Triumphant",
+      "release_date": "Sun, 03 Oct 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "54": {
+      "code": "UD",
+      "id": 54,
+      "language": "ENGLISH",
+      "name": "Undaunted",
+      "release_date": "Wed, 18 Aug 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "55": {
+      "code": "UL",
+      "id": 55,
+      "language": "ENGLISH",
+      "name": "Unleashed",
+      "release_date": "Wed, 12 May 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "56": {
+      "code": "AR",
+      "id": 56,
+      "language": "ENGLISH",
+      "name": "Arceus",
+      "release_date": "Sun, 04 Oct 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "57": {
+      "code": "SV",
+      "id": 57,
+      "language": "ENGLISH",
+      "name": "Supreme Victors",
+      "release_date": "Wed, 19 Aug 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "58": {
+      "code": "LA",
+      "id": 58,
+      "language": "ENGLISH",
+      "name": "Legends Awakened",
+      "release_date": "Fri, 01 Aug 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "59": {
+      "code": "GE",
+      "id": 59,
+      "language": "ENGLISH",
+      "name": "Great Encounters",
+      "release_date": "Fri, 01 Feb 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "60": {
+      "code": "DP",
+      "id": 60,
+      "language": "ENGLISH",
+      "name": "Diamond & Pearl",
+      "release_date": "Tue, 01 May 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "61": {
+      "code": "DF",
+      "id": 61,
+      "language": "ENGLISH",
+      "name": "Dragon Frontiers",
+      "release_date": "Sun, 01 Oct 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "62": {
+      "code": "CG",
+      "id": 62,
+      "language": "ENGLISH",
+      "name": "Crystal Guardians",
+      "release_date": "Tue, 01 Aug 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "63": {
+      "code": "DS",
+      "id": 63,
+      "language": "ENGLISH",
+      "name": "Delta Species",
+      "release_date": "Mon, 31 Oct 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "64": {
+      "code": "UF",
+      "id": 64,
+      "language": "ENGLISH",
+      "name": "Unseen Forces",
+      "release_date": "Mon, 01 Aug 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "65": {
+      "code": "EM",
+      "id": 65,
+      "language": "ENGLISH",
+      "name": "Emerald",
+      "release_date": "Sun, 01 May 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "66": {
+      "code": "DX",
+      "id": 66,
+      "language": "ENGLISH",
+      "name": "Deoxys",
+      "release_date": "Tue, 01 Feb 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "67": {
+      "code": "DR",
+      "id": 67,
+      "language": "ENGLISH",
+      "name": "Dragon",
+      "release_date": "Thu, 18 Sep 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "68": {
+      "code": "AQ",
+      "id": 68,
+      "language": "ENGLISH",
+      "name": "Aquapolis",
+      "release_date": "Wed, 15 Jan 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "69": {
+      "code": "TR",
+      "id": 69,
+      "language": "ENGLISH",
+      "name": "Team Rocket",
+      "release_date": "Mon, 24 Apr 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "70": {
+      "code": "TR",
+      "id": 70,
+      "language": "ENGLISH",
+      "name": "Team Rocket 1st Edition",
+      "release_date": "Sun, 23 Apr 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "71": {
+      "code": "FO",
+      "id": 71,
+      "language": "ENGLISH",
+      "name": "Fossil",
+      "release_date": "Sun, 10 Oct 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "72": {
+      "code": "FO",
+      "id": 72,
+      "language": "ENGLISH",
+      "name": "Fossil 1st Edition",
+      "release_date": "Sat, 09 Oct 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "73": {
+      "code": "BS2",
+      "id": 73,
+      "language": "ENGLISH",
+      "name": "Base Set 2",
+      "release_date": "Thu, 24 Feb 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "74": {
+      "code": "EX",
+      "id": 74,
+      "language": "ENGLISH",
+      "name": "Expedition",
+      "release_date": "Sun, 15 Sep 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "75": {
+      "code": "RG",
+      "id": 75,
+      "language": "ENGLISH",
+      "name": "Fire Red Leaf Green",
+      "release_date": "Wed, 01 Sep 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "76": {
+      "code": "G2",
+      "id": 76,
+      "language": "ENGLISH",
+      "name": "Gym Challenge",
+      "release_date": "Mon, 16 Oct 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "77": {
+      "code": "G2",
+      "id": 77,
+      "language": "ENGLISH",
+      "name": "Gym Challenge 1st Edition",
+      "release_date": "Sun, 15 Oct 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "78": {
+      "code": "G1",
+      "id": 78,
+      "language": "ENGLISH",
+      "name": "Gym Heroes",
+      "release_date": "Mon, 14 Aug 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "79": {
+      "code": "G1",
+      "id": 79,
+      "language": "ENGLISH",
+      "name": "Gym Heroes 1st Edition",
+      "release_date": "Sun, 13 Aug 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "80": {
+      "code": "HS",
+      "id": 80,
+      "language": "ENGLISH",
+      "name": "HeartGold SoulSilver",
+      "release_date": "Wed, 10 Feb 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "81": {
+      "code": "HL",
+      "id": 81,
+      "language": "ENGLISH",
+      "name": "Hidden Legends",
+      "release_date": "Tue, 01 Jun 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "82": {
+      "code": "HP",
+      "id": 82,
+      "language": "ENGLISH",
+      "name": "Holon Phantoms",
+      "release_date": "Mon, 01 May 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "83": {
+      "code": "JU",
+      "id": 83,
+      "language": "ENGLISH",
+      "name": "Jungle",
+      "release_date": "Wed, 16 Jun 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "84": {
+      "code": "JU",
+      "id": 84,
+      "language": "ENGLISH",
+      "name": "Jungle 1st Edition",
+      "release_date": "Tue, 15 Jun 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "85": {
+      "code": "LM",
+      "id": 85,
+      "language": "ENGLISH",
+      "name": "Legend Maker",
+      "release_date": "Mon, 13 Feb 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "86": {
+      "code": "LC",
+      "id": 86,
+      "language": "ENGLISH",
+      "name": "Legendary Collection",
+      "release_date": "Fri, 24 May 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "87": {
+      "code": "MD",
+      "id": 87,
+      "language": "ENGLISH",
+      "name": "Majestic Dawn",
+      "release_date": "Thu, 01 May 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "88": {
+      "code": "MT",
+      "id": 88,
+      "language": "ENGLISH",
+      "name": "Mysterious Treasures",
+      "release_date": "Wed, 01 Aug 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "89": {
+      "code": "N4",
+      "id": 89,
+      "language": "ENGLISH",
+      "name": "Neo Destiny",
+      "release_date": "Thu, 28 Feb 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "90": {
+      "code": "N4",
+      "id": 90,
+      "language": "ENGLISH",
+      "name": "Neo Destiny 1st Edition",
+      "release_date": "Wed, 27 Feb 2002 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "91": {
+      "code": "N2",
+      "id": 91,
+      "language": "ENGLISH",
+      "name": "Neo Discovery",
+      "release_date": "Sat, 02 Jun 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "92": {
+      "code": "N2",
+      "id": 92,
+      "language": "ENGLISH",
+      "name": "Neo Discovery 1st Edition",
+      "release_date": "Fri, 01 Jun 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "93": {
+      "code": "N1",
+      "id": 93,
+      "language": "ENGLISH",
+      "name": "Neo Genesis",
+      "release_date": "Sat, 16 Dec 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "94": {
+      "code": "N1",
+      "id": 94,
+      "language": "ENGLISH",
+      "name": "Neo Genesis 1st Edition",
+      "release_date": "Fri, 15 Dec 2000 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "95": {
+      "code": "N3",
+      "id": 95,
+      "language": "ENGLISH",
+      "name": "Neo Revelation",
+      "release_date": "Fri, 21 Sep 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "96": {
+      "code": "N3",
+      "id": 96,
+      "language": "ENGLISH",
+      "name": "Neo Revelation 1st Edition",
+      "release_date": "Thu, 20 Sep 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "97": {
+      "code": "NXD",
+      "id": 97,
+      "language": "ENGLISH",
+      "name": "Next Destinies",
+      "release_date": "Wed, 08 Feb 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "98": {
+      "code": "PL",
+      "id": 98,
+      "language": "ENGLISH",
+      "name": "Platinum",
+      "release_date": "Wed, 11 Feb 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "99": {
+      "code": "PK",
+      "id": 99,
+      "language": "ENGLISH",
+      "name": "Power Keepers",
+      "release_date": "Thu, 01 Feb 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "100": {
+      "code": "RR",
+      "id": 100,
+      "language": "ENGLISH",
+      "name": "Rising Rivals",
+      "release_date": "Sat, 16 May 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "101": {
+      "code": "RS",
+      "id": 101,
+      "language": "ENGLISH",
+      "name": "Ruby and Sapphire",
+      "release_date": "Tue, 01 Jul 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "102": {
+      "code": "SS",
+      "id": 102,
+      "language": "ENGLISH",
+      "name": "Sandstorm",
+      "release_date": "Thu, 18 Sep 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "103": {
+      "code": "SW",
+      "id": 103,
+      "language": "ENGLISH",
+      "name": "Secret Wonders",
+      "release_date": "Mon, 01 Oct 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "104": {
+      "code": "SK",
+      "id": 104,
+      "language": "ENGLISH",
+      "name": "Skyridge",
+      "release_date": "Mon, 12 May 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "105": {
+      "code": "SF",
+      "id": 105,
+      "language": "ENGLISH",
+      "name": "Stormfront",
+      "release_date": "Wed, 01 Oct 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "106": {
+      "code": "MA",
+      "id": 106,
+      "language": "ENGLISH",
+      "name": "Team Magma vs Team Aqua",
+      "release_date": "Mon, 01 Mar 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "107": {
+      "code": "RR",
+      "id": 107,
+      "language": "ENGLISH",
+      "name": "Team Rocket Returns",
+      "release_date": "Fri, 01 Oct 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "108": {
+      "code": "SWSH07",
+      "id": 108,
+      "language": "ENGLISH",
+      "name": "Evolving Skies",
+      "release_date": "Fri, 27 Aug 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "109": {
+      "code": "SWSD",
+      "id": 109,
+      "language": "ENGLISH",
+      "name": "Sword & Shield Promo",
+      "release_date": "Tue, 01 Oct 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "110": {
+      "code": "PR",
+      "id": 110,
+      "language": "ENGLISH",
+      "name": "WOTC Promo",
+      "release_date": "Thu, 01 Jul 1999 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "111": {
+      "code": "CCC",
+      "id": 111,
+      "language": "ENGLISH",
+      "name": "Celebrations: Classic Collection",
+      "release_date": "Thu, 07 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "112": {
+      "code": "CLB",
+      "id": 112,
+      "language": "ENGLISH",
+      "name": "Celebrations",
+      "release_date": "Fri, 08 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "113": {
+      "code": "PR",
+      "id": 113,
+      "language": "ENGLISH",
+      "name": "Diamond and Pearl Promo",
+      "release_date": "Tue, 01 May 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "169": {
+      "code": "GEN",
+      "id": 169,
+      "language": "ENGLISH",
+      "name": "Generations Radiant Collection",
+      "release_date": "Mon, 22 Feb 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "170": {
+      "code": "LTR",
+      "id": 170,
+      "language": "ENGLISH",
+      "name": "Legendary Treasures Radiant Collection",
+      "release_date": "Wed, 06 Nov 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "171": {
+      "code": "M21",
+      "id": 171,
+      "language": "ENGLISH",
+      "name": "Mcdonald's 25th Anniversary",
+      "release_date": "Tue, 09 Feb 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "172": {
+      "code": "SWSH08",
+      "id": 172,
+      "language": "ENGLISH",
+      "name": "Fusion Strike",
+      "release_date": "Sun, 31 Oct 2021 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "174": {
+      "code": "PR",
+      "id": 174,
+      "language": "ENGLISH",
+      "name": "Alternate Art Promos",
+      "release_date": "Wed, 13 Aug 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "175": {
+      "code": "PR",
+      "id": 175,
+      "language": "ENGLISH",
+      "name": "XY Black Star Promos",
+      "release_date": "Tue, 01 Oct 2013 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "176": {
+      "code": "MCAP",
+      "id": 176,
+      "language": "ENGLISH",
+      "name": "Miscellaneous Promos",
+      "release_date": "Fri, 01 Jan 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "178": {
+      "code": "SWSH09",
+      "id": 178,
+      "language": "ENGLISH",
+      "name": "Brilliant Stars",
+      "release_date": "Fri, 25 Feb 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "182": {
+      "code": "SWSH10",
+      "id": 182,
+      "language": "ENGLISH",
+      "name": "Astral Radiance",
+      "release_date": "Fri, 27 May 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "290": {
+      "code": "SI",
+      "id": 290,
+      "language": "ENGLISH",
+      "name": "Southern Islands",
+      "release_date": "Tue, 31 Jul 2001 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "291": {
+      "code": "DCR",
+      "id": 291,
+      "language": "ENGLISH",
+      "name": "Double Crisis",
+      "release_date": "Wed, 25 Mar 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "292": {
+      "code": "PR",
+      "id": 292,
+      "language": "ENGLISH",
+      "name": "Black and White Promos",
+      "release_date": "Tue, 01 Mar 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "387": {
+      "code": "PGO",
+      "id": 387,
+      "language": "ENGLISH",
+      "name": "Pokemon GO",
+      "release_date": "Fri, 01 Jul 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "389": {
+      "code": "DRV",
+      "id": 389,
+      "language": "ENGLISH",
+      "name": "Dragon Vault",
+      "release_date": "Fri, 12 Oct 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "390": {
+      "code": "POP",
+      "id": 390,
+      "language": "ENGLISH",
+      "name": "Pop Series 1",
+      "release_date": "Wed, 01 Sep 2004 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "391": {
+      "code": "POP",
+      "id": 391,
+      "language": "ENGLISH",
+      "name": "Pop Series 2",
+      "release_date": "Mon, 01 Aug 2005 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "392": {
+      "code": "POP",
+      "id": 392,
+      "language": "ENGLISH",
+      "name": "Pop Series 3",
+      "release_date": "Sat, 01 Apr 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "393": {
+      "code": "POP",
+      "id": 393,
+      "language": "ENGLISH",
+      "name": "Pop Series 4",
+      "release_date": "Tue, 01 Aug 2006 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "394": {
+      "code": "POP",
+      "id": 394,
+      "language": "ENGLISH",
+      "name": "Pop Series 5",
+      "release_date": "Thu, 01 Mar 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "395": {
+      "code": "POP",
+      "id": 395,
+      "language": "ENGLISH",
+      "name": "Pop Series 6",
+      "release_date": "Sat, 01 Sep 2007 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "396": {
+      "code": "POP",
+      "id": 396,
+      "language": "ENGLISH",
+      "name": "Pop Series 7",
+      "release_date": "Sat, 01 Mar 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "397": {
+      "code": "POP",
+      "id": 397,
+      "language": "ENGLISH",
+      "name": "Pop Series 8",
+      "release_date": "Mon, 01 Sep 2008 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "398": {
+      "code": "POP",
+      "id": 398,
+      "language": "ENGLISH",
+      "name": "Pop Series 9",
+      "release_date": "Sun, 01 Mar 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "399": {
+      "code": "M22",
+      "id": 399,
+      "language": "ENGLISH",
+      "name": "Mcdonald's Promos 2022",
+      "release_date": "Tue, 16 Aug 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "400": {
+      "code": "SWSH11",
+      "id": 400,
+      "language": "ENGLISH",
+      "name": "Lost Origin",
+      "release_date": "Fri, 09 Sep 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "503": {
+      "code": "SWSH12",
+      "id": 503,
+      "language": "ENGLISH",
+      "name": "Silver Tempest",
+      "release_date": "Fri, 11 Nov 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "504": {
+      "code": "TTBB",
+      "id": 504,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2022",
+      "release_date": "Thu, 01 Sep 2022 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "506": {
+      "code": "CRZ",
+      "id": 506,
+      "language": "ENGLISH",
+      "name": "Crown Zenith",
+      "release_date": "Fri, 20 Jan 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "510": {
+      "code": "SVI",
+      "id": 510,
+      "language": "ENGLISH",
+      "name": "Scarlet & Violet Base",
+      "release_date": "Fri, 31 Mar 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "513": {
+      "code": "PAL",
+      "id": 513,
+      "language": "ENGLISH",
+      "name": "Paldea Evolved",
+      "release_date": "Fri, 09 Jun 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "515": {
+      "code": "SVP",
+      "id": 515,
+      "language": "ENGLISH",
+      "name": "Scarlet & Violet Promos",
+      "release_date": "Sun, 01 Jan 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "517": {
+      "code": "OBF",
+      "id": 517,
+      "language": "ENGLISH",
+      "name": "Obsidian Flames",
+      "release_date": "Fri, 11 Aug 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "518": {
+      "code": "PR",
+      "id": 518,
+      "language": "ENGLISH",
+      "name": "HGSS Black Star Promo",
+      "release_date": "Mon, 01 Feb 2010 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "519": {
+      "code": "PR",
+      "id": 519,
+      "language": "ENGLISH",
+      "name": "Nintendo Black Star Promo",
+      "release_date": "Wed, 01 Oct 2003 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "521": {
+      "code": "M19",
+      "id": 521,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2019",
+      "release_date": "Tue, 15 Oct 2019 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "522": {
+      "code": "M18",
+      "id": 522,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2018",
+      "release_date": "Fri, 19 Oct 2018 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "523": {
+      "code": "M17",
+      "id": 523,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2017",
+      "release_date": "Thu, 03 Aug 2017 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "524": {
+      "code": "M16",
+      "id": 524,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2016",
+      "release_date": "Sat, 20 Aug 2016 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "525": {
+      "code": "M15",
+      "id": 525,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2015",
+      "release_date": "Fri, 27 Nov 2015 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "526": {
+      "code": "M14",
+      "id": 526,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2014",
+      "release_date": "Fri, 23 May 2014 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "528": {
+      "code": "M12",
+      "id": 528,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2012",
+      "release_date": "Fri, 15 Jun 2012 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "529": {
+      "code": "M11",
+      "id": 529,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2011",
+      "release_date": "Fri, 17 Jun 2011 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "530": {
+      "code": "M23",
+      "id": 530,
+      "language": "ENGLISH",
+      "name": "McDonald's Promos 2023",
+      "release_date": "Thu, 27 Jul 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "531": {
+      "code": "TTBB23",
+      "id": 531,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2023",
+      "release_date": "Fri, 01 Sep 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "532": {
+      "code": "MEW",
+      "id": 532,
+      "language": "ENGLISH",
+      "name": "Pokemon Card 151",
+      "release_date": "Fri, 22 Sep 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "536": {
+      "code": "PAR",
+      "id": 536,
+      "language": "ENGLISH",
+      "name": "Paradox Rift",
+      "release_date": "Fri, 03 Nov 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "539": {
+      "code": "PAF",
+      "id": 539,
+      "language": "ENGLISH",
+      "name": "Paldean Fates",
+      "release_date": "Fri, 26 Jan 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "542": {
+      "code": "TEF",
+      "id": 542,
+      "language": "ENGLISH",
+      "name": "Temporal Forces",
+      "release_date": "Fri, 22 Mar 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "545": {
+      "code": "TWM",
+      "id": 545,
+      "language": "ENGLISH",
+      "name": "Twilight Masquerade",
+      "release_date": "Sat, 25 May 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "548": {
+      "code": "SFA",
+      "id": 548,
+      "language": "ENGLISH",
+      "name": "Shrouded Fable",
+      "release_date": "Fri, 02 Aug 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "549": {
+      "code": "SCR",
+      "id": 549,
+      "language": "ENGLISH",
+      "name": "Stellar Crown",
+      "release_date": "Fri, 13 Sep 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "553": {
+      "code": "RUM",
+      "id": 553,
+      "language": "ENGLISH",
+      "name": "Pokemon Rumble",
+      "release_date": "Wed, 02 Dec 2009 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "554": {
+      "code": "TTBB24",
+      "id": 554,
+      "language": "ENGLISH",
+      "name": "Trick or Trade 2024",
+      "release_date": "Fri, 30 Aug 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "555": {
+      "code": "SSP",
+      "id": 555,
+      "language": "ENGLISH",
+      "name": "Surging Sparks",
+      "release_date": "Fri, 08 Nov 2024 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "557": {
+      "code": "PRE",
+      "id": 557,
+      "language": "ENGLISH",
+      "name": "Prismatic Evolutions",
+      "release_date": "Fri, 17 Jan 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "559": {
+      "code": "M24",
+      "id": 559,
+      "language": "ENGLISH",
+      "name": "Mcdonald's Dragon Discovery",
+      "release_date": "Tue, 21 Jan 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "561": {
+      "code": "CL",
+      "id": 561,
+      "language": "ENGLISH",
+      "name": "Trading Card Game Classic",
+      "release_date": "Fri, 17 Nov 2023 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "562": {
+      "code": "JTG",
+      "id": 562,
+      "language": "ENGLISH",
+      "name": "Journey Together",
+      "release_date": "Fri, 28 Mar 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "567": {
+      "code": "DRI",
+      "id": 567,
+      "language": "ENGLISH",
+      "name": "Destined Rivals",
+      "release_date": "Fri, 30 May 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "570": {
+      "code": "BLK",
+      "id": 570,
+      "language": "ENGLISH",
+      "name": "Black Bolt",
+      "release_date": "Fri, 18 Jul 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "571": {
+      "code": "WHT",
+      "id": 571,
+      "language": "ENGLISH",
+      "name": "White Flare",
+      "release_date": "Fri, 18 Jul 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "574": {
+      "code": "MEG",
+      "id": 574,
+      "language": "ENGLISH",
+      "name": "Mega Evolution",
+      "release_date": "Fri, 26 Sep 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "575": {
+      "code": "MEP",
+      "id": 575,
+      "language": "ENGLISH",
+      "name": "Mega Evolution Promos",
+      "release_date": "Thu, 25 Sep 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "3589": {
+      "code": "PFL",
+      "id": 3589,
+      "language": "ENGLISH",
+      "name": "Phantasmal Flames",
+      "release_date": "Thu, 13 Nov 2025 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "3591": {
+      "code": "ASC",
+      "id": 3591,
+      "language": "ENGLISH",
+      "name": "Ascended Heroes",
+      "release_date": "Fri, 30 Jan 2026 00:00:00 GMT",
+      "tcg": "Pokemon"
+    },
+    "3665": {
+      "code": "POR",
+      "id": 3665,
+      "language": "ENGLISH",
+      "name": "Perfect Order",
+      "release_date": "Fri, 27 Mar 2026 00:00:00 GMT",
+      "tcg": "Pokemon"
+    }
+  },
+  "nameToId": {
+    "perfect order": 3665,
+    "ascended heroes": 3591,
+    "phantasmal flames": 3589,
+    "mega evolution": 574,
+    "mega evolution promos": 575,
+    "black bolt": 570,
+    "white flare": 571,
+    "destined rivals": 567,
+    "journey together": 562,
+    "mcdonald's dragon discovery": 559,
+    "prismatic evolutions": 557,
+    "surging sparks": 555,
+    "stellar crown": 549,
+    "trick or trade 2024": 554,
+    "shrouded fable": 548,
+    "twilight masquerade": 545,
+    "temporal forces": 542,
+    "paldean fates": 539,
+    "trading card game classic": 561,
+    "paradox rift": 536,
+    "pokemon card 151": 532,
+    "trick or trade 2023": 531,
+    "obsidian flames": 517,
+    "mcdonald's promos 2023": 530,
+    "paldea evolved": 513,
+    "scarlet & violet base": 510,
+    "crown zenith": 506,
+    "scarlet & violet promos": 515,
+    "silver tempest": 503,
+    "lost origin": 400,
+    "trick or trade 2022": 504,
+    "mcdonald's promos 2022": 399,
+    "pokemon go": 387,
+    "astral radiance": 182,
+    "brilliant stars": 178,
+    "fusion strike": 172,
+    "celebrations": 112,
+    "celebrations: classic collection": 111,
+    "evolving skies": 108,
+    "chilling reign": 26,
+    "battle styles": 20,
+    "shining fates": 21,
+    "mcdonald's 25th anniversary": 171,
+    "vivid voltage": 3,
+    "champion's path": 2,
+    "darkness ablaze": 4,
+    "rebel clash": 5,
+    "sword & shield": 6,
+    "cosmic eclipse": 7,
+    "mcdonald's promos 2019": 521,
+    "sword & shield promo": 109,
+    "hidden fates": 1,
+    "unified minds": 8,
+    "unbroken bonds": 24,
+    "detective pikachu": 23,
+    "team up": 9,
+    "lost thunder": 10,
+    "mcdonald's promos 2018": 522,
+    "dragon majesty": 11,
+    "celestial storm": 12,
+    "forbidden light": 13,
+    "ultra prism": 14,
+    "crimson invasion": 15,
+    "shining legends": 16,
+    "burning shadows": 17,
+    "mcdonald's promos 2017": 523,
+    "guardians rising": 18,
+    "sun & moon": 19,
+    "sun & moon black star promo": 25,
+    "evolutions": 22,
+    "mcdonald's promos 2016": 524,
+    "steam siege": 31,
+    "fates collide": 32,
+    "generations": 33,
+    "generations radiant collection": 169,
+    "breakpoint": 34,
+    "mcdonald's promos 2015": 525,
+    "breakthrough": 35,
+    "ancient origins": 36,
+    "roaring skies": 37,
+    "double crisis": 291,
+    "primal clash": 38,
+    "phantom forces": 39,
+    "furious fists": 40,
+    "alternate art promos": 174,
+    "mcdonald's promos 2014": 526,
+    "flashfire": 41,
+    "xy base": 42,
+    "legendary treasures radiant collection": 170,
+    "legendary treasures": 43,
+    "xy black star promos": 175,
+    "plasma blast": 44,
+    "plasma freeze": 45,
+    "plasma storm": 46,
+    "dragon vault": 389,
+    "boundaries crossed": 47,
+    "dragons exalted": 48,
+    "mcdonald's promos 2012": 528,
+    "dark explorers": 49,
+    "next destinies": 97,
+    "noble victories": 50,
+    "emerging powers": 51,
+    "mcdonald's promos 2011": 529,
+    "black and white": 30,
+    "black and white promos": 292,
+    "call of legends": 52,
+    "triumphant": 53,
+    "undaunted": 54,
+    "unleashed": 55,
+    "heartgold soulsilver": 80,
+    "hgss black star promo": 518,
+    "miscellaneous promos": 176,
+    "pokemon rumble": 553,
+    "arceus": 56,
+    "supreme victors": 57,
+    "rising rivals": 100,
+    "pop series 9": 398,
+    "platinum": 98,
+    "stormfront": 105,
+    "pop series 8": 397,
+    "legends awakened": 58,
+    "majestic dawn": 87,
+    "pop series 7": 396,
+    "great encounters": 59,
+    "secret wonders": 103,
+    "pop series 6": 395,
+    "mysterious treasures": 88,
+    "diamond & pearl": 60,
+    "diamond and pearl promo": 113,
+    "pop series 5": 394,
+    "power keepers": 99,
+    "dragon frontiers": 61,
+    "crystal guardians": 62,
+    "pop series 4": 393,
+    "holon phantoms": 82,
+    "pop series 3": 392,
+    "legend maker": 85,
+    "delta species": 63,
+    "pop series 2": 391,
+    "unseen forces": 64,
+    "emerald": 65,
+    "deoxys": 66,
+    "team rocket returns": 107,
+    "pop series 1": 390,
+    "fire red leaf green": 75,
+    "hidden legends": 81,
+    "team magma vs team aqua": 106,
+    "nintendo black star promo": 519,
+    "dragon": 67,
+    "sandstorm": 102,
+    "ruby and sapphire": 101,
+    "skyridge": 104,
+    "aquapolis": 68,
+    "expedition": 74,
+    "legendary collection": 86,
+    "neo destiny": 89,
+    "neo destiny 1st edition": 90,
+    "neo revelation": 95,
+    "neo revelation 1st edition": 96,
+    "southern islands": 290,
+    "neo discovery": 91,
+    "neo discovery 1st edition": 92,
+    "neo genesis": 93,
+    "neo genesis 1st edition": 94,
+    "gym challenge": 76,
+    "gym challenge 1st edition": 77,
+    "gym heroes": 78,
+    "gym heroes 1st edition": 79,
+    "team rocket": 69,
+    "team rocket 1st edition": 70,
+    "base set 2": 73,
+    "fossil": 71,
+    "fossil 1st edition": 72,
+    "wotc promo": 110,
+    "jungle": 83,
+    "jungle 1st edition": 84,
+    "base set unlimited": 27,
+    "base set shadowless": 29,
+    "base set 1st edition": 28
+  },
+  "codeToId": {
+    "por": 3665,
+    "asc": 3591,
+    "pfl": 3589,
+    "meg": 574,
+    "mep": 575,
+    "blk": 570,
+    "wht": 571,
+    "dri": 567,
+    "jtg": 562,
+    "m24": 559,
+    "pre": 557,
+    "ssp": 555,
+    "scr": 549,
+    "ttbb24": 554,
+    "sfa": 548,
+    "twm": 545,
+    "tef": 542,
+    "paf": 539,
+    "cl": 561,
+    "par": 536,
+    "mew": 532,
+    "ttbb23": 531,
+    "obf": 517,
+    "m23": 530,
+    "pal": 513,
+    "svi": 510,
+    "crz": 506,
+    "svp": 515,
+    "swsh12": 503,
+    "swsh11": 400,
+    "ttbb": 504,
+    "m22": 399,
+    "pgo": 387,
+    "swsh10": 182,
+    "swsh09": 178,
+    "swsh08": 172,
+    "clb": 112,
+    "ccc": 111,
+    "swsh07": 108,
+    "swsh06": 26,
+    "swsh05": 20,
+    "shf": 21,
+    "m21": 171,
+    "swsh04": 3,
+    "chp": 2,
+    "swsh03": 4,
+    "swsh02": 5,
+    "swsh01": 6,
+    "sm12": 7,
+    "m19": 521,
+    "swsd": 109,
+    "hif": 1,
+    "sm11": 8,
+    "sm10": 24,
+    "dep": 23,
+    "sm9": 9,
+    "sm8": 10,
+    "m18": 522,
+    "drm": 11,
+    "ces": 12,
+    "sm06": 13,
+    "sm05": 14,
+    "sm04": 15,
+    "shl": 16,
+    "sm03": 17,
+    "m17": 523,
+    "sm02": 18,
+    "sm01": 19,
+    "smp": 25,
+    "evo": 22,
+    "m16": 524,
+    "sts": 31,
+    "fco": 32,
+    "gen": 33,
+    "bkp": 34,
+    "m15": 525,
+    "bkt": 35,
+    "aor": 36,
+    "ros": 37,
+    "dcr": 291,
+    "prc": 38,
+    "phf": 39,
+    "ffi": 40,
+    "pr": 174,
+    "m14": 526,
+    "flf": 41,
+    "xy": 42,
+    "ltr": 170,
+    "plb": 44,
+    "plf": 45,
+    "pls": 46,
+    "drv": 389,
+    "bcr": 47,
+    "drx": 48,
+    "m12": 528,
+    "dex": 49,
+    "nxd": 97,
+    "nvi": 50,
+    "epo": 51,
+    "m11": 529,
+    "blw": 30,
+    "tm": 53,
+    "ud": 54,
+    "ul": 55,
+    "hs": 80,
+    "mcap": 176,
+    "rum": 553,
+    "ar": 56,
+    "sv": 57,
+    "rr": 100,
+    "pop": 398,
+    "pl": 98,
+    "sf": 105,
+    "la": 58,
+    "md": 87,
+    "ge": 59,
+    "sw": 103,
+    "mt": 88,
+    "dp": 60,
+    "pk": 99,
+    "df": 61,
+    "cg": 62,
+    "hp": 82,
+    "lm": 85,
+    "ds": 63,
+    "uf": 64,
+    "em": 65,
+    "dx": 66,
+    "rg": 75,
+    "hl": 81,
+    "ma": 106,
+    "dr": 67,
+    "ss": 102,
+    "rs": 101,
+    "sk": 104,
+    "aq": 68,
+    "ex": 74,
+    "lc": 86,
+    "n4": 89,
+    "n3": 95,
+    "si": 290,
+    "n2": 91,
+    "n1": 93,
+    "g2": 76,
+    "g1": 78,
+    "tr": 69,
+    "bs2": 73,
+    "fo": 71,
+    "ju": 83,
+    "bs": 27,
+    "bss": 29
+  }
+}

@@ -11,7 +11,7 @@ interface PokedataCard {
   // Add other fields as needed
 }
 
-interface PokedataCardPricing {
+export interface PokedataCardPricing {
   id: string
   name: string
   pricing: {
@@ -27,6 +27,19 @@ interface PokedataSetValue {
   date: string
   value: number
   currency: string
+}
+
+/** Card row from GET /v0/set?set_id= */
+export interface PokedataSetCardRow {
+  id: number
+  language: string
+  name: string
+  num: string
+  release_date: string
+  secret: boolean
+  set_code: string
+  set_id: number
+  set_name: string
 }
 
 const POKEDATA_BASE_URL = "https://www.pokedata.io/v0"
@@ -160,7 +173,7 @@ export class PokedataClient {
   }
 
   /**
-   * Get all cards in a specific set
+   * Get all cards in a specific set (by set name — legacy).
    * @param setName Name of the set
    * @returns Array of cards in the set
    */
@@ -170,11 +183,21 @@ export class PokedataClient {
   }
 
   /**
-   * Get list of all Pokémon TCG sets
-   * @returns Array of set information
+   * List all cards in a set by Pokedata set id (5 API credits).
+   * GET /v0/set?set_id=
    */
-  async getAllSets(): Promise<any[]> {
-    return this.request<any[]>("/sets")
+  async getCardsInSetById(setId: number): Promise<PokedataSetCardRow[]> {
+    const params = new URLSearchParams({ set_id: String(setId) })
+    return this.request<PokedataSetCardRow[]>(`/set?${params}`)
+  }
+
+  /**
+   * Get list of all Pokémon TCG sets from Pokedata (5 API credits per call).
+   * @param language Optional filter: ENGLISH | JAPANESE
+   */
+  async getAllSets(language?: "ENGLISH" | "JAPANESE"): Promise<any[]> {
+    const params = language ? `?language=${encodeURIComponent(language)}` : ""
+    return this.request<any[]>(`/sets${params}`)
   }
 
   /**

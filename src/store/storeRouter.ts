@@ -895,7 +895,7 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
 
     // Enrich with market price from card_prices (dynamic data; API only every 48h)
     const cardIds = [...new Set(userCollections.map((c: any) => c.cardId != null ? String(c.cardId) : null).filter(Boolean))] as string[]
-    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; imageUrl: string | null; setId: string | null; cardNumber: string | null }>()
+    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; imageUrl: string | null; setId: string | null; setName: string | null; cardNumber: string | null }>()
     if (cardIds.length > 0) {
       let rows: any[] = []
       try {
@@ -905,6 +905,7 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
           ebayLastSold: cardPrices.ebayLastSold,
           imageUrl: cardPrices.imageUrl,
           setId: cardPrices.setId,
+          setName: cardPrices.setName,
           cardNumber: cardPrices.cardNumber,
         })
           .from(cardPrices)
@@ -922,8 +923,9 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         const ebay = rawEbay != null && rawEbay !== '' ? parseFloat(String(rawEbay)) : null
         const imageUrl = r.imageUrl != null ? String(r.imageUrl).trim() || null : null
         const setId = r.setId != null ? String(r.setId).trim() || null : null
+        const setName = r.setName != null ? String(r.setName).trim() || null : null
         const cardNumber = r.cardNumber != null ? String(r.cardNumber).trim() || null : null
-        priceMap.set(id, { marketPrice: market, ebayLastSold: ebay, imageUrl, setId, cardNumber })
+        priceMap.set(id, { marketPrice: market, ebayLastSold: ebay, imageUrl, setId, setName, cardNumber })
       })
     }
     const USD_TO_ZAR = Number(process.env.USD_TO_ZAR) || 17
@@ -933,9 +935,16 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
       const marketPrice = prices != null ? (prices.marketPrice ?? null) : null
       const ebayLastSold = prices?.ebayLastSold ?? null
       // Same logic for every card: prefer stored imageUrl; use built URL only when set is on CDN (so Ascended Heroes etc. use API image or null, not 404).
-      const setForImage = collection.set && String(collection.set).trim() ? String(collection.set).trim() : (prices?.setId ?? null)
+      const setForImage =
+        (collection.set && String(collection.set).trim()) ||
+        (prices?.setId && String(prices.setId).trim()) ||
+        (prices?.setName && String(prices.setName).trim()) ||
+        null
       const cardNumForImage = prices?.cardNumber ?? (collection.cardNumber != null ? String(collection.cardNumber) : null)
-      const builtImageUrl = setForImage && cardNumForImage ? buildImageUrl(setForImage, cardNumForImage) : null
+      const builtImageUrl =
+        setForImage && cardNumForImage
+          ? buildImageUrl(setForImage, cardNumForImage, prices?.setName ?? null)
+          : null
       const setCodeForImage = setForImage ? setToSetCode(setForImage) : null
       const useBuiltUrl = setCodeForImage && !SET_CODES_NOT_ON_CDN.has(setCodeForImage)
       const cardImageUrl = (prices?.imageUrl ?? null) ?? (useBuiltUrl ? builtImageUrl : null)

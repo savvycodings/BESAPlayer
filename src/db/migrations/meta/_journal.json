@@ -225,6 +225,20 @@
       "when": 1773096124941,
       "tag": "0031_long_dreaming_celestial",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1773100000000,
+      "tag": "0034_market_sets",
+      "breakpoints": true
+    },
+    {
+      "idx": 33,
+      "version": "7",
+      "when": 1773200000000,
+      "tag": "0035_market_cards",
+      "breakpoints": true
     }
   ]
 }

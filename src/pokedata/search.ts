@@ -4,6 +4,8 @@ import { eq, and, gt } from "drizzle-orm"
 import { db, pokedataSearchCache } from "../db"
 import { pokedataClient } from "./client"
 import { rateLimit, getClientIP, RateLimitResult } from "./rateLimiter"
+import { ensureMarketSchema } from "../market/ensureMarketSchema"
+import { countMarketCards, searchMarketCards, toSearchResults } from "../market/marketSearch"
 
 type AssetType = "CARD" | "SEALED"
 type Language = "en" | "es" | "fr" | "de" | "it" | "pt" | "ja" | "ko" | "zh"
@@ -35,12 +37,39 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
     const query = req.query.query as string
     const assetType = (req.query.asset_type as AssetType) || "CARD"
     const language = req.query.language as Language | undefined
-    const limitParam = req.query.limit
-    const limit = Math.min(Math.max(parseInt(String(limitParam), 10) || 3, 1), 20)
-
     if (!query) {
       res.status(400).json({ error: "Query parameter is required" })
       return
+    }
+
+    const limitParam = req.query.limit
+    const limit = Math.min(Math.max(parseInt(String(limitParam), 10) || 3, 1), 20)
+
+    // 1) Local market catalog (synced via pnpm run fetch-set-cards) — no Pokedata credits
+    if (assetType === "CARD") {
+      await ensureMarketSchema()
+      const indexed = await countMarketCards()
+      if (indexed > 0) {
+        const marketLang = language === "ja" ? "JAPANESE" : "ENGLISH"
+        const marketResults = await searchMarketCards(query, { language: marketLang, limit })
+        if (marketResults.length > 0) {
+          console.log(
+            `[Pokedata search] market_db HIT — query="${query}" | ${marketResults.length} results (no API call)`,
+          )
+          res.json({
+            results: toSearchResults(marketResults),
+            fromCache: true,
+            source: "market_db",
+            rateLimit: {
+              limit: 60,
+              remaining: rateLimitResult.remaining,
+              resetTime: new Date(rateLimitResult.resetTime).toISOString(),
+            },
+          })
+          return
+        }
+        console.log(`[Pokedata search] market_db MISS — query="${query}" | falling back to Pokedata`)
+      }
     }
 
     const cacheKey = searchCacheKey(query, assetType, language)
@@ -58,6 +87,7 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
       res.json({
         results: cachedResults,
         fromCache: true,
+        source: "search_cache",
         rateLimit: {
           limit: 60,
           remaining: rateLimitResult.remaining,
@@ -97,6 +127,7 @@ export const searchCards = asyncHandler(async (req: Request, res: Response) => {
     res.json({
       results: limited,
       fromCache: false,
+      source: "pokedata_api",
       rateLimit: {
         limit: 60,
         remaining: rateLimitResult.remaining,

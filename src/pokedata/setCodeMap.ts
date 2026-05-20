@@ -7,26 +7,42 @@
  * Run server/scripts/fetch-pokemon-tcg-sets.ts to refresh.
  */
 
+import fs from 'fs'
+import path from 'path'
+
 type TcgSetsJson = {
   sets?: { id: string; name: string }[]
   nameToId?: Record<string, string>
 }
 
+function loadTcgSetsJson(): TcgSetsJson {
+  const candidates = [
+    path.join(__dirname, 'pokemonTcgSets.json'),
+    path.join(__dirname, '../../src/pokedata/pokemonTcgSets.json'),
+  ]
+  for (const filePath of candidates) {
+    if (!fs.existsSync(filePath)) continue
+    try {
+      return JSON.parse(fs.readFileSync(filePath, 'utf8')) as TcgSetsJson
+    } catch {
+      // try next path
+    }
+  }
+  console.warn('[setCodeMap] pokemonTcgSets.json not found — card image URLs will be empty')
+  return {}
+}
+
 let NAME_TO_ID: Record<string, string> = {}
 const VALID_IDS = new Set<string>()
 
-try {
-  const data = require('./pokemonTcgSets.json') as TcgSetsJson
-  if (data.nameToId && typeof data.nameToId === 'object') {
-    NAME_TO_ID = data.nameToId
+const data = loadTcgSetsJson()
+if (data.nameToId && typeof data.nameToId === 'object') {
+  NAME_TO_ID = data.nameToId
+}
+if (Array.isArray(data.sets)) {
+  for (const s of data.sets) {
+    if (s?.id) VALID_IDS.add(s.id)
   }
-  if (Array.isArray(data.sets)) {
-    for (const s of data.sets) {
-      if (s?.id) VALID_IDS.add(s.id)
-    }
-  }
-} catch {
-  // No JSON
 }
 
 /** Set codes not on images.pokemontcg.io (empty — JSON is source of truth). */
