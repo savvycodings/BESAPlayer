@@ -6,6 +6,7 @@ import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc, ne, lt,
 import { auth } from '../auth/auth'
 import { fromNodeHeaders } from 'better-auth/node'
 import { sendExpoPush } from '../lib/expoPush'
+import { enrichListingsForPresentation } from './listingPresentation'
 
 const router = express.Router()
 
@@ -141,86 +142,15 @@ router.get('/api/listings/recent', async (req, res) => {
       .orderBy(desc(storeListings.createdAt))
       .limit(limit)
 
-    const cardIds = [...new Set(rows.map((r) => r.cardId).filter(Boolean))] as string[]
-    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; setName: string | null; cardNumber: string | null }>()
-    if (cardIds.length > 0) {
-      try {
-        const priceRows = await db.select({
-          id: cardPrices.id,
-          marketPrice: cardPrices.marketPrice,
-          ebayLastSold: cardPrices.ebayLastSold,
-          setName: cardPrices.setName,
-          cardNumber: cardPrices.cardNumber,
-        })
-          .from(cardPrices)
-          .where(inArray(cardPrices.id, cardIds))
-        priceRows.forEach((pr) => {
-          const id = pr.id != null ? String(pr.id) : null
-          if (!id) return
-          const market = pr.marketPrice != null && pr.marketPrice !== '' ? parseFloat(String(pr.marketPrice)) : null
-          const ebay = pr.ebayLastSold != null && pr.ebayLastSold !== '' ? parseFloat(String(pr.ebayLastSold)) : null
-          priceMap.set(id, {
-            marketPrice: market,
-            ebayLastSold: ebay,
-            setName: pr.setName != null ? String(pr.setName).trim() || null : null,
-            cardNumber: pr.cardNumber != null ? String(pr.cardNumber).trim() || null : null,
-          })
-        })
-      } catch (_) {
-        // card_prices optional
-      }
-    }
-
-    const listings = rows.map((row) => {
-      const cid = row.cardId != null ? String(row.cardId) : null
-      const prices = cid ? priceMap.get(cid) : null
-      const setName =
-        (row.collectionSet && String(row.collectionSet).trim()) ||
-        prices?.setName ||
-        undefined
-      const cardNumber =
-        (row.collectionCardNumber != null && String(row.collectionCardNumber).trim() !== ''
-          ? String(row.collectionCardNumber).trim()
-          : undefined) || prices?.cardNumber || undefined
-      const metaParts: string[] = []
-      if (row.collectionType === 'slab' && row.collectionGrade != null) {
-        metaParts.push(`PSA ${row.collectionGrade}`)
-      } else if (row.collectionType && row.collectionType !== 'card') {
-        metaParts.push(
-          row.collectionType.charAt(0).toUpperCase() + row.collectionType.slice(1)
-        )
-      }
-      const finishLabel =
-        row.collectionType === 'slab'
-          ? 'Slab'
-          : row.collectionType === 'sealed'
-            ? 'Sealed'
-            : undefined
-
-      return {
-        id: row.id,
-        listingId: row.id,
-        cardName: row.cardName,
-        cardImage: row.cardImage,
-        price: parseFloat(row.price?.toString() || '0'),
-        quantity: row.quantity != null ? Math.max(1, Number(row.quantity)) : 1,
-        cardId: cid ?? undefined,
-        marketPrice: prices?.marketPrice ?? undefined,
-        ebayLastSold: prices?.ebayLastSold ?? undefined,
-        setName,
-        cardNumber,
-        condition: row.collectionCondition ?? undefined,
-        metaLine: metaParts.length > 0 ? metaParts.join(' • ') : undefined,
-        finishLabel,
-        vaultingStatus: row.vaultingStatus,
-        storeId: row.storeId,
-        storeName: row.storeName,
-        sellerId: row.sellerId,
-        sellerName: row.sellerFirstName && row.sellerLastName
-          ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
-          : row.sellerName || 'Seller',
-      }
-    })
+    const listings = await enrichListingsForPresentation(
+      rows.map((row) => ({
+        ...row,
+        sellerName:
+          row.sellerFirstName && row.sellerLastName
+            ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
+            : row.sellerName || 'Seller',
+      }))
+    )
 
     res.json({ listings })
   } catch (error: any) {
@@ -380,44 +310,61 @@ router.get('/api/store/listings', authenticate, async (req, res) => {
       return res.status(404).json({ message: 'Store not found' })
     }
 
-    const listings = await db.select()
+    const listingRows = await db.select({
+      id: storeListings.id,
+      cardName: storeListings.cardName,
+      cardImage: storeListings.cardImage,
+      price: storeListings.price,
+      quantity: storeListings.quantity,
+      cardId: storeListings.cardId,
+      vaultingStatus: storeListings.vaultingStatus,
+      purchaseType: storeListings.purchaseType,
+      currentBid: storeListings.currentBid,
+      bidCount: storeListings.bidCount,
+      description: storeListings.description,
+      collectionSet: collections.set,
+      collectionCardNumber: collections.cardNumber,
+      collectionCondition: collections.condition,
+      collectionType: collections.type,
+      collectionGrade: collections.grade,
+    })
       .from(storeListings)
+      .leftJoin(collections, eq(storeListings.collectionId, collections.id))
       .where(and(
         eq(storeListings.storeId, store.id),
         eq(storeListings.isActive, true)
       ))
       .orderBy(storeListings.createdAt)
 
-    // Check vaulting requests for each listing and update status if needed
     const listingsWithVaultingStatus = await Promise.all(
-      listings.map(async (listing) => {
-        // Check if there's a vaulting request for this card
+      listingRows.map(async (row) => {
         const [vaultingRequest] = await db.select()
           .from(vaultedRequests)
           .where(and(
             eq(vaultedRequests.userId, req.user!.id),
-            eq(vaultedRequests.cardName, listing.cardName)
+            eq(vaultedRequests.cardName, row.cardName)
           ))
           .orderBy(vaultedRequests.createdAt)
           .limit(1)
 
-        let vaultingStatus = listing.vaultingStatus
+        let vaultingStatus = row.vaultingStatus
         if (vaultingRequest) {
           if (vaultingRequest.status === 'vaulted') {
             vaultingStatus = 'vaulted'
-          } else if (vaultingRequest.status === 'pending' || vaultingRequest.status === 'approved') {
+          } else if (
+            vaultingRequest.status === 'pending' ||
+            vaultingRequest.status === 'approved'
+          ) {
             vaultingStatus = 'vaulting-in-process'
           }
         }
 
-        return {
-          ...listing,
-          vaultingStatus,
-        }
+        return { ...row, vaultingStatus }
       })
     )
 
-    res.json({ listings: listingsWithVaultingStatus })
+    const listings = await enrichListingsForPresentation(listingsWithVaultingStatus)
+    res.json({ listings })
   } catch (error: any) {
     console.error('Get listings error:', error)
     res.status(500).json({ message: 'Internal server error', error: error.message })
@@ -1929,14 +1876,37 @@ router.get('/api/stores/:storeId', async (req, res) => {
       .where(eq(users.id, store.userId))
       .limit(1)
 
-    // Get store listings
-    const listings = await db.select()
+    const listingRows = await db.select({
+      id: storeListings.id,
+      cardName: storeListings.cardName,
+      cardImage: storeListings.cardImage,
+      price: storeListings.price,
+      quantity: storeListings.quantity,
+      cardId: storeListings.cardId,
+      vaultingStatus: storeListings.vaultingStatus,
+      purchaseType: storeListings.purchaseType,
+      currentBid: storeListings.currentBid,
+      bidCount: storeListings.bidCount,
+      description: storeListings.description,
+      collectionSet: collections.set,
+      collectionCardNumber: collections.cardNumber,
+      collectionCondition: collections.condition,
+      collectionType: collections.type,
+      collectionGrade: collections.grade,
+      storeId: storeListings.storeId,
+      storeName: stores.storeName,
+      sellerId: stores.userId,
+    })
       .from(storeListings)
+      .innerJoin(stores, eq(storeListings.storeId, stores.id))
+      .leftJoin(collections, eq(storeListings.collectionId, collections.id))
       .where(and(
         eq(storeListings.storeId, store.id),
         eq(storeListings.isActive, true)
       ))
       .orderBy(desc(storeListings.createdAt))
+
+    const listings = await enrichListingsForPresentation(listingRows)
 
     // Get sales count and total revenue
     const [salesResult] = await db.select({ 
@@ -1985,18 +1955,7 @@ router.get('/api/stores/:storeId', async (req, res) => {
         followersCount,
       },
       user: user || null,
-      listings: listings.map(listing => ({
-        id: listing.id,
-        cardName: listing.cardName,
-        cardImage: listing.cardImage,
-        cardId: listing.cardId || undefined,
-        price: parseFloat(listing.price.toString()),
-        vaultingStatus: listing.vaultingStatus,
-        purchaseType: listing.purchaseType,
-        currentBid: listing.currentBid ? parseFloat(listing.currentBid.toString()) : null,
-        bidCount: listing.bidCount,
-        description: listing.description,
-      })),
+      listings,
     })
   } catch (error: any) {
     console.error('\n❌ ========== GET STORE ERROR ==========')
