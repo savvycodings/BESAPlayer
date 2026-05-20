@@ -159,6 +159,83 @@ router.get('/api/listings/recent', async (req, res) => {
   }
 })
 
+// GET /api/listings/by-card/:cardId - Active store listings for the same Pokedata card
+router.get('/api/listings/by-card/:cardId', async (req, res) => {
+  try {
+    const cardId = String(req.params.cardId ?? '').trim()
+    if (!cardId) {
+      return res.status(400).json({ message: 'cardId is required' })
+    }
+
+    const excludeRaw = req.query.excludeListingId
+    const excludeId =
+      excludeRaw != null && String(excludeRaw).trim() !== ''
+        ? parseInt(String(excludeRaw), 10)
+        : null
+
+    const cardMatch = or(
+      eq(storeListings.cardId, cardId),
+      eq(storeListings.pokedataId, cardId),
+    )
+
+    const conditions = [
+      cardMatch,
+      eq(storeListings.isActive, true),
+      eq(stores.isActive, true),
+    ]
+    if (excludeId != null && Number.isFinite(excludeId)) {
+      conditions.push(ne(storeListings.id, excludeId))
+    }
+
+    const rows = await db
+      .select({
+        id: storeListings.id,
+        cardName: storeListings.cardName,
+        cardImage: storeListings.cardImage,
+        price: storeListings.price,
+        quantity: storeListings.quantity,
+        cardId: storeListings.cardId,
+        vaultingStatus: storeListings.vaultingStatus,
+        purchaseType: storeListings.purchaseType,
+        currentBid: storeListings.currentBid,
+        bidCount: storeListings.bidCount,
+        storeId: storeListings.storeId,
+        storeName: stores.storeName,
+        sellerId: stores.userId,
+        sellerName: users.name,
+        sellerFirstName: users.firstName,
+        sellerLastName: users.lastName,
+        collectionSet: collections.set,
+        collectionCardNumber: collections.cardNumber,
+        collectionCondition: collections.condition,
+        collectionType: collections.type,
+        collectionGrade: collections.grade,
+      })
+      .from(storeListings)
+      .innerJoin(stores, eq(storeListings.storeId, stores.id))
+      .innerJoin(users, eq(stores.userId, users.id))
+      .leftJoin(collections, eq(storeListings.collectionId, collections.id))
+      .where(and(...conditions))
+      .orderBy(desc(storeListings.createdAt))
+      .limit(50)
+
+    const listings = await enrichListingsForPresentation(
+      rows.map((row) => ({
+        ...row,
+        sellerName:
+          row.sellerFirstName && row.sellerLastName
+            ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
+            : row.sellerName || 'Seller',
+      })),
+    )
+
+    res.json({ listings })
+  } catch (error: any) {
+    console.error('Get listings by card error:', error)
+    res.status(500).json({ message: 'Internal server error', error: error.message })
+  }
+})
+
 // GET /api/store - Get user's store or return null if doesn't exist
 router.get('/api/store', authenticate, async (req, res) => {
   try {
