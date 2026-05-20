@@ -1,6 +1,22 @@
 {
-  "updatedAt": "2026-05-19T00:26:28.410Z",
+  "updatedAt": "2026-05-20T17:35:36.292Z",
   "bySetId": {
+    "517": {
+      "setName": "Obsidian Flames",
+      "cardCount": 406,
+      "fetchedAt": "2026-05-20T17:35:36.290Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/517.json",
+      "slugFile": "sets/517-obsidian-flames.json"
+    },
+    "531": {
+      "setName": "Trick or Trade 2023",
+      "cardCount": 31,
+      "fetchedAt": "2026-05-20T17:32:56.247Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/531.json",
+      "slugFile": "sets/531-trick-or-trade-2023.json"
+    },
     "532": {
       "setName": "Pokemon Card 151",
       "cardCount": 361,

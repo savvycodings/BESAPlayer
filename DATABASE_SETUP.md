@@ -9,7 +9,7 @@ If you see "✅ Database connected successfully" but accounts won't create, it m
 ---
 
 ## Quick Fix
-
+d
 Run these commands in the `server` directory:
 
 ```bash
