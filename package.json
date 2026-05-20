@@ -28,6 +28,7 @@
     "fetch-card-price-history": "tsx scripts/fetch-card-price-history.ts",
     "sync-card-prices": "tsx scripts/sync-card-prices.ts",
     "db:ensure-price-sync": "tsx scripts/ensure-price-sync-schema.ts",
+    "db:ensure-listing-quantity": "tsx scripts/ensure-store-listing-quantity.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "healthcheck": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/healthcheck.ps1",
     "healthcheck:sh": "bash scripts/healthcheck.sh"

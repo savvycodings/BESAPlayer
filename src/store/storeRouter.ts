@@ -115,6 +115,8 @@ router.get('/api/listings/recent', async (req, res) => {
       cardName: storeListings.cardName,
       cardImage: storeListings.cardImage,
       price: storeListings.price,
+      quantity: storeListings.quantity,
+      cardId: storeListings.cardId,
       vaultingStatus: storeListings.vaultingStatus,
       storeId: storeListings.storeId,
       storeName: stores.storeName,
@@ -122,10 +124,16 @@ router.get('/api/listings/recent', async (req, res) => {
       sellerName: users.name,
       sellerFirstName: users.firstName,
       sellerLastName: users.lastName,
+      collectionSet: collections.set,
+      collectionCardNumber: collections.cardNumber,
+      collectionCondition: collections.condition,
+      collectionType: collections.type,
+      collectionGrade: collections.grade,
     })
       .from(storeListings)
       .innerJoin(stores, eq(storeListings.storeId, stores.id))
       .innerJoin(users, eq(stores.userId, users.id))
+      .leftJoin(collections, eq(storeListings.collectionId, collections.id))
       .where(and(
         eq(storeListings.isActive, true),
         eq(stores.isActive, true)
@@ -133,20 +141,86 @@ router.get('/api/listings/recent', async (req, res) => {
       .orderBy(desc(storeListings.createdAt))
       .limit(limit)
 
-    const listings = rows.map((row) => ({
-      id: row.id,
-      listingId: row.id,
-      cardName: row.cardName,
-      cardImage: row.cardImage,
-      price: parseFloat(row.price?.toString() || '0'),
-      vaultingStatus: row.vaultingStatus,
-      storeId: row.storeId,
-      storeName: row.storeName,
-      sellerId: row.sellerId,
-      sellerName: row.sellerFirstName && row.sellerLastName
-        ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
-        : row.sellerName || 'Seller',
-    }))
+    const cardIds = [...new Set(rows.map((r) => r.cardId).filter(Boolean))] as string[]
+    const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; setName: string | null; cardNumber: string | null }>()
+    if (cardIds.length > 0) {
+      try {
+        const priceRows = await db.select({
+          id: cardPrices.id,
+          marketPrice: cardPrices.marketPrice,
+          ebayLastSold: cardPrices.ebayLastSold,
+          setName: cardPrices.setName,
+          cardNumber: cardPrices.cardNumber,
+        })
+          .from(cardPrices)
+          .where(inArray(cardPrices.id, cardIds))
+        priceRows.forEach((pr) => {
+          const id = pr.id != null ? String(pr.id) : null
+          if (!id) return
+          const market = pr.marketPrice != null && pr.marketPrice !== '' ? parseFloat(String(pr.marketPrice)) : null
+          const ebay = pr.ebayLastSold != null && pr.ebayLastSold !== '' ? parseFloat(String(pr.ebayLastSold)) : null
+          priceMap.set(id, {
+            marketPrice: market,
+            ebayLastSold: ebay,
+            setName: pr.setName != null ? String(pr.setName).trim() || null : null,
+            cardNumber: pr.cardNumber != null ? String(pr.cardNumber).trim() || null : null,
+          })
+        })
+      } catch (_) {
+        // card_prices optional
+      }
+    }
+
+    const listings = rows.map((row) => {
+      const cid = row.cardId != null ? String(row.cardId) : null
+      const prices = cid ? priceMap.get(cid) : null
+      const setName =
+        (row.collectionSet && String(row.collectionSet).trim()) ||
+        prices?.setName ||
+        undefined
+      const cardNumber =
+        (row.collectionCardNumber != null && String(row.collectionCardNumber).trim() !== ''
+          ? String(row.collectionCardNumber).trim()
+          : undefined) || prices?.cardNumber || undefined
+      const metaParts: string[] = []
+      if (row.collectionType === 'slab' && row.collectionGrade != null) {
+        metaParts.push(`PSA ${row.collectionGrade}`)
+      } else if (row.collectionType && row.collectionType !== 'card') {
+        metaParts.push(
+          row.collectionType.charAt(0).toUpperCase() + row.collectionType.slice(1)
+        )
+      }
+      const finishLabel =
+        row.collectionType === 'slab'
+          ? 'Slab'
+          : row.collectionType === 'sealed'
+            ? 'Sealed'
+            : undefined
+
+      return {
+        id: row.id,
+        listingId: row.id,
+        cardName: row.cardName,
+        cardImage: row.cardImage,
+        price: parseFloat(row.price?.toString() || '0'),
+        quantity: row.quantity != null ? Math.max(1, Number(row.quantity)) : 1,
+        cardId: cid ?? undefined,
+        marketPrice: prices?.marketPrice ?? undefined,
+        ebayLastSold: prices?.ebayLastSold ?? undefined,
+        setName,
+        cardNumber,
+        condition: row.collectionCondition ?? undefined,
+        metaLine: metaParts.length > 0 ? metaParts.join(' • ') : undefined,
+        finishLabel,
+        vaultingStatus: row.vaultingStatus,
+        storeId: row.storeId,
+        storeName: row.storeName,
+        sellerId: row.sellerId,
+        sellerName: row.sellerFirstName && row.sellerLastName
+          ? `${row.sellerFirstName} ${row.sellerLastName}`.trim()
+          : row.sellerName || 'Seller',
+      }
+    })
 
     res.json({ listings })
   } catch (error: any) {
@@ -353,7 +427,7 @@ router.get('/api/store/listings', authenticate, async (req, res) => {
 // POST /api/store/listings - Create a new listing
 router.post('/api/store/listings', authenticate, async (req, res) => {
   try {
-    const { cardName, cardImage, cardImageBack, cardImageClose, price, vaultingStatus, purchaseType, description, cardId, collectionId } = req.body
+    const { cardName, cardImage, cardImageBack, cardImageClose, price, vaultingStatus, purchaseType, description, cardId, collectionId, quantity } = req.body
 
     if (!cardName || !price) {
       return res.status(400).json({ message: 'Card name and price are required' })
@@ -421,6 +495,9 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       }
     }
 
+    const qtyRaw = quantity != null ? Number(quantity) : 1
+    const listingQty = Number.isFinite(qtyRaw) ? Math.max(1, Math.min(999, Math.floor(qtyRaw))) : 1
+
     const [newListing] = await db.insert(storeListings).values({
       storeId: store.id,
       collectionId: collectionId != null ? Number(collectionId) : null,
@@ -430,6 +507,7 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
       cardImageBack: cardImageBack && typeof cardImageBack === 'string' && cardImageBack.trim() ? cardImageBack.trim() : null,
       cardImageClose: cardImageClose && typeof cardImageClose === 'string' && cardImageClose.trim() ? cardImageClose.trim() : null,
       price: price.toString(),
+      quantity: listingQty,
       vaultingStatus: finalVaultingStatus,
       purchaseType: purchaseType || 'both',
       description: description || null,
@@ -455,7 +533,7 @@ router.post('/api/store/listings', authenticate, async (req, res) => {
 router.put('/api/store/listings/:id', authenticate, async (req, res) => {
   try {
     const { id } = req.params
-    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, isActive } = req.body
+    const { cardName, cardImage, price, vaultingStatus, purchaseType, description, isActive, quantity } = req.body
 
     const [store] = await db.select()
       .from(stores)
@@ -507,11 +585,18 @@ router.put('/api/store/listings/:id', authenticate, async (req, res) => {
       }
     }
 
+    const qtyRaw = quantity != null ? Number(quantity) : listing.quantity
+    const listingQty =
+      qtyRaw != null && Number.isFinite(Number(qtyRaw))
+        ? Math.max(1, Math.min(999, Math.floor(Number(qtyRaw))))
+        : listing.quantity ?? 1
+
     const [updatedListing] = await db.update(storeListings)
       .set({
         cardName: cardName || listing.cardName,
         cardImage: cardImage !== undefined ? cardImage : listing.cardImage,
         price: price ? price.toString() : listing.price,
+        quantity: listingQty,
         vaultingStatus: vaultingStatus || listing.vaultingStatus,
         purchaseType: purchaseType || listing.purchaseType,
         description: description !== undefined ? description : listing.description,

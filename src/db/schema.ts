@@ -25,6 +25,8 @@ export const users = pgTable('users', {
   dateOfBirth: timestamp('date_of_birth'),
   isPremium: boolean('is_premium').default(false),
   isVerified: boolean('is_verified').default(false),
+  /** Present on some DBs; keep in schema so drizzle-kit push does not drop it */
+  isAdmin: boolean('is_admin').default(false),
   level: integer('level').default(0), // Start at level 0 for new users
   currentXP: integer('current_xp').default(0),
   xpToNextLevel: integer('xp_to_next_level').default(100),
@@ -265,7 +267,12 @@ export const storeListings = pgTable('store_listings', {
   storeId: integer('store_id').references(() => stores.id, { onDelete: 'cascade' }).notNull(),
   collectionId: integer('collection_id').references(() => collections.id, { onDelete: 'set null' }), // which collection item is listed (for accurate "Listed" badge)
   cardId: varchar('card_id', { length: 100 }), // Pokedata card ID (optional, for price cache)
+  /** Legacy DB column (alias of card_id on some rows) */
+  pokedataId: varchar('pokedata_id', { length: 100 }),
   cardName: varchar('card_name', { length: 255 }).notNull(),
+  /** Optional listing condition when not linked to a collection row */
+  condition: varchar('condition', { length: 50 }),
+  costPriceZar: decimal('cost_price_zar', { precision: 10, scale: 2 }),
   cardImage: text('card_image'), // URL to card image
   cardImageBack: text('card_image_back'), // Back of card photo
   cardImageClose: text('card_image_close'), // Up close / damage photo
@@ -275,6 +282,7 @@ export const storeListings = pgTable('store_listings', {
   currentBid: decimal('current_bid', { precision: 10, scale: 2 }),
   bidCount: integer('bid_count').default(0),
   description: text('description'),
+  quantity: integer('quantity').default(1).notNull(),
   isActive: boolean('is_active').default(true),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(), // Better Auth uses $onUpdate
