@@ -7,6 +7,7 @@ export type MarketSearchResult = {
   name: string
   set: string
   number: string
+  imageUrl: string | null
 }
 
 /** Result shape compatible with /pokedata/search */
@@ -17,6 +18,7 @@ export function toSearchResults(rows: MarketSearchResult[]) {
     set: r.set,
     number: r.number,
     num: r.number,
+    imageUrl: r.imageUrl ?? undefined,
   }))
 }
 
@@ -72,12 +74,16 @@ export async function searchMarketCards(
     .orderBy(desc(marketSets.releaseDate), asc(marketCards.num))
     .limit(limit)
 
-  return rows.map((r) => ({
-    id: String(r.id),
-    name: r.name,
-    set: r.setName || '',
-    number: r.num,
-  }))
+  return rows.map((r) => {
+    const tcgCode = r.tcgSetId || r.setCode || null
+    return {
+      id: String(r.id),
+      name: r.name,
+      set: r.setName || '',
+      number: r.num,
+      imageUrl: buildImageUrl(tcgCode, r.num, r.setName),
+    }
+  })
 }
 
 export type MarketCardMeta = {

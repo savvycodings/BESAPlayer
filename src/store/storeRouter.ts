@@ -767,6 +767,51 @@ router.post('/api/store/auctions', authenticate, async (req, res) => {
   }
 })
 
+/** Attach market price + catalog image for ISO list rows */
+async function enrichIsoItems(isoItemsList: { set?: string | null; cardNumber?: string | null; image?: string | null; [key: string]: unknown }[]) {
+  const setNames = [...new Set(isoItemsList.map((i) => i.set).filter(Boolean))] as string[]
+  const metaBySetAndNumber = new Map<string, { marketPrice: number | null; imageUrl: string | null }>()
+  if (setNames.length > 0) {
+    try {
+      const rows = await db
+        .select({
+          setName: cardPrices.setName,
+          cardNumber: cardPrices.cardNumber,
+          marketPrice: cardPrices.marketPrice,
+          imageUrl: cardPrices.imageUrl,
+        })
+        .from(cardPrices)
+        .where(inArray(cardPrices.setName, setNames))
+      rows.forEach((r) => {
+        const key = `${r.setName ?? ''}|${r.cardNumber ?? ''}`
+        metaBySetAndNumber.set(key, {
+          marketPrice: r.marketPrice != null ? parseFloat(String(r.marketPrice)) : null,
+          imageUrl: r.imageUrl ?? null,
+        })
+      })
+    } catch (_) {
+      /* card_prices may be missing */
+    }
+  }
+
+  return isoItemsList.map((item) => {
+    const key = `${item.set ?? ''}|${item.cardNumber ?? ''}`
+    const meta = metaBySetAndNumber.get(key)
+    let image = item.image ?? meta?.imageUrl ?? null
+    if (!image && item.set && item.cardNumber) {
+      const setCode = setToSetCode(item.set)
+      if (setCode && !SET_CODES_NOT_ON_CDN.has(setCode.toLowerCase())) {
+        image = buildImageUrl(setCode, item.cardNumber, item.set)
+      }
+    }
+    return {
+      ...item,
+      marketPrice: meta?.marketPrice ?? null,
+      image,
+    }
+  })
+}
+
 // GET /api/store/iso - Get all ISO items for user's store
 router.get('/api/store/iso', authenticate, async (req, res) => {
   try {
@@ -787,29 +832,7 @@ router.get('/api/store/iso', authenticate, async (req, res) => {
       ))
       .orderBy(isoItems.createdAt)
 
-    // Enrich with price from card_prices (one query by set names – eco-friendly)
-    const setNames = [...new Set(isoItemsList.map((i: any) => i.set).filter(Boolean))] as string[]
-    const priceBySetAndNumber = new Map<string, number | null>()
-    if (setNames.length > 0) {
-      try {
-        const rows = await db.select({
-          setName: cardPrices.setName,
-          cardNumber: cardPrices.cardNumber,
-          marketPrice: cardPrices.marketPrice,
-        })
-          .from(cardPrices)
-          .where(inArray(cardPrices.setName, setNames))
-        rows.forEach((r: any) => {
-          const key = `${r.setName ?? ''}|${r.cardNumber ?? ''}`
-          const val = r.marketPrice != null ? parseFloat(String(r.marketPrice)) : null
-          priceBySetAndNumber.set(key, val)
-        })
-      } catch (_) { /* card_prices may be missing */ }
-    }
-    const enriched = isoItemsList.map((item: any) => ({
-      ...item,
-      marketPrice: priceBySetAndNumber.get(`${item.set ?? ''}|${item.cardNumber ?? ''}`) ?? null,
-    }))
+    const enriched = await enrichIsoItems(isoItemsList)
 
     res.json({ isoItems: enriched })
   } catch (error: any) {
@@ -1747,28 +1770,7 @@ router.get('/api/stores/:storeId/iso', async (req, res) => {
       ))
       .orderBy(isoItems.createdAt)
 
-    const setNames = [...new Set(isoItemsList.map((i: any) => i.set).filter(Boolean))] as string[]
-    const priceBySetAndNumber = new Map<string, number | null>()
-    if (setNames.length > 0) {
-      try {
-        const rows = await db.select({
-          setName: cardPrices.setName,
-          cardNumber: cardPrices.cardNumber,
-          marketPrice: cardPrices.marketPrice,
-        })
-          .from(cardPrices)
-          .where(inArray(cardPrices.setName, setNames))
-        rows.forEach((r: any) => {
-          const key = `${r.setName ?? ''}|${r.cardNumber ?? ''}`
-          const val = r.marketPrice != null ? parseFloat(String(r.marketPrice)) : null
-          priceBySetAndNumber.set(key, val)
-        })
-      } catch (_) { /* card_prices may be missing */ }
-    }
-    const enriched = isoItemsList.map((item: any) => ({
-      ...item,
-      marketPrice: priceBySetAndNumber.get(`${item.set ?? ''}|${item.cardNumber ?? ''}`) ?? null,
-    }))
+    const enriched = await enrichIsoItems(isoItemsList)
 
     res.json({ isoItems: enriched })
   } catch (error: any) {
