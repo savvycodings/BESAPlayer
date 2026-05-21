@@ -1,6 +1,6 @@
 import express from 'express'
 import { db, users, stores, storeListings, orders, auctions, isoItems, sessions, collections, followers, vaultedRequests, verificationOrders, verificationOrderItems, pool, cardPrices, cardPriceHistory, storeReviews } from '../db'
-import { getCardLookupOrFetch, buildImageUrl } from '../pokedata/lookup'
+import { getCardLookupOrFetch, buildImageUrl, refreshStaleCardPrices } from '../pokedata/lookup'
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from '../pokedata/setCodeMap'
 import { eq, and, count, sql, inArray, or, like, ilike, isNotNull, desc, ne, lt, gte } from 'drizzle-orm'
 import { auth } from '../auth/auth'
@@ -1025,8 +1025,22 @@ router.get('/api/profile/collections', authenticate, async (req, res) => {
         .filter((id: number | null): id is number => id != null)
     )
 
-    // Enrich with market price from card_prices (dynamic data; API only every 48h)
+    // Enrich with market price from card_prices (Pokedata only when cache >48h old)
     const cardIds = [...new Set(userCollections.map((c: any) => c.cardId != null ? String(c.cardId) : null).filter(Boolean))] as string[]
+
+    const refreshStaleLimit = Math.min(
+      Math.max(0, parseInt(String(req.query.refreshStale ?? '0'), 10) || 0),
+      30,
+    )
+    if (refreshStaleLimit > 0 && cardIds.length > 0) {
+      const { refreshed, staleInBatch } = await refreshStaleCardPrices(cardIds, refreshStaleLimit, 'CARD')
+      if (refreshed > 0) {
+        console.log(
+          `[GET collections] refreshStale=${refreshStaleLimit} refreshed=${refreshed} staleInBatch=${staleInBatch}`,
+        )
+      }
+    }
+
     const priceMap = new Map<string, { marketPrice: number | null; ebayLastSold: number | null; imageUrl: string | null; setId: string | null; setName: string | null; cardNumber: string | null }>()
     if (cardIds.length > 0) {
       let rows: any[] = []

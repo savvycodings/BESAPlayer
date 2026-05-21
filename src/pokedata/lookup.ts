@@ -1,11 +1,59 @@
 import { db, cardPrices } from "../db"
-import { eq } from "drizzle-orm"
+import { eq, inArray } from "drizzle-orm"
 import { pokedataClient } from "./client"
 import { setToSetCode, SET_CODES_NOT_ON_CDN } from "./setCodeMap"
 import { getMarketCardById } from "../market/marketSearch"
 import { parsePricingFromApi, upsertCardPriceFromPricing } from "../pricing/cardPriceUpsert"
 
-const CACHE_TTL_MS = 48 * 60 * 60 * 1000 // 48 hours
+export const CARD_PRICE_CACHE_TTL_MS = 48 * 60 * 60 * 1000 // 48 hours
+const CACHE_TTL_MS = CARD_PRICE_CACHE_TTL_MS
+
+export function isCardPriceStale(lastFetchedAt: Date | string | null | undefined): boolean {
+  if (lastFetchedAt == null) return true
+  const t =
+    lastFetchedAt instanceof Date ? lastFetchedAt.getTime() : new Date(String(lastFetchedAt)).getTime()
+  return Number.isNaN(t) || t < Date.now() - CACHE_TTL_MS
+}
+
+/**
+ * Refresh up to `limit` cards that are missing or older than 48h (shared DB cache — eco).
+ * Used when opening profile or bulk admin refresh.
+ */
+export async function refreshStaleCardPrices(
+  cardIds: string[],
+  limit = 20,
+  assetType: "CARD" | "SEALED" = "CARD",
+): Promise<{ refreshed: number; staleInBatch: number; totalIds: number }> {
+  const unique = [...new Set(cardIds.map((id) => String(id).trim()).filter(Boolean))]
+  if (unique.length === 0) {
+    return { refreshed: 0, staleInBatch: 0, totalIds: 0 }
+  }
+
+  const cap = Math.min(Math.max(1, limit), 50)
+  const cutoff = new Date(Date.now() - CACHE_TTL_MS)
+  const rows = await db
+    .select({ id: cardPrices.id, lastFetchedAt: cardPrices.lastFetchedAt })
+    .from(cardPrices)
+    .where(inArray(cardPrices.id, unique))
+
+  const lastById = new Map(rows.map((r) => [r.id, r.lastFetchedAt]))
+  const staleIds = unique.filter((id) => {
+    const last = lastById.get(id)
+    return !last || new Date(last) <= cutoff
+  })
+
+  let refreshed = 0
+  for (const id of staleIds.slice(0, cap)) {
+    try {
+      await getCardLookupOrFetch(id, assetType)
+      refreshed += 1
+    } catch (err) {
+      console.warn("[refreshStaleCardPrices] skip", id, err)
+    }
+  }
+
+  return { refreshed, staleInBatch: Math.min(staleIds.length, cap), totalIds: unique.length }
+}
 
 const POKEMON_TCG_IMAGE_BASE = 'https://images.pokemontcg.io'
 
