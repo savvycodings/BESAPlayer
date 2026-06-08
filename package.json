@@ -36,6 +36,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "packageManager": "pnpm@9.15.9",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "ngrok"]
+  },
   "dependencies": {
     "@better-auth/expo": "^1.4.17",
     "@bytescale/sdk": "^3.10.0",

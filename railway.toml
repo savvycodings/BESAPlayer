@@ -1,0 +1,3 @@
+# Railpack uses package.json scripts in this folder (server root on Railway).
+[deploy]
+restartPolicyType = "ON_FAILURE"
