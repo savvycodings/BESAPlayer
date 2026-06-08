@@ -19,9 +19,9 @@ export type ListingEnrichmentRow = {
   collectionType?: string | null
   collectionGrade?: unknown
   storeId?: number
-  storeName?: string
+  storeName?: string | null
   sellerId?: string
-  sellerName?: string
+  sellerName?: string | null
 }
 
 type CardPriceMeta = {
