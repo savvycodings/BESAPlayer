@@ -1,6 +1,406 @@
 {
-  "updatedAt": "2026-05-20T17:35:36.292Z",
+  "updatedAt": "2026-06-08T20:42:25.146Z",
   "bySetId": {
+    "1": {
+      "setName": "Hidden Fates",
+      "cardCount": 219,
+      "fetchedAt": "2026-06-08T14:34:38.315Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/1.json",
+      "slugFile": "sets/1-hidden-fates.json"
+    },
+    "2": {
+      "setName": "Champion's Path",
+      "cardCount": 134,
+      "fetchedAt": "2026-06-08T13:45:04.228Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/2.json",
+      "slugFile": "sets/2-champions-path.json"
+    },
+    "3": {
+      "setName": "Vivid Voltage",
+      "cardCount": 345,
+      "fetchedAt": "2026-06-08T13:42:23.073Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/3.json",
+      "slugFile": "sets/3-vivid-voltage.json"
+    },
+    "4": {
+      "setName": "Darkness Ablaze",
+      "cardCount": 356,
+      "fetchedAt": "2026-06-08T13:47:44.728Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/4.json",
+      "slugFile": "sets/4-darkness-ablaze.json"
+    },
+    "5": {
+      "setName": "Rebel Clash",
+      "cardCount": 361,
+      "fetchedAt": "2026-06-08T13:50:26.253Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/5.json",
+      "slugFile": "sets/5-rebel-clash.json"
+    },
+    "6": {
+      "setName": "Sword & Shield",
+      "cardCount": 399,
+      "fetchedAt": "2026-06-08T13:53:07.746Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/6.json",
+      "slugFile": "sets/6-sword-shield.json"
+    },
+    "7": {
+      "setName": "Cosmic Eclipse",
+      "cardCount": 464,
+      "fetchedAt": "2026-06-08T13:55:49.149Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/7.json",
+      "slugFile": "sets/7-cosmic-eclipse.json"
+    },
+    "8": {
+      "setName": "Unified Minds",
+      "cardCount": 454,
+      "fetchedAt": "2026-06-08T14:42:53.709Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/8.json",
+      "slugFile": "sets/8-unified-minds.json"
+    },
+    "9": {
+      "setName": "Team Up",
+      "cardCount": 357,
+      "fetchedAt": "2026-06-08T14:50:57.114Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/9.json",
+      "slugFile": "sets/9-team-up.json"
+    },
+    "10": {
+      "setName": "Lost Thunder",
+      "cardCount": 410,
+      "fetchedAt": "2026-06-08T14:53:39.441Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/10.json",
+      "slugFile": "sets/10-lost-thunder.json"
+    },
+    "11": {
+      "setName": "Dragon Majesty",
+      "cardCount": 134,
+      "fetchedAt": "2026-06-08T14:59:00.922Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/11.json",
+      "slugFile": "sets/11-dragon-majesty.json"
+    },
+    "12": {
+      "setName": "Celestial Storm",
+      "cardCount": 320,
+      "fetchedAt": "2026-06-08T15:01:41.334Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/12.json",
+      "slugFile": "sets/12-celestial-storm.json"
+    },
+    "13": {
+      "setName": "Forbidden Light",
+      "cardCount": 251,
+      "fetchedAt": "2026-06-08T17:10:07.840Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/13.json",
+      "slugFile": "sets/13-forbidden-light.json"
+    },
+    "14": {
+      "setName": "Ultra Prism",
+      "cardCount": 298,
+      "fetchedAt": "2026-06-08T17:12:49.054Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/14.json",
+      "slugFile": "sets/14-ultra-prism.json"
+    },
+    "15": {
+      "setName": "Crimson Invasion",
+      "cardCount": 216,
+      "fetchedAt": "2026-06-08T17:15:29.853Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/15.json",
+      "slugFile": "sets/15-crimson-invasion.json"
+    },
+    "16": {
+      "setName": "Shining Legends",
+      "cardCount": 138,
+      "fetchedAt": "2026-06-08T17:18:10.787Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/16.json",
+      "slugFile": "sets/16-shining-legends.json"
+    },
+    "17": {
+      "setName": "Burning Shadows",
+      "cardCount": 285,
+      "fetchedAt": "2026-06-08T17:20:51.338Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/17.json",
+      "slugFile": "sets/17-burning-shadows.json"
+    },
+    "18": {
+      "setName": "Guardians Rising",
+      "cardCount": 288,
+      "fetchedAt": "2026-06-08T17:26:12.436Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/18.json",
+      "slugFile": "sets/18-guardians-rising.json"
+    },
+    "19": {
+      "setName": "Sun & Moon",
+      "cardCount": 307,
+      "fetchedAt": "2026-06-08T17:28:55.788Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/19.json",
+      "slugFile": "sets/19-sun-moon.json"
+    },
+    "20": {
+      "setName": "Battle Styles",
+      "cardCount": 306,
+      "fetchedAt": "2026-06-08T13:34:20.662Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/20.json",
+      "slugFile": "sets/20-battle-styles.json"
+    },
+    "21": {
+      "setName": "Shining Fates",
+      "cardCount": 241,
+      "fetchedAt": "2026-06-08T13:37:01.980Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/21.json",
+      "slugFile": "sets/21-shining-fates.json"
+    },
+    "22": {
+      "setName": "Evolutions",
+      "cardCount": 196,
+      "fetchedAt": "2026-06-08T20:05:54.788Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/22.json",
+      "slugFile": "sets/22-evolutions.json"
+    },
+    "23": {
+      "setName": "Detective Pikachu",
+      "cardCount": 18,
+      "fetchedAt": "2026-06-08T14:48:16.428Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/23.json",
+      "slugFile": "sets/23-detective-pikachu.json"
+    },
+    "24": {
+      "setName": "Unbroken Bonds",
+      "cardCount": 410,
+      "fetchedAt": "2026-06-08T14:45:35.095Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/24.json",
+      "slugFile": "sets/24-unbroken-bonds.json"
+    },
+    "25": {
+      "setName": "Sun & Moon Black Star Promo",
+      "cardCount": 337,
+      "fetchedAt": "2026-06-08T20:03:13.615Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/25.json",
+      "slugFile": "sets/25-sun-moon-black-star-promo.json"
+    },
+    "26": {
+      "setName": "Chilling Reign",
+      "cardCount": 370,
+      "fetchedAt": "2026-06-08T13:31:39.425Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/26.json",
+      "slugFile": "sets/26-chilling-reign.json"
+    },
+    "31": {
+      "setName": "Steam Siege",
+      "cardCount": 209,
+      "fetchedAt": "2026-06-08T20:21:53.252Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/31.json",
+      "slugFile": "sets/31-steam-siege.json"
+    },
+    "32": {
+      "setName": "Fates Collide",
+      "cardCount": 222,
+      "fetchedAt": "2026-06-08T20:24:33.897Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/32.json",
+      "slugFile": "sets/32-fates-collide.json"
+    },
+    "33": {
+      "setName": "Generations",
+      "cardCount": 153,
+      "fetchedAt": "2026-06-08T20:27:14.513Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/33.json",
+      "slugFile": "sets/33-generations.json"
+    },
+    "34": {
+      "setName": "BREAKpoint",
+      "cardCount": 220,
+      "fetchedAt": "2026-06-08T20:32:34.946Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/34.json",
+      "slugFile": "sets/34-breakpoint.json"
+    },
+    "35": {
+      "setName": "BREAKthrough",
+      "cardCount": 302,
+      "fetchedAt": "2026-06-08T20:37:56.019Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/35.json",
+      "slugFile": "sets/35-breakthrough.json"
+    },
+    "36": {
+      "setName": "Ancient Origins",
+      "cardCount": 172,
+      "fetchedAt": "2026-06-08T20:42:25.145Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/36.json",
+      "slugFile": "sets/36-ancient-origins.json"
+    },
+    "108": {
+      "setName": "Evolving Skies",
+      "cardCount": 369,
+      "fetchedAt": "2026-06-08T13:28:58.249Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/108.json",
+      "slugFile": "sets/108-evolving-skies.json"
+    },
+    "109": {
+      "setName": "Sword & Shield Promo",
+      "cardCount": 339,
+      "fetchedAt": "2026-06-08T14:31:56.895Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/109.json",
+      "slugFile": "sets/109-sword-shield-promo.json"
+    },
+    "111": {
+      "setName": "Celebrations: Classic Collection",
+      "cardCount": 25,
+      "fetchedAt": "2026-06-08T13:26:18.227Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/111.json",
+      "slugFile": "sets/111-celebrations-classic-collection.json"
+    },
+    "112": {
+      "setName": "Celebrations",
+      "cardCount": 25,
+      "fetchedAt": "2026-06-08T13:23:38.326Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/112.json",
+      "slugFile": "sets/112-celebrations.json"
+    },
+    "169": {
+      "setName": "Generations Radiant Collection",
+      "cardCount": 32,
+      "fetchedAt": "2026-06-08T20:29:54.962Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/169.json",
+      "slugFile": "sets/169-generations-radiant-collection.json"
+    },
+    "171": {
+      "setName": "Mcdonald's 25th Anniversary",
+      "cardCount": 50,
+      "fetchedAt": "2026-06-08T13:39:42.896Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/171.json",
+      "slugFile": "sets/171-mcdonalds-25th-anniversary.json"
+    },
+    "172": {
+      "setName": "Fusion Strike",
+      "cardCount": 501,
+      "fetchedAt": "2026-06-08T13:20:56.748Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/172.json",
+      "slugFile": "sets/172-fusion-strike.json"
+    },
+    "178": {
+      "setName": "Brilliant Stars",
+      "cardCount": 340,
+      "fetchedAt": "2026-06-08T13:18:15.331Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/178.json",
+      "slugFile": "sets/178-brilliant-stars.json"
+    },
+    "182": {
+      "setName": "Astral Radiance",
+      "cardCount": 374,
+      "fetchedAt": "2026-06-08T12:51:43.980Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/182.json",
+      "slugFile": "sets/182-astral-radiance.json"
+    },
+    "387": {
+      "setName": "Pokemon GO",
+      "cardCount": 148,
+      "fetchedAt": "2026-06-08T12:49:03.244Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/387.json",
+      "slugFile": "sets/387-pokemon-go.json"
+    },
+    "399": {
+      "setName": "Mcdonald's Promos 2022",
+      "cardCount": 15,
+      "fetchedAt": "2026-05-21T13:05:46.275Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/399.json",
+      "slugFile": "sets/399-mcdonalds-promos-2022.json"
+    },
+    "400": {
+      "setName": "Lost Origin",
+      "cardCount": 396,
+      "fetchedAt": "2026-05-21T12:48:52.935Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/400.json",
+      "slugFile": "sets/400-lost-origin.json"
+    },
+    "503": {
+      "setName": "Silver Tempest",
+      "cardCount": 387,
+      "fetchedAt": "2026-05-21T12:07:29.090Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/503.json",
+      "slugFile": "sets/503-silver-tempest.json"
+    },
+    "504": {
+      "setName": "Trick or Trade 2022",
+      "cardCount": 30,
+      "fetchedAt": "2026-05-21T12:51:33.839Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/504.json",
+      "slugFile": "sets/504-trick-or-trade-2022.json"
+    },
+    "506": {
+      "setName": "Crown Zenith",
+      "cardCount": 342,
+      "fetchedAt": "2026-05-21T12:02:07.209Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/506.json",
+      "slugFile": "sets/506-crown-zenith.json"
+    },
+    "510": {
+      "setName": "Scarlet & Violet Base",
+      "cardCount": 444,
+      "fetchedAt": "2026-05-21T11:59:25.431Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/510.json",
+      "slugFile": "sets/510-scarlet-violet-base.json"
+    },
+    "513": {
+      "setName": "Paldea Evolved",
+      "cardCount": 455,
+      "fetchedAt": "2026-05-21T11:56:43.652Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/513.json",
+      "slugFile": "sets/513-paldea-evolved.json"
+    },
+    "515": {
+      "setName": "Scarlet & Violet Promos",
+      "cardCount": 296,
+      "fetchedAt": "2026-05-21T12:04:48.312Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/515.json",
+      "slugFile": "sets/515-scarlet-violet-promos.json"
+    },
     "517": {
       "setName": "Obsidian Flames",
       "cardCount": 406,
@@ -8,6 +408,54 @@
       "language": "ENGLISH",
       "idFile": "setCards/517.json",
       "slugFile": "sets/517-obsidian-flames.json"
+    },
+    "521": {
+      "setName": "McDonald's Promos 2019",
+      "cardCount": 12,
+      "fetchedAt": "2026-06-08T13:58:30.447Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/521.json",
+      "slugFile": "sets/521-mcdonalds-promos-2019.json"
+    },
+    "522": {
+      "setName": "McDonald's Promos 2018",
+      "cardCount": 12,
+      "fetchedAt": "2026-06-08T14:56:20.826Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/522.json",
+      "slugFile": "sets/522-mcdonalds-promos-2018.json"
+    },
+    "523": {
+      "setName": "McDonald's Promos 2017",
+      "cardCount": 12,
+      "fetchedAt": "2026-06-08T17:23:32.127Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/523.json",
+      "slugFile": "sets/523-mcdonalds-promos-2017.json"
+    },
+    "524": {
+      "setName": "McDonald's Promos 2016",
+      "cardCount": 12,
+      "fetchedAt": "2026-06-08T20:19:13.160Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/524.json",
+      "slugFile": "sets/524-mcdonalds-promos-2016.json"
+    },
+    "525": {
+      "setName": "McDonald's Promos 2015",
+      "cardCount": 12,
+      "fetchedAt": "2026-06-08T20:35:15.856Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/525.json",
+      "slugFile": "sets/525-mcdonalds-promos-2015.json"
+    },
+    "530": {
+      "setName": "McDonald's Promos 2023",
+      "cardCount": 15,
+      "fetchedAt": "2026-05-21T11:54:03.648Z",
+      "language": "ENGLISH",
+      "idFile": "setCards/530.json",
+      "slugFile": "sets/530-mcdonalds-promos-2023.json"
     },
     "531": {
       "setName": "Trick or Trade 2023",
